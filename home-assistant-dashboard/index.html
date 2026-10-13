@@ -1,0 +1,1033 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Home Floor Plan</title>
+<style>
+  :root {
+    --bg: #14161a;
+    --panel: #1e2127;
+    --panel-2: #262a31;
+    --line: #353a43;
+    --text: #eef0f3;
+    --muted: #9aa1ad;
+    --on: #ffc845;
+    --on-bg: rgba(255, 200, 69, .16);
+    --ok: #3ccf7a;
+    --ok-bg: rgba(60, 207, 122, .14);
+    --info: #4aa8ff;
+    --info-bg: rgba(74, 168, 255, .15);
+    --warn: #ff9f2e;
+    --danger: #ff4d4f;
+    --danger-bg: rgba(255, 77, 79, .18);
+    --chip: rgba(24, 26, 31, .88);
+    --radius: 12px;
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font: 14px/1.4 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    min-height: 100vh;
+  }
+  button { font: inherit; color: inherit; cursor: pointer; }
+  svg.i { width: 1.25em; height: 1.25em; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+
+  /* ---------- header ---------- */
+  header {
+    display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+    padding: 12px 20px; border-bottom: 1px solid var(--line); background: var(--panel);
+  }
+  header h1 { font-size: 18px; margin: 0; font-weight: 600; }
+  .conn { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted);
+    padding: 4px 10px; border-radius: 99px; background: var(--panel-2); }
+  .conn::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--muted); }
+  .conn[data-s="ok"]::before { background: var(--ok); }
+  .conn[data-s="demo"]::before { background: var(--info); }
+  .conn[data-s="error"]::before { background: var(--danger); }
+  .conn[data-s="connecting"]::before { background: var(--warn); }
+  .spacer { flex: 1; }
+  .weather { display: flex; align-items: center; gap: 10px; }
+  .weather .big { font-size: 20px; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .weather .small { font-size: 12px; color: var(--muted); }
+  .icon-btn { background: var(--panel-2); border: 1px solid var(--line); border-radius: 10px; padding: 8px; display: inline-flex; }
+  .icon-btn:hover { border-color: var(--muted); }
+
+  /* ---------- layout ---------- */
+  main { display: grid; grid-template-columns: 270px 1fr; gap: 16px; padding: 16px 20px; }
+  main > * { min-width: 0; }
+  aside { display: flex; flex-direction: column; gap: 12px; }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px; }
+  .card h2 { font-size: 13px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin: 0 0 10px; font-weight: 600;
+    display: flex; align-items: center; gap: 8px; }
+
+  .alarm-state { display: flex; align-items: center; gap: 10px; font-size: 16px; font-weight: 600; margin-bottom: 10px; }
+  .alarm-state .badge { width: 40px; height: 40px; border-radius: 10px; display: grid; place-items: center; background: var(--panel-2); color: var(--muted); }
+  .alarm-state[data-armed="1"] .badge { background: var(--info-bg); color: var(--info); }
+  .alarm-state[data-armed="trig"] .badge { background: var(--danger-bg); color: var(--danger); }
+  .seg { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+  .seg button { background: var(--panel-2); border: 1px solid var(--line); border-radius: 8px; padding: 7px 4px; font-size: 12px; }
+  .seg button.active { border-color: var(--info); color: var(--info); background: var(--info-bg); }
+
+  .sensor-list { list-style: none; margin: 0; padding: 0; }
+  .sensor-list li { display: flex; align-items: center; gap: 10px; padding: 6px 0; border-top: 1px solid var(--line); }
+  .sensor-list li:first-child { border-top: 0; }
+  .sensor-list .name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .sensor-list .val { font-size: 12px; font-weight: 600; color: var(--muted); }
+  .sensor-list .val.on { color: var(--ok); }
+  .sensor-list .val.alert { color: var(--danger); }
+  .sensor-list .val.missing { color: var(--warn); font-weight: 400; }
+
+  .stat { display: flex; align-items: baseline; gap: 6px; }
+  .stat .num { font-size: 28px; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .stat .unit { color: var(--muted); }
+  .sub { font-size: 12px; color: var(--muted); }
+
+  .smoke-card .row { display: flex; align-items: center; gap: 12px; }
+  .smoke-card .dot { width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; background: var(--ok-bg); color: var(--ok); }
+  .smoke-card.alert { border-color: var(--danger); }
+  .smoke-card.alert .dot { background: var(--danger); color: #fff; animation: pulse 1s infinite; }
+  .smoke-card .title { font-weight: 600; }
+  .smoke-card .test { margin-top: 10px; width: 100%; background: var(--panel-2); border: 1px solid var(--line); border-radius: 8px; padding: 7px; font-size: 12px; }
+
+  /* ---------- floor plan ---------- */
+  .plan-scroll { overflow-x: auto; border-radius: var(--radius); border: 1px solid var(--line); }
+  .plan {
+    position: relative; aspect-ratio: 1365 / 768; width: 100%; min-width: 760px;
+    background: #2a2c30 url("floorplan.jpg") center / cover no-repeat;
+    container-type: inline-size;
+  }
+  .chip {
+    position: absolute; transform: translate(-50%, -50%);
+    display: flex; align-items: center; gap: .45em;
+    font-size: clamp(9px, .95cqw, 14px);
+    padding: .38em .7em .38em .45em; border-radius: .7em;
+    background: var(--chip); border: 1px solid rgba(255,255,255,.12);
+    box-shadow: 0 4px 14px rgba(0,0,0,.45);
+    backdrop-filter: blur(4px);
+    white-space: nowrap; user-select: none; -webkit-user-select: none; touch-action: manipulation;
+    transition: border-color .2s, background .2s, transform .1s;
+  }
+  .chip:hover { border-color: rgba(255,255,255,.4); z-index: 2; }
+  .chip:active { transform: translate(-50%, -50%) scale(.96); }
+  .chip .ic { width: 2em; height: 2em; border-radius: .55em; display: grid; place-items: center; background: rgba(255,255,255,.08); color: var(--muted); }
+  .chip .ic svg { width: 1.3em; height: 1.3em; }
+  .chip .txt { display: flex; flex-direction: column; line-height: 1.15; text-align: left; }
+  .chip .lbl { font-size: .78em; color: var(--muted); }
+  .chip .st { font-weight: 600; font-variant-numeric: tabular-nums; }
+  .chip .bar { height: 3px; border-radius: 2px; background: rgba(255,255,255,.15); margin-top: 3px; overflow: hidden; }
+  .chip .bar i { display: block; height: 100%; background: var(--on); }
+
+  .chip.compact { flex-direction: column; gap: .2em; padding: .35em .4em; }
+  .chip.compact .lbl { display: none; }
+  .chip.compact .txt { align-items: center; }
+  .chip.on { border-color: rgba(255,200,69,.6); }
+  .chip.on .ic { background: var(--on-bg); color: var(--on); }
+  .chip.on .st { color: var(--on); }
+  .chip.media.on, .chip.climate.on { border-color: rgba(74,168,255,.6); }
+  .chip.media.on .ic, .chip.climate.on .ic { background: var(--info-bg); color: var(--info); }
+  .chip.media.on .st, .chip.climate.on .st { color: var(--info); }
+  .chip.okstate .ic { background: var(--ok-bg); color: var(--ok); }
+  .chip.okstate .st { color: var(--ok); }
+  .chip.motion.on { border-color: rgba(60,207,122,.7); }
+  .chip.motion.on .ic { background: var(--ok); color: #0b2316; }
+  .chip.motion.on .st { color: var(--ok); }
+  .chip.alert { border-color: var(--danger); background: rgba(80, 10, 12, .92); animation: pulse 1s infinite; z-index: 3; }
+  .chip.alert .ic { background: var(--danger); color: #fff; }
+  .chip.alert .st { color: #fff; }
+  .chip.missing { opacity: .55; border-style: dashed; }
+  .chip.busy { opacity: .7; }
+  .chip.smoke { border-width: 2px; }
+
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(255,77,79,.7); }
+    50% { box-shadow: 0 0 0 .8em rgba(255,77,79,0); }
+  }
+
+  .hint { font-size: 12px; color: var(--muted); margin: 8px 2px 0; }
+
+  /* ---------- device list ---------- */
+  details.devices { margin-top: 16px; }
+  details.devices summary { cursor: pointer; color: var(--muted); font-weight: 600; padding: 6px 2px; }
+  .rooms { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; margin-top: 8px; }
+  .rooms .card h3 { margin: 0 0 6px; font-size: 14px; }
+  .dev-row { display: flex; align-items: center; gap: 10px; width: 100%; background: none; border: 0; border-top: 1px solid var(--line); padding: 7px 0; text-align: left; }
+  .dev-row:first-of-type { border-top: 0; }
+  .dev-row .n { flex: 1; }
+  .dev-row .v { font-size: 12px; font-weight: 600; color: var(--muted); }
+  .dev-row.on .v { color: var(--on); }
+  .dev-row.alert .v { color: var(--danger); }
+
+  /* ---------- modal ---------- */
+  .backdrop { position: fixed; inset: 0; background: rgba(0,0,0,.55); display: none; align-items: center; justify-content: center; z-index: 50; padding: 16px; }
+  .backdrop.open { display: flex; }
+  .modal { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; width: min(420px, 100%); padding: 18px; max-height: 90vh; overflow: auto; }
+  .modal header { padding: 0 0 12px; background: none; border: 0; gap: 10px; flex-wrap: nowrap; }
+  .modal h3 { margin: 0; font-size: 17px; flex: 1; }
+  .modal .eid { font-size: 11px; color: var(--muted); font-family: ui-monospace, monospace; word-break: break-all; }
+  .modal .big-state { font-size: 34px; font-weight: 600; text-align: center; margin: 8px 0 14px; font-variant-numeric: tabular-nums; }
+  .modal .controls { display: flex; flex-direction: column; gap: 14px; }
+  .modal label.slider { display: flex; flex-direction: column; gap: 6px; font-size: 12px; color: var(--muted); }
+  .modal input[type=range] { width: 100%; accent-color: var(--on); }
+  .btn-row { display: flex; gap: 8px; flex-wrap: wrap; }
+  .btn { flex: 1; background: var(--panel-2); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; min-width: 70px;
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
+  .btn:hover { border-color: var(--muted); }
+  .btn.primary { background: var(--on); color: #231a00; border-color: var(--on); font-weight: 600; }
+  .btn.active { border-color: var(--info); color: var(--info); background: var(--info-bg); }
+  .btn.danger { background: var(--danger); border-color: var(--danger); color: #fff; font-weight: 600; }
+  .attrs { font-size: 12px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 10px; margin-top: 4px; }
+  .attrs div { display: flex; justify-content: space-between; gap: 10px; }
+
+  .field { display: flex; flex-direction: column; gap: 4px; margin-bottom: 12px; font-size: 12px; color: var(--muted); }
+  .field input { background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 9px 10px; color: var(--text); font: 13px ui-monospace, monospace; }
+  .note { font-size: 12px; color: var(--muted); background: var(--panel-2); border-radius: 8px; padding: 10px; margin-bottom: 12px; }
+
+  /* ---------- smoke alarm overlay ---------- */
+  .fire {
+    position: fixed; inset: 0; z-index: 100; display: none; flex-direction: column; align-items: center; justify-content: center; gap: 14px;
+    background: rgba(120, 0, 4, .9); text-align: center; padding: 24px; animation: flash 1s infinite;
+  }
+  .fire.open { display: flex; }
+  .fire svg { width: 90px; height: 90px; }
+  .fire h2 { font-size: clamp(28px, 6vw, 54px); margin: 0; letter-spacing: .04em; }
+  .fire p { margin: 0; font-size: 17px; max-width: 560px; }
+  .fire .btn { flex: none; min-width: 180px; background: #fff; color: #7a0004; border: 0; font-weight: 700; }
+  @keyframes flash { 50% { background: rgba(70, 0, 2, .93); } }
+
+  .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--panel-2); border: 1px solid var(--line);
+    padding: 10px 16px; border-radius: 10px; z-index: 120; display: none; max-width: calc(100% - 32px); }
+  .toast.show { display: block; }
+  .toast.err { border-color: var(--danger); }
+
+  @media (max-width: 900px) {
+    main { grid-template-columns: 1fr; padding: 12px 16px; }
+    aside { order: 2; display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
+    header { padding: 10px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <svg class="i" viewBox="0 0 24 24" style="width:26px;height:26px;color:var(--on)"><path d="M3 11l9-8 9 8M5 9.5V21h14V9.5"/><path d="M10 21v-6h4v6"/></svg>
+  <h1>My Home</h1>
+  <span class="conn" id="conn" data-s="connecting">Connecting…</span>
+  <span class="spacer"></span>
+  <div class="weather">
+    <span id="wxIcon"></span>
+    <div>
+      <div class="big" id="wxTemp">--</div>
+      <div class="small" id="wxCity">--</div>
+    </div>
+    <div style="margin-left:10px">
+      <div class="big" id="clock">--:--</div>
+      <div class="small" id="date">--</div>
+    </div>
+  </div>
+  <button class="icon-btn" id="settingsBtn" title="Connection settings" aria-label="Connection settings"></button>
+</header>
+
+<main>
+  <aside>
+    <section class="card">
+      <h2 id="secTitle">Security</h2>
+      <div class="alarm-state" id="alarmState" data-armed="0">
+        <span class="badge" id="alarmBadge"></span>
+        <span id="alarmText">--</span>
+      </div>
+      <div class="seg" id="alarmButtons">
+        <button data-svc="alarm_arm_home" data-st="armed_home">Home</button>
+        <button data-svc="alarm_arm_away" data-st="armed_away">Away</button>
+        <button data-svc="alarm_disarm" data-st="disarmed">Disarm</button>
+      </div>
+    </section>
+
+    <section class="card smoke-card" id="smokeCard">
+      <h2>Kitchen smoke detector</h2>
+      <div class="row">
+        <span class="dot" id="smokeDot"></span>
+        <div>
+          <div class="title" id="smokeTitle">--</div>
+          <div class="sub" id="smokeSub">--</div>
+        </div>
+      </div>
+      <button class="test" id="smokeTest" hidden>Simulate smoke (demo only)</button>
+    </section>
+
+    <section class="card">
+      <h2>Sensors</h2>
+      <ul class="sensor-list" id="sensorList"></ul>
+    </section>
+
+    <section class="card">
+      <h2>Average temperature</h2>
+      <div class="stat"><span class="num" id="avgTemp">--</span><span class="unit">°C</span></div>
+      <div class="sub" id="avgHum">--</div>
+    </section>
+  </aside>
+
+  <section>
+    <div class="plan-scroll">
+      <div class="plan" id="plan"></div>
+    </div>
+    <p class="hint">Tap a light or switch to toggle it. Press and hold (or right‑click) any device for brightness, temperature, position and details.</p>
+
+    <details class="devices">
+      <summary>All devices by room</summary>
+      <div class="rooms" id="rooms"></div>
+    </details>
+  </section>
+</main>
+
+<!-- device / settings modal -->
+<div class="backdrop" id="backdrop">
+  <div class="modal" id="modal" role="dialog" aria-modal="true"></div>
+</div>
+
+<!-- smoke alarm -->
+<div class="fire" id="fire" role="alertdialog" aria-live="assertive">
+  <span id="fireIcon"></span>
+  <h2>SMOKE DETECTED</h2>
+  <p id="fireText">Kitchen smoke detector has been triggered.</p>
+  <button class="btn" id="fireSilence">Silence alarm on this screen</button>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* =====================================================================
+ *  CONFIGURATION — edit the entity_ids below to match your Home Assistant.
+ *  Find them in HA: Settings → Devices & services → Entities.
+ *  x / y are the position on floorplan.jpg in percent (0–100).
+ *  Any entity that does not exist in HA is shown dashed, so you can see
+ *  what still needs mapping.
+ * ===================================================================== */
+const CONFIG = {
+  // Leave empty when this file is served by Home Assistant itself
+  // (/config/www → http://<ha>:8123/local/...). Otherwise e.g. "http://192.168.1.10:8123"
+  haUrl: "",
+  location: "Riyadh",
+  alarmPanel: "alarm_control_panel.home_alarm",
+  weather: "weather.forecast_home",
+
+  // The new kitchen smoke detector (binary_sensor with device_class: smoke).
+  smokeDetector: "binary_sensor.kitchen_smoke_detector",
+  // Optional: siren/switch to sound in the house when smoke is detected ("" to disable).
+  smokeSiren: "",
+
+  devices: [
+    // ---------------- Living room ----------------
+    { room: "Living room", type: "light",  entity: "light.living_room_ceiling", label: "Ceiling", icon: "pendant", x: 20.9, y: 33.0 },
+    { room: "Living room", type: "light",  entity: "light.living_room_floor_lamp", label: "Floor lamp", icon: "bulb", x: 30.4, y: 61.8 },
+    { room: "Living room", type: "climate_sensor", entity: "sensor.living_room_temperature", entity2: "sensor.living_room_humidity", label: "Climate", icon: "thermo", x: 26.3, y: 55.3 },
+    { room: "Living room", type: "media",  entity: "media_player.living_room_tv", label: "TV", icon: "tv", x: 15.4, y: 73.5 },
+    { room: "Living room", type: "sensor", entity: "sensor.living_room_aqi", label: "AQI", icon: "air", x: 16.7, y: 83.2 },
+
+    // ---------------- Entrance / store ----------------
+    { room: "Entrance", type: "light", entity: "light.entrance", label: "Entrance", icon: "bulb", x: 40.3, y: 35.4 },
+    { room: "Store", type: "light", entity: "light.store", label: "Store", icon: "bulb", x: 45.4, y: 20.8 },
+
+    // ---------------- Kitchen & dining ----------------
+    { room: "Kitchen", type: "smoke", entity: "binary_sensor.kitchen_smoke_detector", label: "Smoke detector", icon: "smoke", x: 44.0, y: 67.5 },
+    { room: "Kitchen", type: "sensor", entity: "sensor.kitchen_temperature", label: "Kitchen", icon: "thermo", x: 40.8, y: 57.3 },
+    { room: "Kitchen", type: "light",  entity: "light.kitchen_spots", label: "Spots", icon: "bulb", x: 40.1, y: 78.2 },
+    { room: "Kitchen", type: "light",  entity: "light.kitchen_counter", label: "Counter", icon: "bulb", x: 49.1, y: 82.7 },
+    { room: "Kitchen", type: "fan",    entity: "fan.kitchen_hood", label: "Hood", icon: "fan", x: 42.9, y: 87.5 },
+    { room: "Kitchen", type: "switch", entity: "switch.kitchen_smart_plug", label: "Smart plug", icon: "plug", x: 56.0, y: 83.0 },
+    { room: "Kitchen", type: "sensor", entity: "sensor.fridge_temperature", label: "Fridge", icon: "fridge", x: 53.2, y: 72.0 },
+    { room: "Dining",  type: "light",  entity: "light.dining_table", label: "Dining", icon: "pendant", x: 50.0, y: 51.5 },
+
+    // ---------------- Kids room ----------------
+    { room: "Kids room", type: "motion", entity: "binary_sensor.corridor_motion", label: "Corridor", icon: "motion", x: 60.8, y: 16.7 },
+    { room: "Kids room", type: "light",  entity: "light.kids_bed_lamp_left", label: "Lamp L", icon: "bulb", x: 71.6, y: 13.0, compact: true },
+    { room: "Kids room", type: "light",  entity: "light.kids_bed_lamp_right", label: "Lamp R", icon: "bulb", x: 75.8, y: 13.0, compact: true },
+    { room: "Kids room", type: "media",  entity: "media_player.kids_room_tv", label: "TV", icon: "tv", x: 68.5, y: 26.0 },
+    { room: "Kids room", type: "cover",  entity: "cover.kids_room_curtain", label: "Curtain", icon: "curtain", x: 85.3, y: 16.5 },
+    { room: "Kids room", type: "media",  entity: "media_player.kids_room_speaker", label: "Speaker", icon: "speaker", x: 89.6, y: 24.5 },
+
+    // ---------------- Master bathroom ----------------
+    { room: "Master bathroom", type: "light",  entity: "light.master_bathroom_mirror", label: "Mirror", icon: "bulb", x: 71.4, y: 37.0, compact: true },
+    { room: "Master bathroom", type: "light",  entity: "light.master_bathroom_ceiling", label: "Ceiling", icon: "bulb", x: 75.4, y: 37.0, compact: true },
+    { room: "Master bathroom", type: "motion", entity: "binary_sensor.master_bathroom_motion", label: "Motion", icon: "motion", x: 79.4, y: 37.0, compact: true },
+    { room: "Master bathroom", type: "leak",   entity: "binary_sensor.master_bathroom_leak", label: "Water leak", icon: "drop", x: 71.2, y: 47.6 },
+    { room: "Master bathroom", type: "leak",   entity: "binary_sensor.bathroom_2_leak", label: "Water leak", icon: "drop", x: 89.0, y: 43.0 },
+
+    // ---------------- Master bedroom ----------------
+    { room: "Master bedroom", type: "climate", entity: "climate.master_bedroom_ac", label: "AC", icon: "ac", x: 90.8, y: 57.3 },
+    { room: "Master bedroom", type: "light",  entity: "light.master_bedroom_left", label: "Left", icon: "pendant", x: 72.9, y: 66.4, compact: true },
+    { room: "Master bedroom", type: "light",  entity: "light.master_bedroom_ceiling", label: "Ceiling", icon: "pendant", x: 77.0, y: 66.4, compact: true },
+    { room: "Master bedroom", type: "light",  entity: "light.master_bedroom_right", label: "Right", icon: "pendant", x: 81.1, y: 66.4, compact: true },
+    { room: "Master bedroom", type: "motion", entity: "binary_sensor.master_bedroom_motion", label: "Motion", icon: "motion", x: 86.5, y: 70.2 },
+    { room: "Master bedroom", type: "media",  entity: "media_player.master_bedroom_tv", label: "TV", icon: "tv", x: 77.0, y: 77.1 },
+    { room: "Master bedroom", type: "cover",  entity: "cover.master_bedroom_curtain", label: "Curtain", icon: "curtain", x: 92.0, y: 78.1 },
+    { room: "Master bedroom", type: "light",  entity: "light.master_bedside_lamp", label: "Bedside", icon: "bulb", x: 81.7, y: 85.5 },
+  ],
+
+  // Shown in the "Sensors" card (doors, windows, motion…). The smoke detector is listed too.
+  securitySensors: [
+    { entity: "binary_sensor.front_door", label: "Front door", icon: "door" },
+    { entity: "binary_sensor.balcony_door", label: "Balcony door", icon: "door" },
+    { entity: "binary_sensor.living_room_window", label: "Living room window", icon: "window" },
+    { entity: "binary_sensor.kitchen_window", label: "Kitchen window", icon: "window" },
+    { entity: "binary_sensor.kids_room_window", label: "Kids room window", icon: "window" },
+    { entity: "binary_sensor.master_bedroom_window", label: "Master bedroom window", icon: "window" },
+    { entity: "binary_sensor.corridor_motion", label: "Corridor motion", icon: "motion" },
+    { entity: "binary_sensor.kitchen_smoke_detector", label: "Kitchen smoke", icon: "smoke" },
+  ],
+};
+
+/* ===================================================================== */
+/*  Icons                                                                 */
+/* ===================================================================== */
+const ICONS = {
+  bulb: '<path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.8 10.6c.6.6.8 1.3.8 2.4h6c0-1.1.2-1.8.8-2.4A6 6 0 0 0 12 3z"/>',
+  pendant: '<path d="M12 2v5M4.5 15a7.5 7.5 0 0 1 15 0zM10 18a2 2 0 0 0 4 0"/>',
+  tv: '<rect x="3" y="5" width="18" height="12" rx="2"/><path d="M8 21h8M12 17v4"/>',
+  thermo: '<path d="M14 14.8V4a2 2 0 0 0-4 0v10.8a4 4 0 1 0 4 0zM12 9v7"/>',
+  drop: '<path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z"/>',
+  motion: '<circle cx="13.5" cy="4" r="2"/><path d="M8 21l2.5-6 3 2.5V21M6 12l3-3.5 4 .5 2.5 3.5 3 1M10.5 15l1.5-6"/>',
+  curtain: '<path d="M3 3h18M5 3v18M19 3v18M5 3c3 5 3 13 5 18M19 3c-3 5-3 13-5 18"/>',
+  speaker: '<rect x="6" y="2" width="12" height="20" rx="2"/><circle cx="12" cy="14" r="3"/><circle cx="12" cy="6.5" r=".8"/>',
+  ac: '<rect x="2" y="4" width="20" height="9" rx="2"/><path d="M6 9h12M7 17v3M12 17v4M17 17v3"/>',
+  plug: '<path d="M9 2v5M15 2v5M6 7h12v4a6 6 0 0 1-12 0zM12 17v5"/>',
+  fan: '<circle cx="12" cy="12" r="1.8"/><path d="M12 10.2C11 6 12 3 15 3c2.5 0 2.5 3.5-1.2 7.2M13.8 12c4.2-1 7.2 0 7.2 3 0 2.5-3.5 2.5-7.2-1.2M12 13.8c1 4.2 0 7.2-3 7.2-2.5 0-2.5-3.5 1.2-7.2M10.2 12C6 13 3 12 3 9c0-2.5 3.5-2.5 7.2 1.2"/>',
+  smoke: '<circle cx="12" cy="7" r="4.5"/><circle cx="12" cy="7" r="1"/><path d="M5 15.5c1.5-1.5 3 1.5 4.7 0s3-1.5 4.6 0 3.2 1.5 4.7 0M5 20c1.5-1.5 3 1.5 4.7 0s3-1.5 4.6 0 3.2 1.5 4.7 0"/>',
+  shield: '<path d="M12 2l8 3v6c0 5-3.4 9.2-8 11-4.6-1.8-8-6-8-11V5z"/>',
+  shieldCheck: '<path d="M12 2l8 3v6c0 5-3.4 9.2-8 11-4.6-1.8-8-6-8-11V5z"/><path d="M8.5 12l2.5 2.5 4.5-5"/>',
+  door: '<path d="M5 21V3h11v18M3 21h16M13 12h.01"/>',
+  window: '<rect x="4" y="3" width="16" height="18" rx="1"/><path d="M12 3v18M4 12h16"/>',
+  air: '<path d="M3 8h10a3 3 0 1 0-3-3M3 12h15a3 3 0 1 1-3 3M3 16h7"/>',
+  fridge: '<rect x="5" y="2" width="14" height="20" rx="2"/><path d="M5 10h14M8 5.5v2M8 13v3"/>',
+  gear: '<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>',
+  close: '<path d="M6 6l12 12M18 6L6 18"/>',
+  power: '<path d="M12 3v9M6.4 6.4a8 8 0 1 0 11.2 0"/>',
+  sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
+  cloud: '<path d="M7 18a5 5 0 1 1 1-9.9A6 6 0 0 1 19.5 10 4 4 0 0 1 18 18z"/>',
+  moon: '<path d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5z"/>',
+  rain: '<path d="M7 15a5 5 0 1 1 1-9.9A6 6 0 0 1 19.5 7 4 4 0 0 1 18 15zM8 19l-1 2M12 19l-1 2M16 19l-1 2"/>',
+};
+const svg = (name, extra = "") => `<svg class="i" viewBox="0 0 24 24" ${extra}>${ICONS[name] || ICONS.bulb}</svg>`;
+const ico = (name) => { const s = document.createElement("span"); s.style.display = "inline-flex"; s.innerHTML = svg(name); return s; };
+
+/* ===================================================================== */
+/*  State                                                                 */
+/* ===================================================================== */
+const states = {};            // entity_id -> HA state object
+let mode = "connecting";      // connecting | ok | demo | error
+let ws = null, msgId = 1, pending = {}, reconnectDelay = 1000, reconnectTimer = null, authFailed = false;
+let alarmSilenced = false;
+
+const LS = {
+  get(k, d) { try { return localStorage.getItem(k) ?? d; } catch { return d; } },
+  set(k, v) { try { localStorage.setItem(k, v); } catch {} },
+  del(k) { try { localStorage.removeItem(k); } catch {} },
+};
+const settings = {
+  url: LS.get("ha_url", CONFIG.haUrl || (location.protocol.startsWith("http") ? location.origin : "")),
+  token: LS.get("ha_token", ""),
+};
+
+const $ = (id) => document.getElementById(id);
+function h(tag, attrs = {}, ...kids) {
+  const el = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) {
+    if (k === "class") el.className = v;
+    else if (k === "html") el.innerHTML = v;
+    else if (k.startsWith("on")) el.addEventListener(k.slice(2), v);
+    else if (v !== false && v != null) el.setAttribute(k, v === true ? "" : v);
+  }
+  for (const c of kids.flat()) if (c != null) el.append(c.nodeType ? c : document.createTextNode(c));
+  return el;
+}
+
+/* ===================================================================== */
+/*  Home Assistant WebSocket API                                          */
+/* ===================================================================== */
+function setConn(s, text) {
+  mode = s;
+  const el = $("conn");
+  el.dataset.s = s;
+  el.textContent = text;
+  $("smokeTest").hidden = s !== "demo";
+}
+
+function connect() {
+  clearTimeout(reconnectTimer);
+  if (ws) { ws.onclose = null; ws.close(); ws = null; }
+  if (!settings.token || !settings.url) { startDemo(); return; }
+  authFailed = false;
+  setConn("connecting", "Connecting…");
+  let url;
+  try { url = new URL("/api/websocket", settings.url); } catch { setConn("error", "Bad URL"); return; }
+  url.protocol = url.protocol === "https:" ? "wss:" : "ws:";
+  try { ws = new WebSocket(url); } catch (e) { setConn("error", "Cannot connect"); toast(e.message, true); return; }
+
+  ws.onmessage = (e) => {
+    const m = JSON.parse(e.data);
+    switch (m.type) {
+      case "auth_required":
+        ws.send(JSON.stringify({ type: "auth", access_token: settings.token }));
+        break;
+      case "auth_ok":
+        reconnectDelay = 1000;
+        onAuthenticated();
+        break;
+      case "auth_invalid":
+        authFailed = true;
+        setConn("error", "Invalid token");
+        toast("Home Assistant rejected the access token. Open settings to fix it.", true);
+        break;
+      case "result":
+        if (pending[m.id]) { pending[m.id](m); delete pending[m.id]; }
+        break;
+      case "event": {
+        const d = m.event && m.event.data;
+        if (!d) break;
+        if (d.new_state) states[d.entity_id] = d.new_state; else delete states[d.entity_id];
+        scheduleRender();
+        break;
+      }
+    }
+  };
+  ws.onclose = () => {
+    if (mode === "demo" || authFailed) return;
+    setConn("error", `Disconnected – retrying in ${Math.round(reconnectDelay / 1000)}s`);
+    reconnectTimer = setTimeout(connect, reconnectDelay);
+    reconnectDelay = Math.min(reconnectDelay * 2, 30000);
+  };
+  ws.onerror = () => {};
+}
+
+function send(msg) {
+  return new Promise((resolve) => {
+    if (!ws || ws.readyState !== 1) return resolve({ success: false, error: { message: "Not connected" } });
+    msg.id = msgId++;
+    pending[msg.id] = resolve;
+    ws.send(JSON.stringify(msg));
+  });
+}
+
+async function onAuthenticated() {
+  setConn("ok", "Connected");
+  const res = await send({ type: "get_states" });
+  if (res.success) {
+    for (const k of Object.keys(states)) delete states[k];
+    for (const s of res.result) states[s.entity_id] = s;
+  }
+  await send({ type: "subscribe_events", event_type: "state_changed" });
+  renderAll();
+}
+
+async function callService(domain, service, entity_id, data = {}) {
+  if (mode === "demo") { demoService(domain, service, entity_id, data); return true; }
+  const res = await send({ type: "call_service", domain, service, service_data: data, target: { entity_id } });
+  if (!res.success) toast(`${domain}.${service} failed: ${res.error?.message || "unknown error"}`, true);
+  return res.success;
+}
+
+/* ===================================================================== */
+/*  Demo mode (used until a token is configured)                          */
+/* ===================================================================== */
+function startDemo() {
+  if (ws) { ws.onclose = null; ws.close(); ws = null; }
+  setConn("demo", "Demo mode – not connected");
+  for (const k of Object.keys(states)) delete states[k];
+  const put = (id, state, attributes = {}) => { states[id] = { entity_id: id, state: String(state), attributes, last_changed: new Date().toISOString() }; };
+  const lights = { "light.living_room_ceiling": 80, "light.dining_table": 60, "light.kitchen_spots": 80, "light.kids_bed_lamp_left": 75, "light.kids_bed_lamp_right": 75,
+    "light.master_bathroom_mirror": 100, "light.master_bathroom_ceiling": 100, "light.master_bedroom_ceiling": 70, "light.master_bedroom_left": 100 };
+  for (const d of CONFIG.devices) {
+    switch (d.type) {
+      case "light": { const b = lights[d.entity]; put(d.entity, b ? "on" : "off", { brightness: b ? Math.round(b * 2.55) : null, supported_color_modes: ["brightness"] }); break; }
+      case "switch": put(d.entity, "off"); break;
+      case "fan": put(d.entity, "off", { percentage: 0 }); break;
+      case "motion": put(d.entity, /corridor|bathroom/.test(d.entity) ? "on" : "off", { device_class: "motion" }); break;
+      case "leak": put(d.entity, "off", { device_class: "moisture" }); break;
+      case "smoke": put(d.entity, "off", { device_class: "smoke", battery_level: 96 }); break;
+      case "media": put(d.entity, /speaker/.test(d.entity) ? "playing" : "on", { volume_level: .35, media_title: /speaker/.test(d.entity) ? "Lo-fi Beats" : undefined }); break;
+      case "cover": put(d.entity, /kids/.test(d.entity) ? "closed" : "open", { current_position: /kids/.test(d.entity) ? 0 : 60 }); break;
+      case "climate": put(d.entity, "cool", { temperature: 24, current_temperature: 25.5, hvac_action: "cooling", hvac_modes: ["off", "cool", "heat", "fan_only", "auto"], min_temp: 16, max_temp: 30, target_temp_step: 1 }); break;
+      case "climate_sensor": put(d.entity, 22, { unit_of_measurement: "°C", device_class: "temperature" }); put(d.entity2, 55, { unit_of_measurement: "%", device_class: "humidity" }); break;
+      case "sensor":
+        if (/aqi/.test(d.entity)) put(d.entity, 12, { device_class: "aqi" });
+        else if (/fridge/.test(d.entity)) put(d.entity, 4, { unit_of_measurement: "°C", device_class: "temperature" });
+        else put(d.entity, 21.5, { unit_of_measurement: "°C", device_class: "temperature" });
+        break;
+    }
+  }
+  for (const s of CONFIG.securitySensors) if (!states[s.entity]) put(s.entity, "off", { device_class: s.icon === "motion" ? "motion" : s.icon });
+  put(CONFIG.alarmPanel, "armed_home", { code_arm_required: false });
+  put(CONFIG.weather, "partlycloudy", { temperature: 31, temperature_unit: "°C", humidity: 18 });
+  renderAll();
+}
+
+function demoService(domain, service, id, data) {
+  const s = states[id];
+  if (!s) return;
+  const a = s.attributes;
+  const set = (state) => { s.state = state; s.last_changed = new Date().toISOString(); };
+  if (domain === "light") {
+    if (service === "toggle") set(s.state === "on" ? "off" : "on");
+    if (service === "turn_off") set("off");
+    if (service === "turn_on") set("on");
+    if (data.brightness_pct != null) a.brightness = Math.round(data.brightness_pct * 2.55);
+    if (s.state === "on" && !a.brightness) a.brightness = 255;
+  } else if (domain === "switch" || domain === "fan" || domain === "siren") {
+    set(service === "toggle" ? (s.state === "on" ? "off" : "on") : service === "turn_on" ? "on" : "off");
+  } else if (domain === "media_player") {
+    if (service === "toggle") set(s.state === "off" ? "on" : "off");
+    if (service === "media_play_pause") set(s.state === "playing" ? "paused" : "playing");
+    if (service === "volume_set") a.volume_level = data.volume_level;
+  } else if (domain === "cover") {
+    if (service === "open_cover") a.current_position = 100;
+    if (service === "close_cover") a.current_position = 0;
+    if (service === "set_cover_position") a.current_position = data.position;
+    set(a.current_position > 0 ? "open" : "closed");
+  } else if (domain === "climate") {
+    if (service === "set_temperature") a.temperature = data.temperature;
+    if (service === "set_hvac_mode") { set(data.hvac_mode); a.hvac_action = data.hvac_mode === "off" ? "off" : data.hvac_mode === "heat" ? "heating" : "cooling"; }
+  } else if (domain === "alarm_control_panel") {
+    set({ alarm_arm_home: "armed_home", alarm_arm_away: "armed_away", alarm_disarm: "disarmed" }[service]);
+  }
+  scheduleRender();
+}
+
+/* ===================================================================== */
+/*  Formatting helpers                                                    */
+/* ===================================================================== */
+const st = (id) => states[id];
+const isMissing = (id) => mode !== "connecting" && !states[id];
+const pct = (b) => Math.round(((b || 0) / 255) * 100);
+const cap = (s) => String(s).replace(/_/g, " ").replace(/^\w/, (c) => c.toUpperCase());
+function fmtSensor(s) {
+  if (!s) return "--";
+  if (["unavailable", "unknown"].includes(s.state)) return cap(s.state);
+  const n = Number(s.state);
+  const u = s.attributes.unit_of_measurement || "";
+  const v = Number.isFinite(n) ? (Math.round(n * 10) / 10).toString() : s.state;
+  return u === "%" || u.startsWith("°") ? v + u : u ? `${v} ${u}` : v;
+}
+
+/** Returns how a device should look: { cls[], text, sub, bar } */
+function view(d) {
+  const s = st(d.entity);
+  if (!s) return { cls: ["missing"], text: mode === "connecting" ? "…" : "N/A" };
+  const unavailable = s.state === "unavailable" || s.state === "unknown";
+  if (unavailable && d.type !== "climate_sensor") return { cls: ["missing"], text: cap(s.state) };
+  const a = s.attributes;
+  switch (d.type) {
+    case "light": {
+      if (s.state !== "on") return { cls: [], text: "OFF" };
+      const p = a.brightness != null ? pct(a.brightness) : null;
+      return { cls: ["on"], text: p != null ? `${p}%` : "ON", bar: p };
+    }
+    case "switch": case "fan":
+      return s.state === "on" ? { cls: ["on"], text: a.percentage ? `${a.percentage}%` : "ON" } : { cls: [], text: "OFF" };
+    case "media": {
+      const on = !["off", "standby", "idle"].includes(s.state);
+      const t = s.state === "playing" ? (a.media_title ? `▶ ${a.media_title}` : "Playing") : s.state === "paused" ? "Paused" : on ? "ON" : "OFF";
+      return { cls: on ? ["media", "on"] : ["media"], text: t };
+    }
+    case "cover": {
+      const p = a.current_position;
+      return { cls: s.state === "open" || p > 0 ? ["on"] : [], text: p != null ? (p === 0 ? "Closed" : p === 100 ? "Open" : `${p}% open`) : cap(s.state) };
+    }
+    case "climate": {
+      const on = s.state !== "off";
+      const t = a.temperature != null ? `${a.temperature}°C` : cap(s.state);
+      return { cls: on ? ["climate", "on"] : ["climate"], text: on ? `${t} · ${cap(a.hvac_action || s.state)}` : "OFF" };
+    }
+    case "motion":
+      return s.state === "on" ? { cls: ["motion", "on"], text: "Motion" } : { cls: ["motion"], text: "Clear" };
+    case "leak":
+      return s.state === "on" ? { cls: ["alert"], text: "LEAK!" } : { cls: ["okstate"], text: "OK" };
+    case "smoke":
+      return s.state === "on" ? { cls: ["smoke", "alert"], text: "SMOKE!" } : { cls: ["smoke", "okstate"], text: "Clear" };
+    case "climate_sensor": {
+      const h2 = st(d.entity2);
+      return { cls: [], text: `${fmtSensor(s)}${h2 ? " · " + fmtSensor(h2) : ""}` };
+    }
+    case "sensor": {
+      let text = fmtSensor(s);
+      if (/aqi/.test(d.entity)) {
+        const n = Number(s.state);
+        text = `${s.state} ${n <= 50 ? "Good" : n <= 100 ? "Moderate" : "Unhealthy"}`;
+        return { cls: n <= 50 ? ["okstate"] : n > 100 ? ["alert"] : [], text };
+      }
+      return { cls: [], text };
+    }
+  }
+  return { cls: [], text: s.state };
+}
+
+const TOGGLEABLE = new Set(["light", "switch", "fan"]);
+
+/* ===================================================================== */
+/*  Rendering                                                             */
+/* ===================================================================== */
+const chipEls = new Map();  // device -> {chip, row}
+
+function buildPlan() {
+  const plan = $("plan");
+  const rooms = {};
+  CONFIG.devices.forEach((d) => {
+    const chip = h("button", { class: "chip", style: `left:${d.x}%;top:${d.y}%`, title: `${d.label} – ${d.entity}` },
+      h("span", { class: "ic", html: svg(d.icon) }),
+      h("span", { class: "txt" }, h("span", { class: "lbl" }, d.label), h("span", { class: "st" }, "…"), h("span", { class: "bar", hidden: true }, h("i"))));
+    bindPress(chip, d);
+    plan.append(chip);
+
+    const row = h("button", { class: "dev-row" }, h("span", { html: svg(d.icon) }), h("span", { class: "n" }, d.label), h("span", { class: "v" }, "…"));
+    bindPress(row, d);
+    (rooms[d.room] ||= []).push(row);
+    chipEls.set(d, { chip, row });
+  });
+  const wrap = $("rooms");
+  for (const [room, rows] of Object.entries(rooms)) wrap.append(h("div", { class: "card" }, h("h3", {}, room), rows));
+}
+
+function bindPress(el, d) {
+  let timer = null, long = false;
+  el.addEventListener("pointerdown", () => {
+    long = false;
+    timer = setTimeout(() => { long = true; openDevice(d); }, 500);
+  });
+  const cancel = () => clearTimeout(timer);
+  el.addEventListener("pointerleave", cancel);
+  el.addEventListener("pointercancel", cancel);
+  el.addEventListener("contextmenu", (e) => { e.preventDefault(); cancel(); if (!long) openDevice(d); long = true; });
+  el.addEventListener("click", () => {
+    cancel();
+    if (long) return;
+    if (TOGGLEABLE.has(d.type) && st(d.entity)) quickToggle(d, el);
+    else openDevice(d);
+  });
+}
+
+async function quickToggle(d, el) {
+  el.classList.add("busy");
+  await callService(d.type === "light" ? "light" : d.type, "toggle", d.entity);
+  setTimeout(() => el.classList.remove("busy"), 300);
+}
+
+let renderQueued = false;
+function scheduleRender() {
+  if (renderQueued) return;
+  renderQueued = true;
+  requestAnimationFrame(() => { renderQueued = false; renderAll(); });
+}
+
+function renderAll() {
+  for (const [d, { chip, row }] of chipEls) {
+    const v = view(d);
+    chip.className = "chip " + (d.compact ? "compact " : "") + v.cls.join(" ");
+    chip.querySelector(".st").textContent = v.text;
+    const bar = chip.querySelector(".bar");
+    bar.hidden = v.bar == null;
+    if (v.bar != null) bar.firstChild.style.width = v.bar + "%";
+    row.className = "dev-row " + v.cls.filter((c) => c === "on" || c === "alert").join(" ");
+    row.querySelector(".v").textContent = v.text;
+  }
+  renderAlarm();
+  renderSensors();
+  renderAverages();
+  renderWeather();
+  renderSmoke();
+  if (openDeviceRef) refreshModal();
+}
+
+function renderAlarm() {
+  const s = st(CONFIG.alarmPanel);
+  const box = $("alarmState");
+  const state = s ? s.state : null;
+  const armed = state && state.startsWith("armed");
+  box.dataset.armed = state === "triggered" ? "trig" : armed ? "1" : "0";
+  $("alarmBadge").innerHTML = svg(armed ? "shieldCheck" : "shield", 'style="width:22px;height:22px"');
+  $("alarmText").textContent = !s ? (mode === "connecting" ? "…" : "Alarm panel not found") :
+    { armed_home: "Armed home", armed_away: "Armed away", armed_night: "Armed night", disarmed: "Disarmed", triggered: "TRIGGERED", arming: "Arming…", pending: "Pending…" }[state] || cap(state);
+  document.querySelectorAll("#alarmButtons button").forEach((b) => b.classList.toggle("active", b.dataset.st === state));
+}
+
+function renderSensors() {
+  const ul = $("sensorList");
+  ul.replaceChildren(...CONFIG.securitySensors.map((c) => {
+    const s = st(c.entity);
+    let txt, cls = "val";
+    if (!s) { txt = mode === "connecting" ? "…" : "not found"; cls += " missing"; }
+    else if (s.state === "on") {
+      const dc = s.attributes.device_class || c.icon;
+      txt = { door: "Open", window: "Open", opening: "Open", motion: "Motion", smoke: "SMOKE", moisture: "Leak" }[dc] || "ON";
+      cls += dc === "smoke" || dc === "moisture" ? " alert" : " on";
+    } else { txt = s.state === "off" ? (["door", "window", "opening"].includes(s.attributes.device_class || c.icon) ? "Closed" : "Off") : cap(s.state); }
+    return h("li", { title: c.entity }, h("span", { html: svg(c.icon) }), h("span", { class: "name" }, c.label), h("span", { class: cls }, txt));
+  }));
+}
+
+function renderAverages() {
+  const temps = [], hums = [];
+  for (const s of Object.values(states)) {
+    const dc = s.attributes.device_class, n = Number(s.state);
+    if (!s.entity_id.startsWith("sensor.") || !Number.isFinite(n) || /fridge|freezer/.test(s.entity_id)) continue;
+    if (!CONFIG.devices.some((d) => d.entity === s.entity_id || d.entity2 === s.entity_id)) continue;
+    if (dc === "temperature") temps.push(n);
+    if (dc === "humidity") hums.push(n);
+  }
+  const avg = (a) => a.reduce((x, y) => x + y, 0) / a.length;
+  $("avgTemp").textContent = temps.length ? avg(temps).toFixed(1) : "--";
+  $("avgHum").textContent = `${temps.length} sensor${temps.length === 1 ? "" : "s"}` + (hums.length ? ` · humidity ${Math.round(avg(hums))}%` : "");
+}
+
+function renderWeather() {
+  const s = st(CONFIG.weather);
+  $("wxCity").textContent = CONFIG.location + (s ? " · " + cap(s.state.replace("partlycloudy", "partly cloudy")) : "");
+  $("wxTemp").textContent = s && s.attributes.temperature != null ? `${Math.round(s.attributes.temperature)}${s.attributes.temperature_unit || "°"}` : "--";
+  const c = s ? s.state : "";
+  const icon = /sunny|clear-night/.test(c) ? (c === "clear-night" ? "moon" : "sun") : /rain|pouring|lightning/.test(c) ? "rain" : "cloud";
+  $("wxIcon").innerHTML = svg(icon, 'style="width:30px;height:30px;color:var(--on)"');
+}
+
+function tickClock() {
+  const now = new Date();
+  $("clock").textContent = now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: false });
+  $("date").textContent = now.toLocaleDateString([], { weekday: "short", day: "numeric", month: "short" });
+}
+
+/* ===================================================================== */
+/*  Smoke alarm                                                           */
+/* ===================================================================== */
+let smokeWasOn = false, audioCtx = null, beepTimer = null;
+
+function renderSmoke() {
+  const s = st(CONFIG.smokeDetector);
+  const on = s && s.state === "on";
+  const card = $("smokeCard");
+  card.classList.toggle("alert", !!on);
+  $("smokeDot").innerHTML = svg("smoke", 'style="width:24px;height:24px"');
+  if (!s) {
+    $("smokeTitle").textContent = mode === "connecting" ? "…" : "Not found";
+    $("smokeSub").textContent = CONFIG.smokeDetector;
+  } else {
+    $("smokeTitle").textContent = on ? "SMOKE DETECTED" : ["unavailable", "unknown"].includes(s.state) ? "Offline" : "All clear";
+    const bat = s.attributes.battery_level ?? st(CONFIG.smokeDetector.replace("binary_sensor.", "sensor.") + "_battery")?.state;
+    $("smokeSub").textContent = (bat != null ? `Battery ${bat}% · ` : "") + "since " + new Date(s.last_changed).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+  }
+  $("smokeTest").textContent = on ? "Clear simulated smoke" : "Simulate smoke (demo only)";
+
+  if (on && !smokeWasOn) {
+    alarmSilenced = false;
+    if (CONFIG.smokeSiren) callService(CONFIG.smokeSiren.split(".")[0], "turn_on", CONFIG.smokeSiren);
+    notify();
+  }
+  if (!on) alarmSilenced = false;
+  smokeWasOn = !!on;
+  $("fire").classList.toggle("open", !!on && !alarmSilenced);
+  if (on && !alarmSilenced) startBeep(); else stopBeep();
+}
+
+function startBeep() {
+  if (beepTimer || !audioCtx) return;
+  // Temporal-3 pattern, the standard smoke-alarm cadence: 3 beeps, pause.
+  const pattern = () => {
+    [0, .75, 1.5].forEach((t) => {
+      const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+      o.type = "square"; o.frequency.value = 3100;
+      g.gain.value = .12;
+      o.connect(g).connect(audioCtx.destination);
+      o.start(audioCtx.currentTime + t); o.stop(audioCtx.currentTime + t + .5);
+    });
+  };
+  pattern();
+  beepTimer = setInterval(pattern, 3500);
+}
+function stopBeep() { clearInterval(beepTimer); beepTimer = null; }
+
+function notify() {
+  try {
+    if ("Notification" in window && Notification.permission === "granted")
+      new Notification("🔥 Smoke detected in the kitchen", { body: "The kitchen smoke detector has been triggered.", requireInteraction: true });
+  } catch {}
+}
+
+// Browsers only allow audio/notifications after a user gesture — unlock on first interaction.
+document.addEventListener("pointerdown", () => {
+  if (!audioCtx) { try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch {} }
+  if (audioCtx && audioCtx.state === "suspended") audioCtx.resume();
+  if ("Notification" in window && Notification.permission === "default") Notification.requestPermission().catch(() => {});
+  if (smokeWasOn && !alarmSilenced) startBeep();
+}, { capture: true });
+
+$("fireSilence").addEventListener("click", () => {
+  alarmSilenced = true;
+  $("fire").classList.remove("open");
+  stopBeep();
+});
+$("smokeTest").addEventListener("click", () => {
+  const s = st(CONFIG.smokeDetector);
+  if (!s) return;
+  s.state = s.state === "on" ? "off" : "on";
+  s.last_changed = new Date().toISOString();
+  scheduleRender();
+});
+
+/* ===================================================================== */
+/*  Device detail modal                                                   */
+/* ===================================================================== */
+let openDeviceRef = null;
+
+function openModal(content) {
+  $("modal").replaceChildren(...content);
+  $("backdrop").classList.add("open");
+}
+function closeModal() {
+  $("backdrop").classList.remove("open");
+  openDeviceRef = null;
+}
+$("backdrop").addEventListener("click", (e) => { if (e.target.id === "backdrop") closeModal(); });
+document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeModal(); });
+
+function openDevice(d) {
+  openDeviceRef = d;
+  refreshModal(true);
+}
+
+// Re-renders the modal for live updates, but never while a slider is being dragged.
+function refreshModal(force) {
+  const d = openDeviceRef;
+  if (!d) return;
+  if (!force && document.activeElement && document.activeElement.type === "range") return;
+  const s = st(d.entity);
+  const v = view(d);
+  const head = h("header", {},
+    h("span", { html: svg(d.icon, 'style="width:24px;height:24px"') }),
+    h("div", { style: "flex:1" }, h("h3", {}, `${d.room} – ${d.label}`), h("div", { class: "eid" }, d.entity)),
+    h("button", { class: "icon-btn", onclick: closeModal, "aria-label": "Close", html: svg("close") }));
+  const body = [h("div", { class: "big-state" }, v.text)];
+  const ctl = h("div", { class: "controls" });
+
+  if (!s) {
+    body.push(h("div", { class: "note" }, `Entity "${d.entity}" was not found in Home Assistant. Edit CONFIG.devices in index.html to match your entity_id.`));
+  } else {
+    const a = s.attributes;
+    const dom = d.entity.split(".")[0];
+    if (d.type === "light") {
+      ctl.append(h("div", { class: "btn-row" },
+        h("button", { class: "btn" + (s.state === "on" ? " primary" : ""), onclick: () => callService("light", "turn_on", d.entity) }, ico("power"), "On"),
+        h("button", { class: "btn" + (s.state !== "on" ? " active" : ""), onclick: () => callService("light", "turn_off", d.entity) }, "Off")));
+      const modes = a.supported_color_modes || [];
+      if (!(modes.length === 1 && modes[0] === "onoff")) {
+        const out = h("span", {}, `${s.state === "on" ? pct(a.brightness) : 0}%`);
+        ctl.append(h("label", { class: "slider" }, h("span", {}, "Brightness ", out),
+          h("input", { type: "range", min: 1, max: 100, value: s.state === "on" ? pct(a.brightness) : 0,
+            oninput: (e) => (out.textContent = e.target.value + "%"),
+            onchange: (e) => { callService("light", "turn_on", d.entity, { brightness_pct: Number(e.target.value) }); e.target.blur(); } })));
+      }
+    } else if (d.type === "switch" || d.type === "fan") {
+      ctl.append(h("div", { class: "btn-row" },
+        h("button", { class: "btn" + (s.state === "on" ? " primary" : ""), onclick: () => callService(dom, "turn_on", d.entity) }, ico("power"), "On"),
+        h("button", { class: "btn" + (s.state !== "on" ? " active" : ""), onclick: () => callService(dom, "turn_off", d.entity) }, "Off")));
+    } else if (d.type === "media") {
+      ctl.append(h("div", { class: "btn-row" },
+        h("button", { class: "btn", onclick: () => callService("media_player", "toggle", d.entity) }, ico("power"), "Power"),
+        h("button", { class: "btn", onclick: () => callService("media_player", "media_play_pause", d.entity) }, s.state === "playing" ? "Pause" : "Play")));
+      if (a.volume_level != null) {
+        const out = h("span", {}, `${Math.round(a.volume_level * 100)}%`);
+        ctl.append(h("label", { class: "slider" }, h("span", {}, "Volume ", out),
+          h("input", { type: "range", min: 0, max: 100, value: Math.round(a.volume_level * 100),
+            oninput: (e) => (out.textContent = e.target.value + "%"),
+            onchange: (e) => { callService("media_player", "volume_set", d.entity, { volume_level: Number(e.target.value) / 100 }); e.target.blur(); } })));
+      }
+    } else if (d.type === "cover") {
+      ctl.append(h("div", { class: "btn-row" },
+        h("button", { class: "btn", onclick: () => callService("cover", "open_cover", d.entity) }, "Open"),
+        h("button", { class: "btn", onclick: () => callService("cover", "stop_cover", d.entity) }, "Stop"),
+        h("button", { class: "btn", onclick: () => callService("cover", "close_cover", d.entity) }, "Close")));
+      if (a.current_position != null) {
+        const out = h("span", {}, `${a.current_position}%`);
+        ctl.append(h("label", { class: "slider" }, h("span", {}, "Position ", out),
+          h("input", { type: "range", min: 0, max: 100, value: a.current_position,
+            oninput: (e) => (out.textContent = e.target.value + "%"),
+            onchange: (e) => { callService("cover", "set_cover_position", d.entity, { position: Number(e.target.value) }); e.target.blur(); } })));
+      }
+    } else if (d.type === "climate") {
+      const step = a.target_temp_step || .5;
+      const setT = (delta) => {
+        const t = Math.min(a.max_temp ?? 35, Math.max(a.min_temp ?? 7, (Number(a.temperature) || 24) + delta));
+        callService("climate", "set_temperature", d.entity, { temperature: t });
+      };
+      ctl.append(h("div", { class: "btn-row" },
+        h("button", { class: "btn", onclick: () => setT(-step) }, "−"),
+        h("div", { class: "btn", style: "pointer-events:none" }, `Target ${a.temperature ?? "--"}°C`),
+        h("button", { class: "btn", onclick: () => setT(step) }, "+")));
+      ctl.append(h("div", { class: "btn-row" }, (a.hvac_modes || ["off", "cool", "heat", "auto"]).map((m) =>
+        h("button", { class: "btn" + (s.state === m ? " active" : ""), onclick: () => callService("climate", "set_hvac_mode", d.entity, { hvac_mode: m }) }, cap(m)))));
+    } else if (d.type === "smoke" && s.state === "on") {
+      ctl.append(h("div", { class: "note", style: "color:#fff;background:var(--danger-bg)" }, "Smoke is being reported. Check the kitchen immediately. The detector clears itself once the air is clear."));
+    }
+
+    // attributes
+    const rows = [["State", s.state], ["Last changed", new Date(s.last_changed).toLocaleString()]];
+    if (d.type === "climate" && a.current_temperature != null) rows.push(["Room temperature", a.current_temperature + "°C"]);
+    if (a.battery_level != null) rows.push(["Battery", a.battery_level + "%"]);
+    if (a.media_title) rows.push(["Now playing", a.media_title]);
+    if (d.entity2 && st(d.entity2)) rows.push([d.entity2, fmtSensor(st(d.entity2))]);
+    ctl.append(h("div", { class: "attrs" }, rows.map(([k, val]) => h("div", {}, h("span", {}, k), h("span", {}, String(val))))));
+  }
+  body.push(ctl);
+  openModal([head, ...body]);
+}
+
+/* ===================================================================== */
+/*  Settings                                                              */
+/* ===================================================================== */
+function openSettings() {
+  openDeviceRef = null;
+  const url = h("input", { value: settings.url, placeholder: "http://homeassistant.local:8123" });
+  const token = h("input", { value: settings.token, placeholder: "Long-lived access token", type: "password", autocomplete: "off" });
+  openModal([
+    h("header", {}, h("h3", {}, "Home Assistant connection"), h("button", { class: "icon-btn", onclick: closeModal, "aria-label": "Close", html: svg("close") })),
+    h("div", { class: "note" },
+      "Create a token in Home Assistant → your profile → Security → Long-lived access tokens. ",
+      "The token is saved only in this browser. Use this dashboard on trusted devices only."),
+    h("label", { class: "field" }, "Home Assistant URL", url),
+    h("label", { class: "field" }, "Access token", token),
+    h("div", { class: "btn-row" },
+      h("button", { class: "btn primary", onclick: () => {
+        settings.url = url.value.trim().replace(/\/$/, "");
+        settings.token = token.value.trim();
+        LS.set("ha_url", settings.url); LS.set("ha_token", settings.token);
+        closeModal(); connect();
+      } }, "Save & connect"),
+      h("button", { class: "btn", onclick: () => { LS.del("ha_token"); settings.token = ""; closeModal(); startDemo(); } }, "Use demo")),
+  ]);
+}
+
+/* ===================================================================== */
+/*  Boot                                                                  */
+/* ===================================================================== */
+$("settingsBtn").innerHTML = svg("gear");
+$("settingsBtn").addEventListener("click", openSettings);
+$("fireIcon").innerHTML = svg("smoke");
+$("alarmButtons").addEventListener("click", (e) => {
+  const b = e.target.closest("button");
+  if (!b) return;
+  const s = st(CONFIG.alarmPanel);
+  const data = {};
+  if (s && (b.dataset.svc === "alarm_disarm" ? s.attributes.code_format : s.attributes.code_arm_required)) {
+    const code = prompt("Alarm code");
+    if (code == null) return;
+    data.code = code;
+  }
+  callService("alarm_control_panel", b.dataset.svc, CONFIG.alarmPanel, data);
+});
+
+buildPlan();
+tickClock();
+setInterval(tickClock, 10000);
+renderAll();
+connect();
+</script>
+</body>
+</html>
