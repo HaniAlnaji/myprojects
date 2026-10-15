@@ -6,29 +6,30 @@
 <title>Home Floor Plan</title>
 <style>
   :root {
-    --bg: #14161a;
-    --panel: #1e2127;
-    --panel-2: #262a31;
-    --line: #353a43;
+    --bg: #101216;
+    --panel: #191c22;
+    --panel-2: #222630;
+    --line: #2c313b;
     --text: #eef0f3;
-    --muted: #9aa1ad;
+    --muted: #949bab;
     --on: #ffc845;
     --on-bg: rgba(255, 200, 69, .16);
     --ok: #3ccf7a;
-    --ok-bg: rgba(60, 207, 122, .14);
+    --ok-bg: rgba(60, 207, 122, .15);
     --info: #4aa8ff;
-    --info-bg: rgba(74, 168, 255, .15);
+    --info-bg: rgba(74, 168, 255, .16);
     --warn: #ff9f2e;
+    --warn-bg: rgba(255, 159, 46, .16);
     --danger: #ff4d4f;
     --danger-bg: rgba(255, 77, 79, .18);
-    --chip: rgba(24, 26, 31, .88);
-    --radius: 12px;
+    --glass: rgba(16, 18, 22, .78);
+    --radius: 14px;
     color-scheme: dark;
   }
   * { box-sizing: border-box; }
   html, body { margin: 0; }
   body {
-    background: var(--bg);
+    background: radial-gradient(1200px 600px at 70% -10%, #1b2030 0%, transparent 60%), var(--bg);
     color: var(--text);
     font: 14px/1.4 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
     min-height: 100vh;
@@ -37,148 +38,176 @@
   svg.i { width: 1.25em; height: 1.25em; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; flex: none; }
 
   /* ---------- header ---------- */
-  header {
-    display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
-    padding: 12px 20px; border-bottom: 1px solid var(--line); background: var(--panel);
+  .top {
+    display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+    padding: 12px 20px; border-bottom: 1px solid var(--line); background: rgba(25, 28, 34, .85);
+    position: sticky; top: 0; z-index: 20; backdrop-filter: blur(10px);
   }
-  header h1 { font-size: 18px; margin: 0; font-weight: 600; }
+  .brand { display: flex; align-items: center; gap: 10px; }
+  .brand h1 { font-size: 18px; margin: 0; font-weight: 650; letter-spacing: .01em; }
   .conn { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted);
     padding: 4px 10px; border-radius: 99px; background: var(--panel-2); }
   .conn::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--muted); }
-  .conn[data-s="ok"]::before { background: var(--ok); }
+  .conn[data-s="ok"]::before { background: var(--ok); box-shadow: 0 0 8px var(--ok); }
   .conn[data-s="demo"]::before { background: var(--info); }
   .conn[data-s="error"]::before { background: var(--danger); }
   .conn[data-s="connecting"]::before { background: var(--warn); }
+  .pills { display: flex; gap: 8px; flex-wrap: wrap; }
+  .pill { display: inline-flex; align-items: center; gap: 7px; padding: 6px 12px; border-radius: 99px; background: var(--panel-2);
+    border: 1px solid var(--line); font-size: 13px; white-space: nowrap; }
+  .pill b { font-variant-numeric: tabular-nums; }
+  .pill.on { color: var(--on); border-color: rgba(255,200,69,.35); }
+  .pill.ok { color: var(--ok); }
+  .pill.warn { color: var(--warn); border-color: rgba(255,159,46,.4); }
+  .pill.alert { color: #fff; background: var(--danger); border-color: var(--danger); }
+  .pill button { background: rgba(255,255,255,.08); border: 0; border-radius: 99px; padding: 2px 9px; font-size: 12px; color: var(--text); }
+  .pill button:hover { background: rgba(255,255,255,.18); }
   .spacer { flex: 1; }
-  .weather { display: flex; align-items: center; gap: 10px; }
-  .weather .big { font-size: 20px; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .weather { display: flex; align-items: center; gap: 12px; }
+  .weather .big { font-size: 20px; font-weight: 600; font-variant-numeric: tabular-nums; line-height: 1.1; }
   .weather .small { font-size: 12px; color: var(--muted); }
   .icon-btn { background: var(--panel-2); border: 1px solid var(--line); border-radius: 10px; padding: 8px; display: inline-flex; }
   .icon-btn:hover { border-color: var(--muted); }
 
   /* ---------- layout ---------- */
-  main { display: grid; grid-template-columns: 270px 1fr; gap: 16px; padding: 16px 20px; }
+  main { display: grid; grid-template-columns: 280px minmax(0, 1fr); gap: 18px; padding: 18px 20px 28px; max-width: 1800px; margin: 0 auto; }
   main > * { min-width: 0; }
-  aside { display: flex; flex-direction: column; gap: 12px; }
-  .card { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px; }
-  .card h2 { font-size: 13px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin: 0 0 10px; font-weight: 600;
+  aside { display: flex; flex-direction: column; gap: 14px; }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; }
+  .card h2 { font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin: 0 0 12px; font-weight: 600;
     display: flex; align-items: center; gap: 8px; }
 
-  .alarm-state { display: flex; align-items: center; gap: 10px; font-size: 16px; font-weight: 600; margin-bottom: 10px; }
-  .alarm-state .badge { width: 40px; height: 40px; border-radius: 10px; display: grid; place-items: center; background: var(--panel-2); color: var(--muted); }
+  .alarm-state { display: flex; align-items: center; gap: 12px; font-size: 16px; font-weight: 600; margin-bottom: 12px; }
+  .alarm-state .badge { width: 42px; height: 42px; border-radius: 12px; display: grid; place-items: center; background: var(--panel-2); color: var(--muted); }
   .alarm-state[data-armed="1"] .badge { background: var(--info-bg); color: var(--info); }
-  .alarm-state[data-armed="trig"] .badge { background: var(--danger-bg); color: var(--danger); }
-  .seg { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
-  .seg button { background: var(--panel-2); border: 1px solid var(--line); border-radius: 8px; padding: 7px 4px; font-size: 12px; }
-  .seg button.active { border-color: var(--info); color: var(--info); background: var(--info-bg); }
+  .alarm-state[data-armed="trig"] .badge { background: var(--danger); color: #fff; }
+  .seg { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; background: var(--panel-2); padding: 4px; border-radius: 10px; }
+  .seg button { background: transparent; border: 0; border-radius: 7px; padding: 7px 4px; font-size: 12px; color: var(--muted); }
+  .seg button.active { color: #fff; background: var(--info); font-weight: 600; }
 
   .sensor-list { list-style: none; margin: 0; padding: 0; }
-  .sensor-list li { display: flex; align-items: center; gap: 10px; padding: 6px 0; border-top: 1px solid var(--line); }
+  .sensor-list li { display: flex; align-items: center; gap: 10px; padding: 7px 0; border-top: 1px solid var(--line); color: var(--muted); }
   .sensor-list li:first-child { border-top: 0; }
-  .sensor-list .name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .sensor-list .val { font-size: 12px; font-weight: 600; color: var(--muted); }
-  .sensor-list .val.on { color: var(--ok); }
-  .sensor-list .val.alert { color: var(--danger); }
-  .sensor-list .val.missing { color: var(--warn); font-weight: 400; }
+  .sensor-list .name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--text); }
+  .sensor-list .val { font-size: 12px; font-weight: 600; padding: 2px 8px; border-radius: 99px; background: var(--panel-2); }
+  .sensor-list .val.on { color: var(--warn); background: var(--warn-bg); }
+  .sensor-list .val.motion { color: var(--ok); background: var(--ok-bg); }
+  .sensor-list .val.alert { color: #fff; background: var(--danger); }
+  .sensor-list .val.missing { color: var(--muted); font-weight: 400; background: none; }
 
   .stat { display: flex; align-items: baseline; gap: 6px; }
-  .stat .num { font-size: 28px; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .stat .num { font-size: 30px; font-weight: 650; font-variant-numeric: tabular-nums; }
   .stat .unit { color: var(--muted); }
   .sub { font-size: 12px; color: var(--muted); }
 
   .smoke-card .row { display: flex; align-items: center; gap: 12px; }
-  .smoke-card .dot { width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; background: var(--ok-bg); color: var(--ok); }
-  .smoke-card.alert { border-color: var(--danger); }
+  .smoke-card .dot { width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center; background: var(--ok-bg); color: var(--ok); flex: none; }
+  .smoke-card.alert { border-color: var(--danger); background: linear-gradient(180deg, rgba(255,77,79,.18), var(--panel)); }
   .smoke-card.alert .dot { background: var(--danger); color: #fff; animation: pulse 1s infinite; }
   .smoke-card .title { font-weight: 600; }
-  .smoke-card .test { margin-top: 10px; width: 100%; background: var(--panel-2); border: 1px solid var(--line); border-radius: 8px; padding: 7px; font-size: 12px; }
+  .smoke-card .test { margin-top: 12px; width: 100%; background: var(--panel-2); border: 1px solid var(--line); border-radius: 8px; padding: 7px; font-size: 12px; }
 
   /* ---------- floor plan ---------- */
-  .plan-scroll { overflow-x: auto; border-radius: var(--radius); border: 1px solid var(--line); }
+  .plan-bar { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
+  .filters { display: flex; gap: 4px; background: var(--panel); border: 1px solid var(--line); padding: 4px; border-radius: 12px; overflow-x: auto; max-width: 100%; }
+  .filters button { background: none; border: 0; border-radius: 8px; padding: 6px 12px; color: var(--muted); font-size: 13px; white-space: nowrap; }
+  .filters button.active { background: var(--panel-2); color: var(--text); box-shadow: inset 0 0 0 1px var(--line); }
+  .plan-bar .hint { font-size: 12px; color: var(--muted); margin-left: auto; }
+
+  .plan-scroll { overflow-x: auto; border-radius: 18px; border: 1px solid var(--line); background: #8a8890; box-shadow: 0 20px 50px rgba(0,0,0,.45); }
   .plan {
-    position: relative; aspect-ratio: 1365 / 768; width: 100%; min-width: 760px;
-    background: #2a2c30 url("floorplan.jpg") center / cover no-repeat;
-    container-type: inline-size;
+    position: relative; aspect-ratio: 1365 / 768; width: 100%; min-width: 820px;
+    background: #8a8890 url("floorplan.jpg") center / 100% 100% no-repeat;
+    container-type: inline-size; overflow: hidden;
+    --u: clamp(9px, .9cqw, 15px);
+    font-size: var(--u);
   }
-  .chip {
-    position: absolute; transform: translate(-50%, -50%);
-    display: flex; align-items: center; gap: .45em;
-    font-size: clamp(9px, .95cqw, 14px);
-    padding: .38em .7em .38em .45em; border-radius: .7em;
-    background: var(--chip); border: 1px solid rgba(255,255,255,.12);
-    box-shadow: 0 4px 14px rgba(0,0,0,.45);
-    backdrop-filter: blur(4px);
-    white-space: nowrap; user-select: none; -webkit-user-select: none; touch-action: manipulation;
-    transition: border-color .2s, background .2s, transform .1s;
-  }
-  .chip:hover { border-color: rgba(255,255,255,.4); z-index: 2; }
-  .chip:active { transform: translate(-50%, -50%) scale(.96); }
-  .chip .ic { width: 2em; height: 2em; border-radius: .55em; display: grid; place-items: center; background: rgba(255,255,255,.08); color: var(--muted); }
-  .chip .ic svg { width: 1.3em; height: 1.3em; }
-  .chip .txt { display: flex; flex-direction: column; line-height: 1.15; text-align: left; }
-  .chip .lbl { font-size: .78em; color: var(--muted); }
-  .chip .st { font-weight: 600; font-variant-numeric: tabular-nums; }
-  .chip .bar { height: 3px; border-radius: 2px; background: rgba(255,255,255,.15); margin-top: 3px; overflow: hidden; }
-  .chip .bar i { display: block; height: 100%; background: var(--on); }
+  /* gentle vignette so the controls read well on the bright backdrop */
+  .plan::before { content: ""; position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(ellipse at 55% 50%, transparent 55%, rgba(10,12,16,.35) 100%); }
 
-  .chip.compact { flex-direction: column; gap: .2em; padding: .35em .4em; }
-  .chip.compact .lbl { display: none; }
-  .chip.compact .txt { align-items: center; }
-  .chip.on { border-color: rgba(255,200,69,.6); }
-  .chip.on .ic { background: var(--on-bg); color: var(--on); }
-  .chip.on .st { color: var(--on); }
-  .chip.media.on, .chip.climate.on { border-color: rgba(74,168,255,.6); }
-  .chip.media.on .ic, .chip.climate.on .ic { background: var(--info-bg); color: var(--info); }
-  .chip.media.on .st, .chip.climate.on .st { color: var(--info); }
-  .chip.okstate .ic { background: var(--ok-bg); color: var(--ok); }
-  .chip.okstate .st { color: var(--ok); }
-  .chip.motion.on { border-color: rgba(60,207,122,.7); }
-  .chip.motion.on .ic { background: var(--ok); color: #0b2316; }
-  .chip.motion.on .st { color: var(--ok); }
-  .chip.alert { border-color: var(--danger); background: rgba(80, 10, 12, .92); animation: pulse 1s infinite; z-index: 3; }
-  .chip.alert .ic { background: var(--danger); color: #fff; }
-  .chip.alert .st { color: #fff; }
-  .chip.missing { opacity: .55; border-style: dashed; }
-  .chip.busy { opacity: .7; }
-  .chip.smoke { border-width: 2px; }
+  .glow { position: absolute; width: 16cqw; aspect-ratio: 1; transform: translate(-50%, -50%); border-radius: 50%; pointer-events: none;
+    background: radial-gradient(circle, rgba(255, 200, 100, .85) 0%, rgba(255, 170, 60, .3) 30%, transparent 66%);
+    mix-blend-mode: screen; opacity: 0; transition: opacity .6s; }
 
-  @keyframes pulse {
-    0%, 100% { box-shadow: 0 0 0 0 rgba(255,77,79,.7); }
-    50% { box-shadow: 0 0 0 .8em rgba(255,77,79,0); }
-  }
+  .room { position: absolute; transform: translate(-50%, -50%); pointer-events: none; text-align: center;
+    font-size: .82em; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: #fff;
+    padding: .25em .7em; border-radius: 99px; background: rgba(12,14,18,.55); backdrop-filter: blur(3px);
+    white-space: nowrap; text-shadow: 0 1px 2px rgba(0,0,0,.6); }
+  .room .clim { text-transform: none; letter-spacing: 0; font-weight: 500; color: #d8dce4; margin-left: .5em; font-variant-numeric: tabular-nums; }
 
-  .hint { font-size: 12px; color: var(--muted); margin: 8px 2px 0; }
+  .dev { position: absolute; transform: translate(-50%, -50%); display: flex; flex-direction: column; align-items: center; gap: .3em;
+    background: none; border: 0; padding: 0; user-select: none; -webkit-user-select: none; touch-action: manipulation; z-index: 2;
+    transition: opacity .25s; }
+  .dev .orb { width: 2.9em; height: 2.9em; border-radius: 50%; display: grid; place-items: center;
+    background: var(--glass); color: #c3c8d2; border: 1.5px solid rgba(255,255,255,.18);
+    box-shadow: 0 .3em .9em rgba(0,0,0,.45); backdrop-filter: blur(4px);
+    transition: background .25s, color .25s, border-color .25s, box-shadow .25s, transform .12s; }
+  .dev .orb svg { width: 1.45em; height: 1.45em; }
+  .dev .cap { font-size: .8em; font-weight: 650; padding: .12em .55em; border-radius: 99px; background: var(--glass); color: #dfe3ea;
+    max-width: 9em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-variant-numeric: tabular-nums;
+    box-shadow: 0 .15em .5em rgba(0,0,0,.35); }
+  .dev:hover { z-index: 5; }
+  .dev:hover .orb { border-color: rgba(255,255,255,.55); transform: scale(1.07); }
+  .dev:active .orb { transform: scale(.93); }
+  .dev:focus-visible { outline: none; }
+  .dev:focus-visible .orb { outline: 2px solid var(--info); outline-offset: 2px; }
+  .dev .tip { position: absolute; bottom: calc(100% + .4em); left: 50%; transform: translateX(-50%); font-size: .82em; white-space: nowrap;
+    background: #000c; color: #fff; padding: .2em .6em; border-radius: 6px; opacity: 0; pointer-events: none; transition: opacity .15s; }
+  .dev:hover .tip { opacity: 1; }
+
+  .dev.on .orb { background: radial-gradient(circle at 50% 40%, #ffe08a, var(--on) 70%); color: #3a2a00; border-color: #fff3c4;
+    box-shadow: 0 0 1.2em rgba(255,200,69,.75), 0 .3em .9em rgba(0,0,0,.4); }
+  .dev.on .cap { color: var(--on); }
+  .dev.blue .orb { background: radial-gradient(circle at 50% 40%, #8cc8ff, var(--info) 75%); color: #04203d; border-color: #cfe7ff;
+    box-shadow: 0 0 1.1em rgba(74,168,255,.7), 0 .3em .9em rgba(0,0,0,.4); }
+  .dev.blue .cap { color: #9fd0ff; }
+  .dev.okstate .orb { color: var(--ok); border-color: rgba(60,207,122,.55); }
+  .dev.okstate .cap { color: var(--ok); }
+  .dev.motion-on .orb { background: var(--ok); color: #062814; border-color: #b8f5d0; animation: ring 1.6s infinite; }
+  .dev.motion-on .cap { color: var(--ok); }
+  .dev.open .orb { background: var(--warn); color: #3a1f00; border-color: #ffd9a8; }
+  .dev.open .cap { color: var(--warn); }
+  .dev.alert { z-index: 6; }
+  .dev.alert .orb { background: var(--danger); color: #fff; border-color: #ffc9ca; animation: pulse 1s infinite; }
+  .dev.alert .cap { background: var(--danger); color: #fff; }
+  .dev.smoke .orb { width: 3.3em; height: 3.3em; }
+  .dev.missing { opacity: .55; }
+  .dev.missing .orb { border-style: dashed; }
+  .dev.busy .orb { opacity: .6; }
+
+  @keyframes pulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(255,77,79,.75); } 50% { box-shadow: 0 0 0 1em rgba(255,77,79,0); } }
+  @keyframes ring { 0%, 100% { box-shadow: 0 0 0 0 rgba(60,207,122,.6); } 60% { box-shadow: 0 0 0 .8em rgba(60,207,122,0); } }
 
   /* ---------- device list ---------- */
-  details.devices { margin-top: 16px; }
+  details.devices { margin-top: 18px; }
   details.devices summary { cursor: pointer; color: var(--muted); font-weight: 600; padding: 6px 2px; }
   .rooms { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; margin-top: 8px; }
   .rooms .card h3 { margin: 0 0 6px; font-size: 14px; }
-  .dev-row { display: flex; align-items: center; gap: 10px; width: 100%; background: none; border: 0; border-top: 1px solid var(--line); padding: 7px 0; text-align: left; }
+  .dev-row { display: flex; align-items: center; gap: 10px; width: 100%; background: none; border: 0; border-top: 1px solid var(--line); padding: 8px 0; text-align: left; color: var(--muted); }
   .dev-row:first-of-type { border-top: 0; }
-  .dev-row .n { flex: 1; }
-  .dev-row .v { font-size: 12px; font-weight: 600; color: var(--muted); }
+  .dev-row .n { flex: 1; color: var(--text); }
+  .dev-row .v { font-size: 12px; font-weight: 600; }
   .dev-row.on .v { color: var(--on); }
   .dev-row.alert .v { color: var(--danger); }
 
   /* ---------- modal ---------- */
-  .backdrop { position: fixed; inset: 0; background: rgba(0,0,0,.55); display: none; align-items: center; justify-content: center; z-index: 50; padding: 16px; }
+  .backdrop { position: fixed; inset: 0; background: rgba(0,0,0,.55); display: none; align-items: center; justify-content: center; z-index: 50; padding: 16px; backdrop-filter: blur(3px); }
   .backdrop.open { display: flex; }
-  .modal { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; width: min(420px, 100%); padding: 18px; max-height: 90vh; overflow: auto; }
-  .modal header { padding: 0 0 12px; background: none; border: 0; gap: 10px; flex-wrap: nowrap; }
-  .modal h3 { margin: 0; font-size: 17px; flex: 1; }
+  .modal { background: var(--panel); border: 1px solid var(--line); border-radius: 18px; width: min(420px, 100%); padding: 18px; max-height: 90vh; overflow: auto; box-shadow: 0 30px 80px rgba(0,0,0,.6); }
+  .modal .mhead { display: flex; align-items: center; gap: 10px; padding-bottom: 12px; }
+  .modal h3 { margin: 0; font-size: 17px; }
   .modal .eid { font-size: 11px; color: var(--muted); font-family: ui-monospace, monospace; word-break: break-all; }
-  .modal .big-state { font-size: 34px; font-weight: 600; text-align: center; margin: 8px 0 14px; font-variant-numeric: tabular-nums; }
+  .modal .big-state { font-size: 34px; font-weight: 650; text-align: center; margin: 8px 0 14px; font-variant-numeric: tabular-nums; }
   .modal .controls { display: flex; flex-direction: column; gap: 14px; }
   .modal label.slider { display: flex; flex-direction: column; gap: 6px; font-size: 12px; color: var(--muted); }
-  .modal input[type=range] { width: 100%; accent-color: var(--on); }
+  .modal input[type=range] { width: 100%; accent-color: var(--on); height: 26px; }
   .btn-row { display: flex; gap: 8px; flex-wrap: wrap; }
   .btn { flex: 1; background: var(--panel-2); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; min-width: 70px;
     display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
   .btn:hover { border-color: var(--muted); }
   .btn.primary { background: var(--on); color: #231a00; border-color: var(--on); font-weight: 600; }
   .btn.active { border-color: var(--info); color: var(--info); background: var(--info-bg); }
-  .btn.danger { background: var(--danger); border-color: var(--danger); color: #fff; font-weight: 600; }
   .attrs { font-size: 12px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 10px; margin-top: 4px; }
   .attrs div { display: flex; justify-content: space-between; gap: 10px; }
 
@@ -199,23 +228,27 @@
   @keyframes flash { 50% { background: rgba(70, 0, 2, .93); } }
 
   .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--panel-2); border: 1px solid var(--line);
-    padding: 10px 16px; border-radius: 10px; z-index: 120; display: none; max-width: calc(100% - 32px); }
+    padding: 10px 16px; border-radius: 10px; z-index: 120; display: none; max-width: calc(100% - 32px); box-shadow: 0 10px 30px rgba(0,0,0,.5); }
   .toast.show { display: block; }
   .toast.err { border-color: var(--danger); }
 
-  @media (max-width: 900px) {
-    main { grid-template-columns: 1fr; padding: 12px 16px; }
-    aside { order: 2; display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
-    header { padding: 10px 16px; }
+  @media (max-width: 1000px) {
+    main { grid-template-columns: minmax(0, 1fr); padding: 12px 16px 24px; }
+    aside { order: 2; display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); }
+    .top { padding: 10px 16px; }
+    .plan-bar .hint { display: none; }
   }
 </style>
 </head>
 <body>
 
-<header>
-  <svg class="i" viewBox="0 0 24 24" style="width:26px;height:26px;color:var(--on)"><path d="M3 11l9-8 9 8M5 9.5V21h14V9.5"/><path d="M10 21v-6h4v6"/></svg>
-  <h1>My Home</h1>
-  <span class="conn" id="conn" data-s="connecting">Connecting…</span>
+<header class="top">
+  <div class="brand">
+    <svg class="i" viewBox="0 0 24 24" style="width:28px;height:28px;color:var(--on)"><path d="M3 11l9-8 9 8M5 9.5V21h14V9.5"/><path d="M10 21v-6h4v6"/></svg>
+    <h1>My Home</h1>
+    <span class="conn" id="conn" data-s="connecting">Connecting…</span>
+  </div>
+  <div class="pills" id="pills"></div>
   <span class="spacer"></span>
   <div class="weather">
     <span id="wxIcon"></span>
@@ -223,7 +256,7 @@
       <div class="big" id="wxTemp">--</div>
       <div class="small" id="wxCity">--</div>
     </div>
-    <div style="margin-left:10px">
+    <div style="margin-left:6px">
       <div class="big" id="clock">--:--</div>
       <div class="small" id="date">--</div>
     </div>
@@ -234,7 +267,7 @@
 <main>
   <aside>
     <section class="card">
-      <h2 id="secTitle">Security</h2>
+      <h2>Security</h2>
       <div class="alarm-state" id="alarmState" data-armed="0">
         <span class="badge" id="alarmBadge"></span>
         <span id="alarmText">--</span>
@@ -259,22 +292,31 @@
     </section>
 
     <section class="card">
-      <h2>Sensors</h2>
+      <h2>Doors, windows &amp; motion</h2>
       <ul class="sensor-list" id="sensorList"></ul>
     </section>
 
     <section class="card">
-      <h2>Average temperature</h2>
-      <div class="stat"><span class="num" id="avgTemp">--</span><span class="unit">°C</span></div>
+      <h2>Indoor climate</h2>
+      <div class="stat"><span class="num" id="avgTemp">--</span><span class="unit">°C average</span></div>
       <div class="sub" id="avgHum">--</div>
     </section>
   </aside>
 
   <section>
-    <div class="plan-scroll">
-      <div class="plan" id="plan"></div>
+    <div class="plan-bar">
+      <div class="filters" id="filters">
+        <button data-f="all" class="active">All</button>
+        <button data-f="light">Lights</button>
+        <button data-f="sensor">Sensors</button>
+        <button data-f="safety">Safety</button>
+        <button data-f="comfort">Climate &amp; media</button>
+      </div>
+      <span class="hint">Tap to switch · hold (or right-click) for brightness &amp; details</span>
     </div>
-    <p class="hint">Tap a light or switch to toggle it. Press and hold (or right‑click) any device for brightness, temperature, position and details.</p>
+    <div class="plan-scroll">
+      <div class="plan" id="plan" data-filter="all"></div>
+    </div>
 
     <details class="devices">
       <summary>All devices by room</summary>
@@ -303,8 +345,8 @@
  *  CONFIGURATION — edit the entity_ids below to match your Home Assistant.
  *  Find them in HA: Settings → Devices & services → Entities.
  *  x / y are the position on floorplan.jpg in percent (0–100).
- *  Any entity that does not exist in HA is shown dashed, so you can see
- *  what still needs mapping.
+ *  Any entity that does not exist in HA is shown faded with a dashed ring,
+ *  so you can see what still needs mapping.
  * ===================================================================== */
 const CONFIG = {
   // Leave empty when this file is served by Home Assistant itself
@@ -319,55 +361,71 @@ const CONFIG = {
   // Optional: siren/switch to sound in the house when smoke is detected ("" to disable).
   smokeSiren: "",
 
-  devices: [
-    // ---------------- Living room ----------------
-    { room: "Living room", type: "light",  entity: "light.living_room_ceiling", label: "Ceiling", icon: "pendant", x: 20.9, y: 33.0 },
-    { room: "Living room", type: "light",  entity: "light.living_room_floor_lamp", label: "Floor lamp", icon: "bulb", x: 30.4, y: 61.8 },
-    { room: "Living room", type: "climate_sensor", entity: "sensor.living_room_temperature", entity2: "sensor.living_room_humidity", label: "Climate", icon: "thermo", x: 26.3, y: 55.3 },
-    { room: "Living room", type: "media",  entity: "media_player.living_room_tv", label: "TV", icon: "tv", x: 15.4, y: 73.5 },
-    { room: "Living room", type: "sensor", entity: "sensor.living_room_aqi", label: "AQI", icon: "air", x: 16.7, y: 83.2 },
-
-    // ---------------- Entrance / store ----------------
-    { room: "Entrance", type: "light", entity: "light.entrance", label: "Entrance", icon: "bulb", x: 40.3, y: 35.4 },
-    { room: "Store", type: "light", entity: "light.store", label: "Store", icon: "bulb", x: 45.4, y: 20.8 },
-
-    // ---------------- Kitchen & dining ----------------
-    { room: "Kitchen", type: "smoke", entity: "binary_sensor.kitchen_smoke_detector", label: "Smoke detector", icon: "smoke", x: 44.0, y: 67.5 },
-    { room: "Kitchen", type: "sensor", entity: "sensor.kitchen_temperature", label: "Kitchen", icon: "thermo", x: 40.8, y: 57.3 },
-    { room: "Kitchen", type: "light",  entity: "light.kitchen_spots", label: "Spots", icon: "bulb", x: 40.1, y: 78.2 },
-    { room: "Kitchen", type: "light",  entity: "light.kitchen_counter", label: "Counter", icon: "bulb", x: 49.1, y: 82.7 },
-    { room: "Kitchen", type: "fan",    entity: "fan.kitchen_hood", label: "Hood", icon: "fan", x: 42.9, y: 87.5 },
-    { room: "Kitchen", type: "switch", entity: "switch.kitchen_smart_plug", label: "Smart plug", icon: "plug", x: 56.0, y: 83.0 },
-    { room: "Kitchen", type: "sensor", entity: "sensor.fridge_temperature", label: "Fridge", icon: "fridge", x: 53.2, y: 72.0 },
-    { room: "Dining",  type: "light",  entity: "light.dining_table", label: "Dining", icon: "pendant", x: 50.0, y: 51.5 },
-
-    // ---------------- Kids room ----------------
-    { room: "Kids room", type: "motion", entity: "binary_sensor.corridor_motion", label: "Corridor", icon: "motion", x: 60.8, y: 16.7 },
-    { room: "Kids room", type: "light",  entity: "light.kids_bed_lamp_left", label: "Lamp L", icon: "bulb", x: 71.6, y: 13.0, compact: true },
-    { room: "Kids room", type: "light",  entity: "light.kids_bed_lamp_right", label: "Lamp R", icon: "bulb", x: 75.8, y: 13.0, compact: true },
-    { room: "Kids room", type: "media",  entity: "media_player.kids_room_tv", label: "TV", icon: "tv", x: 68.5, y: 26.0 },
-    { room: "Kids room", type: "cover",  entity: "cover.kids_room_curtain", label: "Curtain", icon: "curtain", x: 85.3, y: 16.5 },
-    { room: "Kids room", type: "media",  entity: "media_player.kids_room_speaker", label: "Speaker", icon: "speaker", x: 89.6, y: 24.5 },
-
-    // ---------------- Master bathroom ----------------
-    { room: "Master bathroom", type: "light",  entity: "light.master_bathroom_mirror", label: "Mirror", icon: "bulb", x: 71.4, y: 37.0, compact: true },
-    { room: "Master bathroom", type: "light",  entity: "light.master_bathroom_ceiling", label: "Ceiling", icon: "bulb", x: 75.4, y: 37.0, compact: true },
-    { room: "Master bathroom", type: "motion", entity: "binary_sensor.master_bathroom_motion", label: "Motion", icon: "motion", x: 79.4, y: 37.0, compact: true },
-    { room: "Master bathroom", type: "leak",   entity: "binary_sensor.master_bathroom_leak", label: "Water leak", icon: "drop", x: 71.2, y: 47.6 },
-    { room: "Master bathroom", type: "leak",   entity: "binary_sensor.bathroom_2_leak", label: "Water leak", icon: "drop", x: 89.0, y: 43.0 },
-
-    // ---------------- Master bedroom ----------------
-    { room: "Master bedroom", type: "climate", entity: "climate.master_bedroom_ac", label: "AC", icon: "ac", x: 90.8, y: 57.3 },
-    { room: "Master bedroom", type: "light",  entity: "light.master_bedroom_left", label: "Left", icon: "pendant", x: 72.9, y: 66.4, compact: true },
-    { room: "Master bedroom", type: "light",  entity: "light.master_bedroom_ceiling", label: "Ceiling", icon: "pendant", x: 77.0, y: 66.4, compact: true },
-    { room: "Master bedroom", type: "light",  entity: "light.master_bedroom_right", label: "Right", icon: "pendant", x: 81.1, y: 66.4, compact: true },
-    { room: "Master bedroom", type: "motion", entity: "binary_sensor.master_bedroom_motion", label: "Motion", icon: "motion", x: 86.5, y: 70.2 },
-    { room: "Master bedroom", type: "media",  entity: "media_player.master_bedroom_tv", label: "TV", icon: "tv", x: 77.0, y: 77.1 },
-    { room: "Master bedroom", type: "cover",  entity: "cover.master_bedroom_curtain", label: "Curtain", icon: "curtain", x: 92.0, y: 78.1 },
-    { room: "Master bedroom", type: "light",  entity: "light.master_bedside_lamp", label: "Bedside", icon: "bulb", x: 81.7, y: 85.5 },
+  // Room name tags on the plan, optionally with a temperature / humidity sensor.
+  rooms: [
+    { name: "Living room", x: 26.1, y: 55.4, temp: "sensor.living_room_temperature", hum: "sensor.living_room_humidity" },
+    { name: "Kitchen", x: 45.1, y: 76.6 },
+    { name: "Store", x: 45.5, y: 27.0 },
+    { name: "Corridor", x: 63.0, y: 40.1 },
+    { name: "Kids room", x: 74.2, y: 20.6 },
+    { name: "Master bath", x: 78.6, y: 45.6 },
+    { name: "Master bedroom", x: 68.2, y: 59.4 },
   ],
 
-  // Shown in the "Sensors" card (doors, windows, motion…). The smoke detector is listed too.
+  // type: light | switch | fan | media | cover | climate | sensor | motion | contact | leak | smoke | climate_sensor
+  // plan: false → only listed under "All devices by room", not drawn on the plan.
+  devices: [
+    // ---------------- Living room ----------------
+    { room: "Living room", type: "light",   entity: "light.living_room_ceiling", label: "Ceiling light", icon: "pendant", x: 20.9, y: 32.4 },
+    { room: "Living room", type: "light",   entity: "light.living_room_floor_lamp", label: "Floor lamp", icon: "lamp", x: 30.4, y: 61.4 },
+    { room: "Living room", type: "contact", entity: "binary_sensor.living_room_window", label: "Window", icon: "window", x: 17.4, y: 63.0 },
+    { room: "Living room", type: "media",   entity: "media_player.living_room_tv", label: "TV", icon: "tv", x: 15.5, y: 73.6 },
+    { room: "Living room", type: "sensor",  entity: "sensor.living_room_aqi", label: "Air quality", icon: "air", x: 16.8, y: 83.6 },
+    { room: "Living room", type: "climate_sensor", entity: "sensor.living_room_temperature", entity2: "sensor.living_room_humidity", label: "Temperature", icon: "thermo", plan: false },
+
+    // ---------------- Entrance / store ----------------
+    { room: "Entrance", type: "contact", entity: "binary_sensor.front_door", label: "Front door", icon: "door", x: 33.3, y: 27.6 },
+    { room: "Entrance", type: "light", entity: "light.entrance", label: "Entrance light", icon: "bulb", x: 40.3, y: 35.6 },
+    { room: "Store", type: "light", entity: "light.store", label: "Store light", icon: "bulb", x: 45.5, y: 20.6 },
+
+    // ---------------- Kitchen & dining ----------------
+    { room: "Kitchen", type: "smoke",  entity: "binary_sensor.kitchen_smoke_detector", label: "Smoke detector", icon: "smoke", x: 46.0, y: 64.0 },
+    { room: "Kitchen", type: "sensor", entity: "sensor.kitchen_temperature", label: "Temperature", icon: "thermo", x: 41.2, y: 57.6 },
+    { room: "Kitchen", type: "light",  entity: "light.kitchen_spots", label: "Spots", icon: "spot", x: 37.2, y: 57.6 },
+    { room: "Kitchen", type: "light",  entity: "light.kitchen_under_cabinet", label: "Under-cabinet", icon: "spot", x: 38.8, y: 78.3 },
+    { room: "Kitchen", type: "light",  entity: "light.kitchen_counter", label: "Counter light", icon: "bulb", x: 49.2, y: 82.8 },
+    { room: "Kitchen", type: "fan",    entity: "fan.kitchen_hood", label: "Hood fan", icon: "fan", x: 43.0, y: 85.2 },
+    { room: "Kitchen", type: "switch", entity: "switch.kitchen_smart_plug", label: "Smart plug", icon: "plug", x: 54.5, y: 85.8 },
+    { room: "Kitchen", type: "sensor", entity: "sensor.fridge_temperature", label: "Fridge", icon: "fridge", x: 53.7, y: 72.8 },
+    { room: "Dining",  type: "light",  entity: "light.dining_table", label: "Dining light", icon: "pendant", x: 50.0, y: 53.2 },
+
+    // ---------------- Corridor & kids room ----------------
+    { room: "Corridor",  type: "motion", entity: "binary_sensor.corridor_motion", label: "Corridor motion", icon: "motion", x: 60.9, y: 16.8 },
+    { room: "Kids room", type: "light",  entity: "light.kids_bed_lamp_left", label: "Bed lamp left", icon: "lamp", x: 72.1, y: 14.2 },
+    { room: "Kids room", type: "light",  entity: "light.kids_bed_lamp_right", label: "Bed lamp right", icon: "lamp", x: 75.4, y: 14.2 },
+    { room: "Kids room", type: "media",  entity: "media_player.kids_room_tv", label: "TV", icon: "tv", x: 68.7, y: 26.3 },
+    { room: "Kids room", type: "cover",  entity: "cover.kids_room_curtain", label: "Curtain", icon: "curtain", x: 83.6, y: 17.0 },
+    { room: "Kids room", type: "media",  entity: "media_player.kids_room_speaker", label: "Speaker", icon: "speaker", x: 86.6, y: 25.6 },
+
+    // ---------------- Master bathroom ----------------
+    { room: "Master bathroom", type: "light",  entity: "light.master_bathroom_mirror", label: "Mirror light", icon: "bulb", x: 71.9, y: 37.0 },
+    { room: "Master bathroom", type: "light",  entity: "light.master_bathroom_ceiling", label: "Ceiling light", icon: "bulb", x: 75.3, y: 37.0 },
+    { room: "Master bathroom", type: "motion", entity: "binary_sensor.master_bathroom_motion", label: "Motion", icon: "motion", x: 79.2, y: 37.0 },
+    { room: "Master bathroom", type: "leak",   entity: "binary_sensor.master_bathroom_leak", label: "Water leak (shower)", icon: "drop", x: 71.4, y: 45.4 },
+    { room: "Master bathroom", type: "leak",   entity: "binary_sensor.bathroom_2_leak", label: "Water leak (sink)", icon: "drop", x: 86.4, y: 43.4 },
+
+    // ---------------- Master bedroom ----------------
+    { room: "Master bedroom", type: "climate", entity: "climate.master_bedroom_ac", label: "Air conditioner", icon: "ac", x: 90.4, y: 57.4 },
+    { room: "Master bedroom", type: "light",  entity: "light.master_bedroom_left", label: "Left pendant", icon: "pendant", x: 73.7, y: 66.6 },
+    { room: "Master bedroom", type: "light",  entity: "light.master_bedroom_ceiling", label: "Ceiling light", icon: "pendant", x: 77.0, y: 66.6 },
+    { room: "Master bedroom", type: "light",  entity: "light.master_bedroom_right", label: "Right pendant", icon: "pendant", x: 80.3, y: 66.6 },
+    { room: "Master bedroom", type: "motion", entity: "binary_sensor.master_bedroom_motion", label: "Motion", icon: "motion", x: 85.3, y: 70.2 },
+    { room: "Master bedroom", type: "media",  entity: "media_player.master_bedroom_tv", label: "TV", icon: "tv", x: 76.8, y: 78.0 },
+    { room: "Master bedroom", type: "cover",  entity: "cover.master_bedroom_curtain", label: "Curtain", icon: "curtain", x: 91.2, y: 78.0 },
+    { room: "Master bedroom", type: "light",  entity: "light.master_bedside_lamp", label: "Bedside lamp", icon: "lamp", x: 81.8, y: 84.8 },
+  ],
+
+  // Listed in the "Doors, windows & motion" card.
   securitySensors: [
     { entity: "binary_sensor.front_door", label: "Front door", icon: "door" },
     { entity: "binary_sensor.balcony_door", label: "Balcony door", icon: "door" },
@@ -386,6 +444,8 @@ const CONFIG = {
 const ICONS = {
   bulb: '<path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.8 10.6c.6.6.8 1.3.8 2.4h6c0-1.1.2-1.8.8-2.4A6 6 0 0 0 12 3z"/>',
   pendant: '<path d="M12 2v5M4.5 15a7.5 7.5 0 0 1 15 0zM10 18a2 2 0 0 0 4 0"/>',
+  lamp: '<path d="M8 3h8l3 8H5zM12 11v8M8 21h8"/>',
+  spot: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
   tv: '<rect x="3" y="5" width="18" height="12" rx="2"/><path d="M8 21h8M12 17v4"/>',
   thermo: '<path d="M14 14.8V4a2 2 0 0 0-4 0v10.8a4 4 0 1 0 4 0zM12 9v7"/>',
   drop: '<path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z"/>',
@@ -444,6 +504,15 @@ function h(tag, attrs = {}, ...kids) {
   return el;
 }
 
+let toastTimer = null;
+function toast(msg, isErr = false) {
+  const t = $("toast");
+  t.textContent = msg;
+  t.className = "toast show" + (isErr ? " err" : "");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => (t.className = "toast"), 5000);
+}
+
 /* ===================================================================== */
 /*  Home Assistant WebSocket API                                          */
 /* ===================================================================== */
@@ -479,7 +548,7 @@ function connect() {
       case "auth_invalid":
         authFailed = true;
         setConn("error", "Invalid token");
-        toast("Home Assistant rejected the access token. Open settings to fix it.", true);
+        toast("Home Assistant rejected the access token. Open settings (⚙) to fix it.", true);
         break;
       case "result":
         if (pending[m.id]) { pending[m.id](m); delete pending[m.id]; }
@@ -537,17 +606,18 @@ function startDemo() {
   setConn("demo", "Demo mode – not connected");
   for (const k of Object.keys(states)) delete states[k];
   const put = (id, state, attributes = {}) => { states[id] = { entity_id: id, state: String(state), attributes, last_changed: new Date().toISOString() }; };
-  const lights = { "light.living_room_ceiling": 80, "light.dining_table": 60, "light.kitchen_spots": 80, "light.kids_bed_lamp_left": 75, "light.kids_bed_lamp_right": 75,
-    "light.master_bathroom_mirror": 100, "light.master_bathroom_ceiling": 100, "light.master_bedroom_ceiling": 70, "light.master_bedroom_left": 100 };
+  const lights = { "light.living_room_ceiling": 80, "light.living_room_floor_lamp": 45, "light.dining_table": 60, "light.kitchen_spots": 80,
+    "light.kids_bed_lamp_left": 75, "light.kids_bed_lamp_right": 75, "light.master_bathroom_mirror": 100, "light.master_bedroom_ceiling": 70 };
   for (const d of CONFIG.devices) {
     switch (d.type) {
       case "light": { const b = lights[d.entity]; put(d.entity, b ? "on" : "off", { brightness: b ? Math.round(b * 2.55) : null, supported_color_modes: ["brightness"] }); break; }
       case "switch": put(d.entity, "off"); break;
       case "fan": put(d.entity, "off", { percentage: 0 }); break;
-      case "motion": put(d.entity, /corridor|bathroom/.test(d.entity) ? "on" : "off", { device_class: "motion" }); break;
+      case "motion": put(d.entity, /corridor/.test(d.entity) ? "on" : "off", { device_class: "motion" }); break;
+      case "contact": put(d.entity, "off", { device_class: d.icon === "door" ? "door" : "window" }); break;
       case "leak": put(d.entity, "off", { device_class: "moisture" }); break;
       case "smoke": put(d.entity, "off", { device_class: "smoke", battery_level: 96 }); break;
-      case "media": put(d.entity, /speaker/.test(d.entity) ? "playing" : "on", { volume_level: .35, media_title: /speaker/.test(d.entity) ? "Lo-fi Beats" : undefined }); break;
+      case "media": put(d.entity, /speaker/.test(d.entity) ? "playing" : /kids/.test(d.entity) ? "on" : "off", { volume_level: .35, media_title: /speaker/.test(d.entity) ? "Lo-fi Beats" : undefined }); break;
       case "cover": put(d.entity, /kids/.test(d.entity) ? "closed" : "open", { current_position: /kids/.test(d.entity) ? 0 : 60 }); break;
       case "climate": put(d.entity, "cool", { temperature: 24, current_temperature: 25.5, hvac_action: "cooling", hvac_modes: ["off", "cool", "heat", "fan_only", "auto"], min_temp: 16, max_temp: 30, target_temp_step: 1 }); break;
       case "climate_sensor": put(d.entity, 22, { unit_of_measurement: "°C", device_class: "temperature" }); put(d.entity2, 55, { unit_of_measurement: "%", device_class: "humidity" }); break;
@@ -599,68 +669,74 @@ function demoService(domain, service, id, data) {
 /*  Formatting helpers                                                    */
 /* ===================================================================== */
 const st = (id) => states[id];
-const isMissing = (id) => mode !== "connecting" && !states[id];
 const pct = (b) => Math.round(((b || 0) / 255) * 100);
 const cap = (s) => String(s).replace(/_/g, " ").replace(/^\w/, (c) => c.toUpperCase());
-function fmtSensor(s) {
+const isOpenable = (dc) => ["door", "window", "opening", "garage_door"].includes(dc);
+function fmtSensor(s, short) {
   if (!s) return "--";
   if (["unavailable", "unknown"].includes(s.state)) return cap(s.state);
   const n = Number(s.state);
   const u = s.attributes.unit_of_measurement || "";
   const v = Number.isFinite(n) ? (Math.round(n * 10) / 10).toString() : s.state;
+  if (short && u.startsWith("°")) return v + "°";
   return u === "%" || u.startsWith("°") ? v + u : u ? `${v} ${u}` : v;
 }
 
-/** Returns how a device should look: { cls[], text, sub, bar } */
+const CATEGORY = { light: "light", switch: "light", fan: "comfort", media: "comfort", cover: "comfort", climate: "comfort",
+  sensor: "sensor", climate_sensor: "sensor", motion: "sensor safety", contact: "sensor safety", leak: "safety", smoke: "safety" };
+
+/** How a device should look: { cls[], text (long), cap (short, for the plan), level (0..1 glow) } */
 function view(d) {
   const s = st(d.entity);
-  if (!s) return { cls: ["missing"], text: mode === "connecting" ? "…" : "N/A" };
-  const unavailable = s.state === "unavailable" || s.state === "unknown";
-  if (unavailable && d.type !== "climate_sensor") return { cls: ["missing"], text: cap(s.state) };
+  if (!s) return { cls: ["missing"], text: mode === "connecting" ? "…" : "Not found", cap: mode === "connecting" ? "…" : "N/A" };
+  if ((s.state === "unavailable" || s.state === "unknown") && d.type !== "climate_sensor") return { cls: ["missing"], text: cap(s.state), cap: "—" };
   const a = s.attributes;
   switch (d.type) {
     case "light": {
-      if (s.state !== "on") return { cls: [], text: "OFF" };
+      if (s.state !== "on") return { cls: [], text: "Off", cap: "Off" };
       const p = a.brightness != null ? pct(a.brightness) : null;
-      return { cls: ["on"], text: p != null ? `${p}%` : "ON", bar: p };
+      return { cls: ["on"], text: p != null ? `On · ${p}%` : "On", cap: p != null ? `${p}%` : "On", level: p != null ? Math.max(.25, p / 100) : 1 };
     }
     case "switch": case "fan":
-      return s.state === "on" ? { cls: ["on"], text: a.percentage ? `${a.percentage}%` : "ON" } : { cls: [], text: "OFF" };
+      return s.state === "on" ? { cls: ["on"], text: a.percentage ? `On · ${a.percentage}%` : "On", cap: "On" } : { cls: [], text: "Off", cap: "Off" };
     case "media": {
       const on = !["off", "standby", "idle"].includes(s.state);
-      const t = s.state === "playing" ? (a.media_title ? `▶ ${a.media_title}` : "Playing") : s.state === "paused" ? "Paused" : on ? "ON" : "OFF";
-      return { cls: on ? ["media", "on"] : ["media"], text: t };
+      const t = s.state === "playing" ? (a.media_title ? `▶ ${a.media_title}` : "Playing") : s.state === "paused" ? "Paused" : on ? "On" : "Off";
+      return { cls: on ? ["blue"] : [], text: t, cap: t };
     }
     case "cover": {
       const p = a.current_position;
-      return { cls: s.state === "open" || p > 0 ? ["on"] : [], text: p != null ? (p === 0 ? "Closed" : p === 100 ? "Open" : `${p}% open`) : cap(s.state) };
+      const t = p != null ? (p === 0 ? "Closed" : p === 100 ? "Open" : `${p}% open`) : cap(s.state);
+      return { cls: s.state === "open" || p > 0 ? ["blue"] : [], text: t, cap: t };
     }
     case "climate": {
-      const on = s.state !== "off";
-      const t = a.temperature != null ? `${a.temperature}°C` : cap(s.state);
-      return { cls: on ? ["climate", "on"] : ["climate"], text: on ? `${t} · ${cap(a.hvac_action || s.state)}` : "OFF" };
+      if (s.state === "off") return { cls: [], text: "Off", cap: "Off" };
+      const t = a.temperature != null ? `${a.temperature}°` : "";
+      return { cls: ["blue"], text: `${t} · ${cap(a.hvac_action || s.state)}`, cap: `${t} ${cap(a.hvac_action || s.state)}`.trim() };
     }
     case "motion":
-      return s.state === "on" ? { cls: ["motion", "on"], text: "Motion" } : { cls: ["motion"], text: "Clear" };
+      return s.state === "on" ? { cls: ["motion-on"], text: "Motion detected", cap: "Motion" } : { cls: [], text: "Clear", cap: "Clear" };
+    case "contact":
+      return s.state === "on" ? { cls: ["open"], text: "Open", cap: "Open" } : { cls: ["okstate"], text: "Closed", cap: "Closed" };
     case "leak":
-      return s.state === "on" ? { cls: ["alert"], text: "LEAK!" } : { cls: ["okstate"], text: "OK" };
+      return s.state === "on" ? { cls: ["alert"], text: "WATER LEAK!", cap: "LEAK!" } : { cls: ["okstate"], text: "Dry", cap: "Dry" };
     case "smoke":
-      return s.state === "on" ? { cls: ["smoke", "alert"], text: "SMOKE!" } : { cls: ["smoke", "okstate"], text: "Clear" };
+      return s.state === "on" ? { cls: ["smoke", "alert"], text: "SMOKE DETECTED", cap: "SMOKE!" } : { cls: ["smoke", "okstate"], text: "All clear", cap: "Clear" };
     case "climate_sensor": {
       const h2 = st(d.entity2);
-      return { cls: [], text: `${fmtSensor(s)}${h2 ? " · " + fmtSensor(h2) : ""}` };
+      const t = `${fmtSensor(s)}${h2 ? " · " + fmtSensor(h2) : ""}`;
+      return { cls: [], text: t, cap: t };
     }
     case "sensor": {
-      let text = fmtSensor(s);
       if (/aqi/.test(d.entity)) {
         const n = Number(s.state);
-        text = `${s.state} ${n <= 50 ? "Good" : n <= 100 ? "Moderate" : "Unhealthy"}`;
-        return { cls: n <= 50 ? ["okstate"] : n > 100 ? ["alert"] : [], text };
+        const q = n <= 50 ? "Good" : n <= 100 ? "Moderate" : "Unhealthy";
+        return { cls: n <= 50 ? ["okstate"] : n > 100 ? ["alert"] : [], text: `AQI ${s.state} · ${q}`, cap: `AQI ${s.state}` };
       }
-      return { cls: [], text };
+      return { cls: [], text: fmtSensor(s), cap: fmtSensor(s, true) };
     }
   }
-  return { cls: [], text: s.state };
+  return { cls: [], text: s.state, cap: s.state };
 }
 
 const TOGGLEABLE = new Set(["light", "switch", "fan"]);
@@ -668,25 +744,41 @@ const TOGGLEABLE = new Set(["light", "switch", "fan"]);
 /* ===================================================================== */
 /*  Rendering                                                             */
 /* ===================================================================== */
-const chipEls = new Map();  // device -> {chip, row}
+const devEls = new Map();  // device -> {dev, row, glow}
+const roomEls = [];
 
 function buildPlan() {
   const plan = $("plan");
-  const rooms = {};
-  CONFIG.devices.forEach((d) => {
-    const chip = h("button", { class: "chip", style: `left:${d.x}%;top:${d.y}%`, title: `${d.label} – ${d.entity}` },
-      h("span", { class: "ic", html: svg(d.icon) }),
-      h("span", { class: "txt" }, h("span", { class: "lbl" }, d.label), h("span", { class: "st" }, "…"), h("span", { class: "bar", hidden: true }, h("i"))));
-    bindPress(chip, d);
-    plan.append(chip);
-
-    const row = h("button", { class: "dev-row" }, h("span", { html: svg(d.icon) }), h("span", { class: "n" }, d.label), h("span", { class: "v" }, "…"));
+  const roomsList = {};
+  for (const d of CONFIG.devices) {
+    let dev = null, glow = null;
+    if (d.plan !== false) {
+      if (d.type === "light") {
+        glow = h("span", { class: "glow", style: `left:${d.x}%;top:${d.y}%` });
+        plan.append(glow);
+      }
+      dev = h("button", { class: "dev", style: `left:${d.x}%;top:${d.y}%`, "data-cat": CATEGORY[d.type] || "", "aria-label": `${d.room} ${d.label}` },
+        h("span", { class: "tip" }, `${d.room} · ${d.label}`),
+        h("span", { class: "orb", html: svg(d.icon) }),
+        h("span", { class: "cap" }, "…"));
+      bindPress(dev, d);
+    }
+    const row = h("button", { class: "dev-row" }, ico(d.icon), h("span", { class: "n" }, d.label), h("span", { class: "v" }, "…"));
     bindPress(row, d);
-    (rooms[d.room] ||= []).push(row);
-    chipEls.set(d, { chip, row });
-  });
+    (roomsList[d.room] ||= []).push(row);
+    devEls.set(d, { dev, row, glow });
+  }
+  for (const r of CONFIG.rooms) {
+    const clim = h("span", { class: "clim" });
+    const el = h("div", { class: "room", style: `left:${r.x}%;top:${r.y}%` }, r.name, clim);
+    plan.append(el);
+    roomEls.push({ r, clim });
+  }
+  // devices above room tags and glows
+  for (const { dev } of devEls.values()) if (dev) plan.append(dev);
+
   const wrap = $("rooms");
-  for (const [room, rows] of Object.entries(rooms)) wrap.append(h("div", { class: "card" }, h("h3", {}, room), rows));
+  for (const [room, rows] of Object.entries(roomsList)) wrap.append(h("div", { class: "card" }, h("h3", {}, room), rows));
 }
 
 function bindPress(el, d) {
@@ -709,7 +801,7 @@ function bindPress(el, d) {
 
 async function quickToggle(d, el) {
   el.classList.add("busy");
-  await callService(d.type === "light" ? "light" : d.type, "toggle", d.entity);
+  await callService(d.type, "toggle", d.entity);
   setTimeout(() => el.classList.remove("busy"), 300);
 }
 
@@ -721,22 +813,57 @@ function scheduleRender() {
 }
 
 function renderAll() {
-  for (const [d, { chip, row }] of chipEls) {
+  for (const [d, { dev, row, glow }] of devEls) {
     const v = view(d);
-    chip.className = "chip " + (d.compact ? "compact " : "") + v.cls.join(" ");
-    chip.querySelector(".st").textContent = v.text;
-    const bar = chip.querySelector(".bar");
-    bar.hidden = v.bar == null;
-    if (v.bar != null) bar.firstChild.style.width = v.bar + "%";
+    if (dev) {
+      dev.className = "dev " + v.cls.join(" ");
+      dev.querySelector(".cap").textContent = v.cap;
+    }
+    if (glow) glow.style.opacity = v.level || 0;
     row.className = "dev-row " + v.cls.filter((c) => c === "on" || c === "alert").join(" ");
     row.querySelector(".v").textContent = v.text;
   }
+  for (const { r, clim } of roomEls) {
+    const t = r.temp && st(r.temp), hu = r.hum && st(r.hum);
+    clim.textContent = [t && fmtSensor(t, true), hu && fmtSensor(hu)].filter(Boolean).join(" · ");
+    clim.hidden = !clim.textContent;
+  }
+  renderPills();
   renderAlarm();
   renderSensors();
   renderAverages();
   renderWeather();
   renderSmoke();
   if (openDeviceRef) refreshModal();
+}
+
+function renderPills() {
+  const lightsOn = CONFIG.devices.filter((d) => d.type === "light" && st(d.entity)?.state === "on");
+  const openings = CONFIG.securitySensors.filter((c) => {
+    const s = st(c.entity);
+    return s && s.state === "on" && isOpenable(s.attributes.device_class || c.icon);
+  });
+  const leaks = CONFIG.devices.filter((d) => d.type === "leak" && st(d.entity)?.state === "on");
+  const motion = CONFIG.devices.filter((d) => d.type === "motion" && st(d.entity)?.state === "on");
+  const pills = [];
+  pills.push(h("span", { class: "pill" + (lightsOn.length ? " on" : "") }, ico("bulb"), h("b", {}, String(lightsOn.length)),
+    lightsOn.length === 1 ? "light on" : "lights on",
+    lightsOn.length ? h("button", { onclick: allLightsOff, title: "Turn off every light" }, "All off") : null));
+  pills.push(openings.length
+    ? h("span", { class: "pill warn", title: openings.map((o) => o.label).join(", ") }, ico("door"), h("b", {}, String(openings.length)), "open")
+    : h("span", { class: "pill ok" }, ico("door"), "All closed"));
+  if (motion.length) pills.push(h("span", { class: "pill ok", title: motion.map((m) => `${m.room} ${m.label}`).join(", ") }, ico("motion"), `Motion: ${motion.map((m) => m.room).join(", ")}`));
+  if (leaks.length) pills.push(h("span", { class: "pill alert" }, ico("drop"), `Water leak: ${leaks.map((l) => l.room).join(", ")}`));
+  if (st(CONFIG.smokeDetector)?.state === "on") pills.push(h("span", { class: "pill alert" }, ico("smoke"), "Smoke in kitchen"));
+  $("pills").replaceChildren(...pills);
+}
+
+async function allLightsOff() {
+  const ids = CONFIG.devices.filter((d) => d.type === "light" && st(d.entity)?.state === "on").map((d) => d.entity);
+  if (!ids.length) return;
+  if (mode === "demo") ids.forEach((id) => demoService("light", "turn_off", id, {}));
+  else await callService("light", "turn_off", ids);
+  toast(`Turned off ${ids.length} light${ids.length === 1 ? "" : "s"}`);
 }
 
 function renderAlarm() {
@@ -757,23 +884,29 @@ function renderSensors() {
     const s = st(c.entity);
     let txt, cls = "val";
     if (!s) { txt = mode === "connecting" ? "…" : "not found"; cls += " missing"; }
-    else if (s.state === "on") {
+    else {
       const dc = s.attributes.device_class || c.icon;
-      txt = { door: "Open", window: "Open", opening: "Open", motion: "Motion", smoke: "SMOKE", moisture: "Leak" }[dc] || "ON";
-      cls += dc === "smoke" || dc === "moisture" ? " alert" : " on";
-    } else { txt = s.state === "off" ? (["door", "window", "opening"].includes(s.attributes.device_class || c.icon) ? "Closed" : "Off") : cap(s.state); }
+      if (s.state === "on") {
+        txt = isOpenable(dc) ? "Open" : { motion: "Motion", occupancy: "Occupied", smoke: "SMOKE", moisture: "Leak" }[dc] || "On";
+        cls += dc === "smoke" || dc === "moisture" ? " alert" : dc === "motion" || dc === "occupancy" ? " motion" : " on";
+      } else txt = s.state === "off" ? (isOpenable(dc) ? "Closed" : "Clear") : cap(s.state);
+    }
     return h("li", { title: c.entity }, h("span", { html: svg(c.icon) }), h("span", { class: "name" }, c.label), h("span", { class: cls }, txt));
   }));
 }
 
 function renderAverages() {
   const temps = [], hums = [];
-  for (const s of Object.values(states)) {
-    const dc = s.attributes.device_class, n = Number(s.state);
-    if (!s.entity_id.startsWith("sensor.") || !Number.isFinite(n) || /fridge|freezer/.test(s.entity_id)) continue;
-    if (!CONFIG.devices.some((d) => d.entity === s.entity_id || d.entity2 === s.entity_id)) continue;
-    if (dc === "temperature") temps.push(n);
-    if (dc === "humidity") hums.push(n);
+  const ids = new Set();
+  for (const d of CONFIG.devices) { ids.add(d.entity); if (d.entity2) ids.add(d.entity2); }
+  for (const r of CONFIG.rooms) { if (r.temp) ids.add(r.temp); if (r.hum) ids.add(r.hum); }
+  for (const id of ids) {
+    const s = st(id);
+    if (!s || !id.startsWith("sensor.") || /fridge|freezer/.test(id)) continue;
+    const n = Number(s.state);
+    if (!Number.isFinite(n)) continue;
+    if (s.attributes.device_class === "temperature") temps.push(n);
+    if (s.attributes.device_class === "humidity") hums.push(n);
   }
   const avg = (a) => a.reduce((x, y) => x + y, 0) / a.length;
   $("avgTemp").textContent = temps.length ? avg(temps).toFixed(1) : "--";
@@ -900,7 +1033,7 @@ function refreshModal(force) {
   if (!force && document.activeElement && document.activeElement.type === "range") return;
   const s = st(d.entity);
   const v = view(d);
-  const head = h("header", {},
+  const head = h("div", { class: "mhead" },
     h("span", { html: svg(d.icon, 'style="width:24px;height:24px"') }),
     h("div", { style: "flex:1" }, h("h3", {}, `${d.room} – ${d.label}`), h("div", { class: "eid" }, d.entity)),
     h("button", { class: "icon-btn", onclick: closeModal, "aria-label": "Close", html: svg("close") }));
@@ -967,7 +1100,6 @@ function refreshModal(force) {
       ctl.append(h("div", { class: "note", style: "color:#fff;background:var(--danger-bg)" }, "Smoke is being reported. Check the kitchen immediately. The detector clears itself once the air is clear."));
     }
 
-    // attributes
     const rows = [["State", s.state], ["Last changed", new Date(s.last_changed).toLocaleString()]];
     if (d.type === "climate" && a.current_temperature != null) rows.push(["Room temperature", a.current_temperature + "°C"]);
     if (a.battery_level != null) rows.push(["Battery", a.battery_level + "%"]);
@@ -987,7 +1119,7 @@ function openSettings() {
   const url = h("input", { value: settings.url, placeholder: "http://homeassistant.local:8123" });
   const token = h("input", { value: settings.token, placeholder: "Long-lived access token", type: "password", autocomplete: "off" });
   openModal([
-    h("header", {}, h("h3", {}, "Home Assistant connection"), h("button", { class: "icon-btn", onclick: closeModal, "aria-label": "Close", html: svg("close") })),
+    h("div", { class: "mhead" }, h("h3", { style: "flex:1" }, "Home Assistant connection"), h("button", { class: "icon-btn", onclick: closeModal, "aria-label": "Close", html: svg("close") })),
     h("div", { class: "note" },
       "Create a token in Home Assistant → your profile → Security → Long-lived access tokens. ",
       "The token is saved only in this browser. Use this dashboard on trusted devices only."),
@@ -1021,6 +1153,19 @@ $("alarmButtons").addEventListener("click", (e) => {
     data.code = code;
   }
   callService("alarm_control_panel", b.dataset.svc, CONFIG.alarmPanel, data);
+});
+$("filters").addEventListener("click", (e) => {
+  const b = e.target.closest("button");
+  if (!b) return;
+  const f = b.dataset.f;
+  document.querySelectorAll("#filters button").forEach((x) => x.classList.toggle("active", x === b));
+  const plan = $("plan");
+  plan.dataset.filter = f;
+  plan.querySelectorAll(".dev").forEach((el) => {
+    const match = f === "all" || el.dataset.cat.split(" ").includes(f);
+    el.style.opacity = match ? "" : ".3";
+    el.style.pointerEvents = match ? "" : "none";
+  });
 });
 
 buildPlan();

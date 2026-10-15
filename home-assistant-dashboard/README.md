@@ -3,7 +3,8 @@
 A single-file HTML dashboard that shows your home's floor plan with live device states from Home Assistant. You can read sensors and control lights, switches, the AC, curtains, TVs, the speaker and the alarm. It also covers the **new kitchen smoke detector**.
 
 - `index.html` is the dashboard (no build step, no external libraries).
-- `floorplan.jpg` is the floor-plan background.
+- `floorplan.jpg` is the floor-plan background: your render with the old baked-in labels removed and upscaled to 2730×1536.
+- `tools/clean_floorplan.py` is the script that cleaned the photo. You only need it if you want to re-process a new render.
 
 ## Features
 
@@ -17,6 +18,9 @@ A single-file HTML dashboard that shows your home's floor plan with live device 
 | Sensors | Temperature, humidity, AQI, fridge, motion and water leak, all live. |
 | Security | Arm home / arm away / disarm through `alarm_control_panel`. Shows door, window and motion sensors. |
 | **Kitchen smoke detector** | Shown on the plan and in its own card. When it reports smoke, the screen shows a full-screen red alarm with a 3-beep siren sound, and the browser sends a notification. It can also turn on a siren in the house (`smokeSiren`). |
+| Status bar | Shows how many lights are on, with an **All off** button, plus open doors/windows, active motion, leaks and smoke. |
+| Filters | Show only Lights, Sensors, Safety, or Climate & media on the plan. |
+| Room tags | Each room has a name tag on the plan. A tag can also show that room's temperature and humidity (`CONFIG.rooms`). |
 | Demo mode | Runs with simulated data until you enter a token, so you can try it right away. |
 
 ## 1. Install it in Home Assistant (recommended)
@@ -40,9 +44,10 @@ Open `index.html` and edit the `CONFIG` block at the top of the `<script>`. Chan
 { room: "Kitchen", type: "smoke", entity: "binary_sensor.kitchen_smoke_detector", label: "Smoke detector", icon: "smoke", x: 44.0, y: 67.5 },
 ```
 
-- `type` is one of `light`, `switch`, `fan`, `media`, `cover`, `climate`, `sensor`, `climate_sensor` (temperature + `entity2` humidity), `motion`, `leak` or `smoke`.
+- `type` is one of `light`, `switch`, `fan`, `media`, `cover`, `climate`, `sensor`, `climate_sensor` (temperature + `entity2` humidity), `motion`, `contact` (door/window), `leak` or `smoke`.
+- Add `plan: false` to keep a device only in the "All devices by room" list, without a button on the plan.
 - `x` / `y` set the position on the floor plan, in percent.
-- If an entity isn't found in HA, its chip is drawn **dashed with "N/A"**, so you can see what still needs mapping.
+- If an entity isn't found in HA, its button is drawn **faded with a dashed ring and "N/A"**, so you can see what still needs mapping.
 - `alarmPanel`, `weather`, `smokeDetector` and `securitySensors` are set in the same block.
 
 ## 3. Add the kitchen smoke detector
