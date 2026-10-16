@@ -176,6 +176,34 @@
   .dev.missing .orb { border-style: dashed; }
   .dev.busy .orb { opacity: .6; }
 
+  /* ---------- setup (edit) mode ---------- */
+  .edit-bar { display: none; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; padding: 10px 12px;
+    background: var(--info-bg); border: 1px solid rgba(74,168,255,.45); border-radius: 12px; }
+  body.editing .edit-bar { display: flex; }
+  body.editing .plan-bar .hint { display: none; }
+  .edit-bar .msg { font-size: 13px; color: #cfe6ff; margin-right: auto; }
+  .edit-bar .msg b { color: #fff; }
+  .edit-bar button { background: var(--panel-2); border: 1px solid var(--line); border-radius: 8px; padding: 6px 11px; font-size: 13px;
+    display: inline-flex; align-items: center; gap: 6px; }
+  .edit-bar button:hover { border-color: var(--muted); }
+  .edit-bar button.done { background: var(--info); border-color: var(--info); color: #fff; font-weight: 600; }
+  body.editing .dev { cursor: grab; touch-action: none; opacity: 1 !important; pointer-events: auto !important; }
+  body.editing .dev .orb { outline: 2px dashed rgba(74,168,255,.9); outline-offset: 3px; }
+  body.editing .dev.missing .orb { outline-color: var(--warn); }
+  body.editing .dev:active { cursor: grabbing; }
+  body.editing .room { pointer-events: auto; cursor: grab; touch-action: none; outline: 2px dashed rgba(255,255,255,.6); outline-offset: 2px; }
+  #editBtn.active { background: var(--info); border-color: var(--info); color: #fff; }
+  .field select { background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 9px 10px; color: var(--text); font: inherit; font-size: 13px; }
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .field-row > *, .field input, .field select { min-width: 0; }
+  .preview { display: flex; align-items: center; gap: 8px; font-size: 12px; margin: -6px 0 12px; padding: 8px 10px; border-radius: 8px; background: var(--panel-2); color: var(--muted); }
+  .preview.ok { color: var(--ok); }
+  .preview.bad { color: var(--warn); }
+  .icon-pick { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+  .icon-pick button { width: 36px; height: 36px; border-radius: 9px; background: var(--panel-2); border: 1px solid var(--line); display: grid; place-items: center; }
+  .icon-pick button.active { border-color: var(--on); color: var(--on); background: var(--on-bg); }
+  .btn.danger-outline { color: var(--danger); border-color: rgba(255,77,79,.45); }
+
   @keyframes pulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(255,77,79,.75); } 50% { box-shadow: 0 0 0 1em rgba(255,77,79,0); } }
   @keyframes ring { 0%, 100% { box-shadow: 0 0 0 0 rgba(60,207,122,.6); } 60% { box-shadow: 0 0 0 .8em rgba(60,207,122,0); } }
 
@@ -261,6 +289,7 @@
       <div class="small" id="date">--</div>
     </div>
   </div>
+  <button class="icon-btn" id="editBtn" title="Set up devices: assign buttons to your Home Assistant entities" aria-label="Set up devices"></button>
   <button class="icon-btn" id="settingsBtn" title="Connection settings" aria-label="Connection settings"></button>
 </header>
 
@@ -314,6 +343,14 @@
       </div>
       <span class="hint">Tap to switch · hold (or right-click) for brightness &amp; details</span>
     </div>
+    <div class="edit-bar" id="editBar">
+      <span class="msg" id="editMsg">Setup mode</span>
+      <button id="addDevBtn"></button>
+      <button id="addRoomBtn"></button>
+      <button id="dlBtn" title="Save layout.json and copy it next to index.html so every device uses it"></button>
+      <button id="resetBtn" title="Forget the changes saved in this browser"></button>
+      <button id="doneBtn" class="done">Done</button>
+    </div>
     <div class="plan-scroll">
       <div class="plan" id="plan" data-filter="all"></div>
     </div>
@@ -339,6 +376,8 @@
 </div>
 
 <div class="toast" id="toast"></div>
+<datalist id="entityList"></datalist>
+<datalist id="roomList"></datalist>
 
 <script>
 /* =====================================================================
@@ -464,6 +503,11 @@ const ICONS = {
   fridge: '<rect x="5" y="2" width="14" height="20" rx="2"/><path d="M5 10h14M8 5.5v2M8 13v3"/>',
   gear: '<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>',
   close: '<path d="M6 6l12 12M18 6L6 18"/>',
+  edit: '<path d="M4 20h4L19 9l-4-4L4 16zM13.5 6.5l4 4"/>',
+  plus: '<path d="M12 5v14M5 12h14"/>',
+  download: '<path d="M12 3v12M7 10l5 5 5-5M5 21h14"/>',
+  undo: '<path d="M9 14L4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/>',
+  tag: '<path d="M3 12V3h9l9 9-9 9z"/><circle cx="7.5" cy="7.5" r="1.5"/>',
   power: '<path d="M12 3v9M6.4 6.4a8 8 0 1 0 11.2 0"/>',
   sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
   cloud: '<path d="M7 18a5 5 0 1 1 1-9.9A6 6 0 0 1 19.5 10 4 4 0 0 1 18 18z"/>',
@@ -749,6 +793,10 @@ const roomEls = [];
 
 function buildPlan() {
   const plan = $("plan");
+  plan.replaceChildren();
+  $("rooms").replaceChildren();
+  devEls.clear();
+  roomEls.length = 0;
   const roomsList = {};
   for (const d of CONFIG.devices) {
     let dev = null, glow = null;
@@ -762,6 +810,7 @@ function buildPlan() {
         h("span", { class: "orb", html: svg(d.icon) }),
         h("span", { class: "cap" }, "…"));
       bindPress(dev, d);
+      makeDraggable(dev, d, () => openDeviceEditor(d), () => { if (glow) { glow.style.left = d.x + "%"; glow.style.top = d.y + "%"; } });
     }
     const row = h("button", { class: "dev-row" }, ico(d.icon), h("span", { class: "n" }, d.label), h("span", { class: "v" }, "…"));
     bindPress(row, d);
@@ -771,6 +820,7 @@ function buildPlan() {
   for (const r of CONFIG.rooms) {
     const clim = h("span", { class: "clim" });
     const el = h("div", { class: "room", style: `left:${r.x}%;top:${r.y}%` }, r.name, clim);
+    makeDraggable(el, r, () => openRoomEditor(r));
     plan.append(el);
     roomEls.push({ r, clim });
   }
@@ -784,15 +834,17 @@ function buildPlan() {
 function bindPress(el, d) {
   let timer = null, long = false;
   el.addEventListener("pointerdown", () => {
+    if (editing) return;
     long = false;
     timer = setTimeout(() => { long = true; openDevice(d); }, 500);
   });
   const cancel = () => clearTimeout(timer);
   el.addEventListener("pointerleave", cancel);
   el.addEventListener("pointercancel", cancel);
-  el.addEventListener("contextmenu", (e) => { e.preventDefault(); cancel(); if (!long) openDevice(d); long = true; });
+  el.addEventListener("contextmenu", (e) => { e.preventDefault(); cancel(); if (editing) return; if (!long) openDevice(d); long = true; });
   el.addEventListener("click", () => {
     cancel();
+    if (editing) { if (!el.classList.contains("dev")) openDeviceEditor(d); return; }  // plan buttons open the editor on pointerup
     if (long) return;
     if (TOGGLEABLE.has(d.type) && st(d.entity)) quickToggle(d, el);
     else openDevice(d);
@@ -801,7 +853,7 @@ function bindPress(el, d) {
 
 async function quickToggle(d, el) {
   el.classList.add("busy");
-  await callService(d.type, "toggle", d.entity);
+  await callService(d.entity.split(".")[0], "toggle", d.entity);
   setTimeout(() => el.classList.remove("busy"), 300);
 }
 
@@ -834,12 +886,13 @@ function renderAll() {
   renderAverages();
   renderWeather();
   renderSmoke();
+  renderEditMsg();
   if (openDeviceRef) refreshModal();
 }
 
 function renderPills() {
   const lightsOn = CONFIG.devices.filter((d) => d.type === "light" && st(d.entity)?.state === "on");
-  const openings = CONFIG.securitySensors.filter((c) => {
+  const openings = securityList().filter((c) => {
     const s = st(c.entity);
     return s && s.state === "on" && isOpenable(s.attributes.device_class || c.icon);
   });
@@ -880,7 +933,9 @@ function renderAlarm() {
 
 function renderSensors() {
   const ul = $("sensorList");
-  ul.replaceChildren(...CONFIG.securitySensors.map((c) => {
+  const list = securityList();
+  if (!list.length) { ul.replaceChildren(h("li", {}, h("span", { class: "name", style: "color:var(--muted)" }, "No door, window or motion sensors assigned yet."))); return; }
+  ul.replaceChildren(...list.map((c) => {
     const s = st(c.entity);
     let txt, cls = "val";
     if (!s) { txt = mode === "connecting" ? "…" : "not found"; cls += " missing"; }
@@ -1118,6 +1173,9 @@ function openSettings() {
   openDeviceRef = null;
   const url = h("input", { value: settings.url, placeholder: "http://homeassistant.local:8123" });
   const token = h("input", { value: settings.token, placeholder: "Long-lived access token", type: "password", autocomplete: "off" });
+  const alarm = h("input", { value: CONFIG.alarmPanel, list: "alarmList", placeholder: "alarm_control_panel.…", autocomplete: "off", spellcheck: "false" });
+  const weather = h("input", { value: CONFIG.weather, list: "weatherList", placeholder: "weather.…", autocomplete: "off", spellcheck: "false" });
+  const opts = (dom) => entityOptions([dom]).map(([id, name]) => h("option", { value: id }, name));
   openModal([
     h("div", { class: "mhead" }, h("h3", { style: "flex:1" }, "Home Assistant connection"), h("button", { class: "icon-btn", onclick: closeModal, "aria-label": "Close", html: svg("close") })),
     h("div", { class: "note" },
@@ -1125,8 +1183,16 @@ function openSettings() {
       "The token is saved only in this browser. Use this dashboard on trusted devices only."),
     h("label", { class: "field" }, "Home Assistant URL", url),
     h("label", { class: "field" }, "Access token", token),
+    h("div", { class: "field-row" },
+      h("label", { class: "field" }, "Alarm panel entity", alarm, h("datalist", { id: "alarmList" }, opts("alarm_control_panel"))),
+      h("label", { class: "field" }, "Weather entity", weather, h("datalist", { id: "weatherList" }, opts("weather")))),
     h("div", { class: "btn-row" },
       h("button", { class: "btn primary", onclick: () => {
+        if (alarm.value.trim() !== CONFIG.alarmPanel || weather.value.trim() !== CONFIG.weather) {
+          CONFIG.alarmPanel = alarm.value.trim();
+          CONFIG.weather = weather.value.trim();
+          saveLayout();
+        }
         settings.url = url.value.trim().replace(/\/$/, "");
         settings.token = token.value.trim();
         LS.set("ha_url", settings.url); LS.set("ha_token", settings.token);
@@ -1137,9 +1203,284 @@ function openSettings() {
 }
 
 /* ===================================================================== */
+/*  Setup mode: assign buttons to entities, drag them, add / delete       */
+/*  Changes are saved in this browser (localStorage) and can be exported  */
+/*  as layout.json, which every browser loads if it sits next to          */
+/*  index.html on the server.                                             */
+/* ===================================================================== */
+let editing = false;
+
+const TYPES = [
+  ["light", "Light", ["light"]],
+  ["switch", "Switch / plug", ["switch", "input_boolean", "light"]],
+  ["fan", "Fan", ["fan"]],
+  ["media", "TV / speaker", ["media_player"]],
+  ["cover", "Curtain / blind / shutter", ["cover"]],
+  ["climate", "AC / thermostat", ["climate"]],
+  ["sensor", "Sensor reading (temperature, AQI…)", ["sensor"]],
+  ["climate_sensor", "Temperature + humidity pair", ["sensor"]],
+  ["motion", "Motion / presence", ["binary_sensor"]],
+  ["contact", "Door / window", ["binary_sensor"]],
+  ["leak", "Water leak", ["binary_sensor"]],
+  ["smoke", "Smoke / gas / CO detector", ["binary_sensor"]],
+];
+const PICKABLE_ICONS = ["bulb", "pendant", "lamp", "spot", "tv", "speaker", "ac", "fan", "plug", "curtain", "thermo", "drop", "air", "fridge", "motion", "door", "window", "smoke"];
+
+function currentLayout() {
+  return { version: 1, alarmPanel: CONFIG.alarmPanel, weather: CONFIG.weather, devices: CONFIG.devices, rooms: CONFIG.rooms };
+}
+function applyLayout(l) {
+  if (!l || !Array.isArray(l.devices) || !Array.isArray(l.rooms)) return false;
+  CONFIG.devices = l.devices;
+  CONFIG.rooms = l.rooms;
+  if (l.alarmPanel) CONFIG.alarmPanel = l.alarmPanel;
+  if (l.weather) CONFIG.weather = l.weather;
+  CONFIG.smokeDetector = (l.devices.find((d) => d.type === "smoke") || {}).entity || CONFIG.smokeDetector;
+  return true;
+}
+function saveLayout() {
+  CONFIG.smokeDetector = (CONFIG.devices.find((d) => d.type === "smoke") || {}).entity || CONFIG.smokeDetector;
+  LS.set("ha_layout", JSON.stringify(currentLayout()));
+}
+async function loadLayout() {
+  try { const l = JSON.parse(LS.get("ha_layout", "null")); if (applyLayout(l)) return "browser"; } catch {}
+  if (location.protocol.startsWith("http")) {
+    try {
+      const r = await fetch("layout.json", { cache: "no-store" });
+      if (r.ok && applyLayout(await r.json())) return "file";
+    } catch {}
+  }
+  return "default";
+}
+
+function securityList() {
+  const seen = new Set(), out = [];
+  for (const c of CONFIG.securitySensors) if (!seen.has(c.entity)) { seen.add(c.entity); out.push(c); }
+  for (const d of CONFIG.devices)
+    if (["contact", "motion", "smoke", "leak"].includes(d.type) && d.entity && !seen.has(d.entity)) {
+      seen.add(d.entity);
+      out.push({ entity: d.entity, label: `${d.room} ${d.label}`.trim(), icon: d.icon });
+    }
+  // once connected, hide example sensors that don't exist in this Home Assistant
+  return mode === "ok" && !editing ? out.filter((c) => states[c.entity]) : out;
+}
+
+function entityOptions(domains) {
+  return Object.values(states)
+    .filter((s) => domains.includes(s.entity_id.split(".")[0]))
+    .map((s) => [s.entity_id, `${s.attributes.friendly_name || s.entity_id} — ${s.state}${s.attributes.unit_of_measurement ? " " + s.attributes.unit_of_measurement : ""}`])
+    .sort((a, b) => a[0].localeCompare(b[0]));
+}
+
+function guessType(id) {
+  const s = states[id];
+  const dom = id.split(".")[0], dc = s?.attributes.device_class || "";
+  if (dom === "binary_sensor") {
+    if (["smoke", "gas", "carbon_monoxide"].includes(dc)) return "smoke";
+    if (dc === "moisture") return "leak";
+    if (["motion", "occupancy", "presence"].includes(dc)) return "motion";
+    return "contact";
+  }
+  return { light: "light", switch: "switch", input_boolean: "switch", fan: "fan", media_player: "media", cover: "cover", climate: "climate", sensor: "sensor" }[dom] || null;
+}
+function guessIcon(type, id) {
+  const s = states[id], dc = s?.attributes.device_class || "", name = (id + " " + (s?.attributes.friendly_name || "")).toLowerCase();
+  switch (type) {
+    case "light": return /lamp/.test(name) ? "lamp" : /spot|downlight/.test(name) ? "spot" : /pendant|ceiling|chandelier|dining/.test(name) ? "pendant" : "bulb";
+    case "switch": return "plug";
+    case "fan": return "fan";
+    case "media": return /speaker|sonos|echo|homepod|music/.test(name) ? "speaker" : "tv";
+    case "cover": return "curtain";
+    case "climate": return "ac";
+    case "sensor": return dc === "humidity" ? "drop" : /aqi|pm25|pm10|co2|voc|air/.test(name + dc) ? "air" : /fridge|freezer/.test(name) ? "fridge" : "thermo";
+    case "climate_sensor": return "thermo";
+    case "motion": return "motion";
+    case "contact": return dc === "window" || /window/.test(name) ? "window" : "door";
+    case "leak": return "drop";
+    case "smoke": return "smoke";
+  }
+  return "bulb";
+}
+
+function makeDraggable(el, obj, onTap, onMove) {
+  let start = null;
+  el.addEventListener("pointerdown", (e) => {
+    if (!editing) return;
+    e.preventDefault();
+    start = { x: e.clientX, y: e.clientY, moved: false };
+    try { el.setPointerCapture(e.pointerId); } catch {}
+  });
+  el.addEventListener("pointermove", (e) => {
+    if (!editing || !start) return;
+    if (!start.moved && Math.hypot(e.clientX - start.x, e.clientY - start.y) < 5) return;
+    start.moved = true;
+    const r = $("plan").getBoundingClientRect();
+    obj.x = Math.round(Math.min(99, Math.max(1, ((e.clientX - r.left) / r.width) * 100)) * 10) / 10;
+    obj.y = Math.round(Math.min(99, Math.max(1, ((e.clientY - r.top) / r.height) * 100)) * 10) / 10;
+    el.style.left = obj.x + "%";
+    el.style.top = obj.y + "%";
+    if (onMove) onMove();
+  });
+  const end = () => {
+    if (!editing || !start) return;
+    const s = start; start = null;
+    if (s.moved) saveLayout(); else onTap();
+  };
+  el.addEventListener("pointerup", end);
+  el.addEventListener("pointercancel", () => { if (start?.moved) saveLayout(); start = null; });
+}
+
+function setEditing(on) {
+  editing = on;
+  document.body.classList.toggle("editing", on);
+  $("editBtn").classList.toggle("active", on);
+  if (on && mode !== "ok") toast("Tip: connect to Home Assistant first (⚙) so you can pick your real devices from a list.");
+  renderAll();
+}
+
+function renderEditMsg() {
+  if (!editing) return;
+  const plan = CONFIG.devices;
+  const linked = plan.filter((d) => states[d.entity]).length;
+  $("editMsg").innerHTML = "";
+  $("editMsg").append(h("b", {}, "Setup mode. "), "Drag to move · click to assign. ",
+    h("b", {}, `${linked}/${plan.length}`), " buttons linked to Home Assistant", mode === "ok" ? "." : " (demo data).");
+}
+
+function field(label, input, extra) {
+  return h("label", { class: "field" }, label, input, extra || null);
+}
+
+function openDeviceEditor(d, isNew = false) {
+  openDeviceRef = null;
+  let typeTouched = !isNew, labelTouched = !isNew, iconTouched = !isNew;
+  let icon = d.icon || "bulb";
+  const ent = h("input", { value: d.entity || "", list: "entityList", placeholder: "Start typing, e.g. light.kitchen or Kitchen", autocomplete: "off", spellcheck: "false" });
+  const ent2 = h("input", { value: d.entity2 || "", list: "entityList2", placeholder: "sensor.…_humidity", autocomplete: "off", spellcheck: "false" });
+  const ent2Field = field("Humidity sensor", ent2, h("datalist", { id: "entityList2" }, entityOptions(["sensor"]).map(([id, n]) => h("option", { value: id }, n))));
+  const preview = h("div", { class: "preview" });
+  const type = h("select", {}, TYPES.map(([v, n]) => h("option", { value: v, selected: v === d.type }, n)));
+  const label = h("input", { value: d.label || "", placeholder: "Name shown on hover" });
+  const room = h("input", { value: d.room || "", list: "roomList", placeholder: "e.g. Kitchen" });
+  const onPlan = h("input", { type: "checkbox", checked: d.plan !== false });
+  const iconRow = h("div", { class: "icon-pick" });
+
+  const drawIcons = () => iconRow.replaceChildren(...PICKABLE_ICONS.map((n) =>
+    h("button", { type: "button", class: n === icon ? "active" : "", title: n, html: svg(n), onclick: () => { icon = n; iconTouched = true; drawIcons(); } })));
+  const fillEntities = () => {
+    const doms = TYPES.find((t) => t[0] === type.value)[2];
+    $("entityList").replaceChildren(...entityOptions(doms).map(([id, n]) => h("option", { value: id }, n)));
+    ent2Field.style.display = type.value === "climate_sensor" ? "" : "none";
+  };
+  const updatePreview = () => {
+    const id = ent.value.trim(), s = states[id];
+    preview.className = "preview " + (s ? "ok" : id ? "bad" : "");
+    preview.textContent = s ? `✓ ${s.attributes.friendly_name || id} — currently ${s.state}${s.attributes.unit_of_measurement ? " " + s.attributes.unit_of_measurement : ""}`
+      : id ? (mode === "ok" ? "Not found in Home Assistant — check the spelling." : "Can't check: not connected to Home Assistant.") : "Pick an entity from the list.";
+    if (s) {
+      const t = guessType(id);
+      if (t && !typeTouched) { type.value = t; fillEntities(); }
+      if (!labelTouched) label.value = s.attributes.friendly_name || id;
+      if (!iconTouched) { icon = guessIcon(type.value, id); drawIcons(); }
+    }
+  };
+  ent.addEventListener("input", updatePreview);
+  type.addEventListener("change", () => { typeTouched = true; fillEntities(); if (!iconTouched) { icon = guessIcon(type.value, ent.value.trim()); drawIcons(); } });
+  label.addEventListener("input", () => (labelTouched = true));
+  $("roomList").replaceChildren(...[...new Set(CONFIG.devices.map((x) => x.room).concat(CONFIG.rooms.map((r) => r.name)))].filter(Boolean).map((r) => h("option", { value: r })));
+  fillEntities(); drawIcons(); updatePreview();
+
+  const save = () => {
+    const id = ent.value.trim();
+    if (!/^[a-z_]+\.[a-z0-9_]+$/.test(id)) { toast("Enter a valid entity id, like light.kitchen", true); ent.focus(); return; }
+    Object.assign(d, { entity: id, type: type.value, label: label.value.trim() || id, room: room.value.trim() || "Other", icon });
+    if (type.value === "climate_sensor" && ent2.value.trim()) d.entity2 = ent2.value.trim(); else delete d.entity2;
+    if (onPlan.checked) delete d.plan; else d.plan = false;
+    if (d.x == null) { d.x = 50; d.y = 50; }
+    if (isNew) CONFIG.devices.push(d);
+    saveLayout(); closeModal(); buildPlan(); applyFilter(); renderAll();
+    if (mode === "demo" && !states[id]) startDemo();
+  };
+  openModal([
+    h("div", { class: "mhead" }, h("span", { html: svg("edit", 'style="width:22px;height:22px"') }),
+      h("h3", { style: "flex:1" }, isNew ? "Add a device" : "Assign button"),
+      h("button", { class: "icon-btn", onclick: closeModal, "aria-label": "Close", html: svg("close") })),
+    field("Home Assistant entity", ent), preview,
+    ent2Field,
+    h("div", { class: "field-row" }, field("Type", type), field("Room", room)),
+    field("Name", label),
+    h("div", { class: "field" }, "Icon"), iconRow,
+    h("label", { class: "field", style: "flex-direction:row;align-items:center;gap:8px" }, onPlan, "Show as a button on the floor plan"),
+    h("div", { class: "btn-row" },
+      h("button", { class: "btn primary", onclick: save }, "Save"),
+      isNew ? null : h("button", { class: "btn danger-outline", onclick: () => {
+        if (!confirm(`Delete "${d.label}" from the dashboard? (Nothing changes in Home Assistant.)`)) return;
+        CONFIG.devices.splice(CONFIG.devices.indexOf(d), 1);
+        saveLayout(); closeModal(); buildPlan(); applyFilter(); renderAll();
+      } }, "Delete"),
+      h("button", { class: "btn", onclick: closeModal }, "Cancel")),
+  ]);
+  setTimeout(() => ent.focus(), 50);
+}
+
+function openRoomEditor(r, isNew = false) {
+  openDeviceRef = null;
+  const sensors = entityOptions(["sensor"]).map(([id, n]) => h("option", { value: id }, n));
+  const name = h("input", { value: r.name || "", placeholder: "e.g. Guest room" });
+  const temp = h("input", { value: r.temp || "", list: "tempList", placeholder: "optional: sensor.…_temperature", autocomplete: "off", spellcheck: "false" });
+  const hum = h("input", { value: r.hum || "", list: "tempList", placeholder: "optional: sensor.…_humidity", autocomplete: "off", spellcheck: "false" });
+  const save = () => {
+    if (!name.value.trim()) { toast("Give the room a name", true); return; }
+    r.name = name.value.trim();
+    if (temp.value.trim()) r.temp = temp.value.trim(); else delete r.temp;
+    if (hum.value.trim()) r.hum = hum.value.trim(); else delete r.hum;
+    if (isNew) CONFIG.rooms.push(r);
+    saveLayout(); closeModal(); buildPlan(); applyFilter(); renderAll();
+  };
+  openModal([
+    h("div", { class: "mhead" }, h("span", { html: svg("tag", 'style="width:22px;height:22px"') }),
+      h("h3", { style: "flex:1" }, isNew ? "Add a room label" : "Room label"),
+      h("button", { class: "icon-btn", onclick: closeModal, "aria-label": "Close", html: svg("close") })),
+    field("Room name", name),
+    field("Temperature sensor", temp, h("datalist", { id: "tempList" }, sensors)),
+    field("Humidity sensor", hum),
+    h("div", { class: "btn-row" },
+      h("button", { class: "btn primary", onclick: save }, "Save"),
+      isNew ? null : h("button", { class: "btn danger-outline", onclick: () => {
+        CONFIG.rooms.splice(CONFIG.rooms.indexOf(r), 1);
+        saveLayout(); closeModal(); buildPlan(); applyFilter(); renderAll();
+      } }, "Delete"),
+      h("button", { class: "btn", onclick: closeModal }, "Cancel")),
+  ]);
+}
+
+function downloadLayout() {
+  const blob = new Blob([JSON.stringify(currentLayout(), null, 2)], { type: "application/json" });
+  const a = h("a", { href: URL.createObjectURL(blob), download: "layout.json" });
+  document.body.append(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  toast("layout.json downloaded. Copy it next to index.html on Home Assistant so every device uses this layout.");
+}
+
+/* ===================================================================== */
 /*  Boot                                                                  */
 /* ===================================================================== */
 $("settingsBtn").innerHTML = svg("gear");
+$("editBtn").innerHTML = svg("edit");
+$("editBtn").addEventListener("click", () => setEditing(!editing));
+$("doneBtn").addEventListener("click", () => setEditing(false));
+$("addDevBtn").append(ico("plus"), "Device");
+$("addDevBtn").addEventListener("click", () => openDeviceEditor({ room: "", type: "light", entity: "", label: "", icon: "bulb", x: 50, y: 50 }, true));
+$("addRoomBtn").append(ico("tag"), "Room label");
+$("addRoomBtn").addEventListener("click", () => openRoomEditor({ name: "", x: 50, y: 50 }, true));
+$("dlBtn").append(ico("download"), "Download layout.json");
+$("dlBtn").addEventListener("click", downloadLayout);
+$("resetBtn").append(ico("undo"), "Reset");
+$("resetBtn").addEventListener("click", () => {
+  if (!confirm("Forget the layout changes saved in this browser and go back to the layout on the server (layout.json) or the built-in example?")) return;
+  LS.del("ha_layout");
+  location.reload();
+});
 $("settingsBtn").addEventListener("click", openSettings);
 $("fireIcon").innerHTML = svg("smoke");
 $("alarmButtons").addEventListener("click", (e) => {
@@ -1154,11 +1495,10 @@ $("alarmButtons").addEventListener("click", (e) => {
   }
   callService("alarm_control_panel", b.dataset.svc, CONFIG.alarmPanel, data);
 });
-$("filters").addEventListener("click", (e) => {
-  const b = e.target.closest("button");
-  if (!b) return;
-  const f = b.dataset.f;
-  document.querySelectorAll("#filters button").forEach((x) => x.classList.toggle("active", x === b));
+let currentFilter = "all";
+function applyFilter() {
+  const f = currentFilter;
+  document.querySelectorAll("#filters button").forEach((x) => x.classList.toggle("active", x.dataset.f === f));
   const plan = $("plan");
   plan.dataset.filter = f;
   plan.querySelectorAll(".dev").forEach((el) => {
@@ -1166,13 +1506,22 @@ $("filters").addEventListener("click", (e) => {
     el.style.opacity = match ? "" : ".3";
     el.style.pointerEvents = match ? "" : "none";
   });
+}
+$("filters").addEventListener("click", (e) => {
+  const b = e.target.closest("button");
+  if (!b) return;
+  currentFilter = b.dataset.f;
+  applyFilter();
 });
 
-buildPlan();
-tickClock();
-setInterval(tickClock, 10000);
-renderAll();
-connect();
+(async () => {
+  await loadLayout();
+  buildPlan();
+  tickClock();
+  setInterval(tickClock, 10000);
+  renderAll();
+  connect();
+})();
 </script>
 </body>
 </html>
