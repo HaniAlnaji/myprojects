@@ -9,9 +9,10 @@
     --sky:#75AADB; --sky-d:#3b7fc4; --navy:#1d2b53; --gold:#f5b700;
     --pitch:#2e9e4f; --pitch-d:#1f7a3a; --bg:#eef6ff; --card:#ffffff;
     --text:#1d2b53; --muted:#5d6b8a; --ok:#1e9e55; --bad:#e0413a;
-    --able:#2f6fd6; --ible:#e2761b; --radius:18px;
+    --able:#2f6fd6; --ible:#e2761b; --team:#8a3ad1; --radius:18px;
   }
   *{box-sizing:border-box}
+  [hidden]{display:none !important}
   html,body{margin:0}
   body{
     font-family:"Comic Sans MS","Chalkboard SE","Segoe UI Rounded",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
@@ -30,20 +31,26 @@
   }
   header::after{content:"";position:absolute;left:50%;top:-60px;width:160px;height:160px;border:3px solid rgba(255,255,255,.25);border-radius:50%;transform:translateX(-50%)}
   .head-in{max-width:900px;margin:0 auto;display:flex;gap:12px;align-items:flex-end;position:relative;z-index:1}
-  .coach{width:110px;flex:0 0 110px;height:140px;position:relative}
+  .coach{width:110px;flex:0 0 110px;height:140px;position:relative;cursor:pointer;-webkit-tap-highlight-color:transparent}
   .coach svg{width:100%;height:100%;overflow:visible}
   .coach .photo{width:104px;height:104px;border-radius:50%;object-fit:cover;border:4px solid #fff;box-shadow:0 4px 10px rgba(0,0,0,.3);position:absolute;bottom:8px;left:3px;background:#fff}
+  .coach .tapme{position:absolute;top:-2px;right:-6px;background:var(--gold);color:var(--navy);font-size:.7rem;font-weight:800;border-radius:999px;padding:2px 7px;animation:pulse 1.6s infinite}
+  .coach .kick{position:absolute;left:50%;top:-8px;font-size:26px;margin-left:-13px;animation:keepy .38s ease-in-out 8 alternate;pointer-events:none}
   .coach.bounce{animation:bounce 2.2s ease-in-out infinite}
   .coach.cheer{animation:jump .5s ease-in-out 3}
+  .coach.spin{animation:spin .9s ease-in-out}
   .coach.sad{animation:shake .5s}
   .arm{transition:transform .3s;transform-box:fill-box}
   .arm.l{transform-origin:100% 0}
   .arm.r{transform-origin:0 0}
-  .coach.cheer .arm.l{transform:rotate(140deg)}
-  .coach.cheer .arm.r{transform:rotate(-140deg)}
+  .coach.cheer .arm.l,.coach.spin .arm.l{transform:rotate(140deg)}
+  .coach.cheer .arm.r,.coach.spin .arm.r{transform:rotate(-140deg)}
   @keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
   @keyframes jump{0%,100%{transform:translateY(0)}50%{transform:translateY(-22px)}}
+  @keyframes spin{0%{transform:rotateY(0)}100%{transform:rotateY(360deg)}}
   @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+  @keyframes keepy{from{transform:translateY(0) rotate(0)}to{transform:translateY(-46px) rotate(180deg)}}
+  @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.12)}}
   .bubble-area{flex:1;min-width:0}
   .title{font-size:1.25rem;font-weight:800;margin:0 0 6px;letter-spacing:.3px;text-shadow:0 2px 0 rgba(0,0,0,.2)}
   .bubble{
@@ -52,16 +59,28 @@
   }
   .bubble::before{content:"";position:absolute;left:-10px;bottom:14px;border:10px solid transparent;border-right-color:#fff;border-left:0}
   .bubble .ar{display:block;direction:rtl;text-align:right;font-size:1rem;color:var(--sky-d);margin-top:2px}
-  .scores{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
-  .chip{background:rgba(255,255,255,.18);border:2px solid rgba(255,255,255,.35);border-radius:999px;padding:3px 10px;font-weight:700;font-size:.95rem}
+  .bubble .go{margin-top:6px}
+  .scores{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+  .chip{background:rgba(255,255,255,.18);border:2px solid rgba(255,255,255,.35);border-radius:999px;padding:3px 10px;font-weight:700;font-size:.92rem;color:#fff}
+  button.chip{cursor:pointer}
+  .mission{margin-top:8px;font-size:.88rem;font-weight:700}
+  .bar{height:12px;background:rgba(255,255,255,.25);border-radius:999px;overflow:hidden;margin-top:3px}
+  .bar i{display:block;height:100%;background:var(--gold);border-radius:999px;transition:width .5s}
+  .bar.light{background:#e6eef9}
 
-  /* ---------- tabs ---------- */
-  nav{display:flex;gap:6px;flex-wrap:wrap;margin:14px 0 12px}
+  /* ---------- lesson chooser + tabs ---------- */
+  .units{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:14px 0 0}
+  .units b{font-size:.95rem;margin-right:2px}
+  .units button{background:#fff;color:var(--navy);border-radius:999px;padding:6px 12px;font-weight:700;border:2px solid #dbe7f6;font-size:.9rem}
+  .units button.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+  nav{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0 12px}
   nav button{
     flex:1 1 auto;background:#fff;color:var(--navy);border-radius:14px;padding:10px 12px;font-weight:700;
     box-shadow:0 3px 0 #c9d9ee;font-size:.98rem;white-space:nowrap
   }
   nav button.on{background:var(--sky);color:#fff;box-shadow:0 3px 0 var(--sky-d)}
+  nav button.hot{background:var(--gold);color:var(--navy);box-shadow:0 3px 0 #c08f00}
+  nav button.hot.on{background:var(--sky);color:#fff;box-shadow:0 3px 0 var(--sky-d)}
   .panel{display:none}
   .panel.on{display:block}
 
@@ -69,6 +88,7 @@
   .center{text-align:center}
   .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
   .row.c{justify-content:center}
+  .row.sb{justify-content:space-between}
 
   .btn{background:var(--sky);color:#fff;border-radius:14px;padding:10px 16px;font-weight:700;box-shadow:0 4px 0 var(--sky-d);font-size:1rem;transition:transform .08s}
   .btn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--sky-d)}
@@ -76,12 +96,16 @@
   .btn.o{background:var(--gold);color:var(--navy);box-shadow:0 4px 0 #c08f00}
   .btn.w{background:#fff;color:var(--navy);box-shadow:0 4px 0 #c9d9ee;border:2px solid #dbe7f6}
   .btn.r{background:var(--bad);box-shadow:0 4px 0 #a52a24}
+  .btn.p{background:var(--team);box-shadow:0 4px 0 #5f2194}
   .btn.sm{padding:6px 10px;font-size:.9rem;border-radius:10px}
+  .btn.big{font-size:1.25rem;padding:14px 24px}
   .btn[disabled]{opacity:.5;pointer-events:none}
 
   .pic{width:170px;height:170px;margin:0 auto 8px;border-radius:22px;background:#f4f9ff;border:3px dashed #cfe0f5;display:flex;align-items:center;justify-content:center;overflow:hidden}
   .pic img{width:100%;height:100%;object-fit:cover}
   .pic .emoji{font-size:96px;line-height:1}
+  .pic.md{width:110px;height:110px;margin:0}
+  .pic.md .emoji{font-size:62px}
   .pic.sm{width:64px;height:64px;border-radius:14px;border-width:2px;margin:0}
   .pic.sm .emoji{font-size:38px}
 
@@ -91,12 +115,14 @@
   .suf{border-radius:8px;padding:0 3px}
   .suf.able{color:var(--able);background:#e4eeff}
   .suf.ible{color:var(--ible);background:#fff0e1}
+  .suf.team{color:var(--team);background:#f3e8ff}
   .ar-mean{direction:rtl;font-size:1.6rem;font-weight:700;color:var(--sky-d);margin:4px 0;font-family:"Geeza Pro","Noto Naskh Arabic","Segoe UI",Tahoma,sans-serif}
   .def{color:var(--muted);font-size:1.05rem;margin:6px 0}
   .ex{background:#fffbea;border-left:5px solid var(--gold);padding:8px 12px;border-radius:10px;margin:10px auto 4px;max-width:560px;text-align:left;font-size:1.05rem}
   .ex b{color:var(--navy)}
   .stars{color:var(--gold);font-size:1.1rem;min-height:1.3em}
   .tag{display:inline-block;background:#ffe5e3;color:var(--bad);border-radius:999px;padding:2px 10px;font-size:.85rem;font-weight:700}
+  .tag.u{background:#e9f1fc;color:var(--sky-d)}
 
   .jump{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:6px}
   .jump button{background:#f1f7ff;color:var(--navy);border-radius:999px;padding:5px 11px;font-size:.9rem;border:2px solid #dbe7f6}
@@ -118,16 +144,57 @@
   .muted{color:var(--muted)}
   .small{font-size:.9rem}
 
-  .suffix-q{font-size:2.6rem;font-weight:800;letter-spacing:2px;margin:8px 0}
-  .suffix-q .blank{display:inline-block;min-width:4.2ch;border-bottom:4px dashed var(--muted);color:transparent}
-  .big-choices{display:flex;gap:14px;justify-content:center;margin:12px 0}
-  .big-choices .btn{font-size:1.7rem;padding:14px 26px;min-width:140px}
+  .gap-q{font-size:2.6rem;font-weight:800;letter-spacing:2px;margin:8px 0}
+  .gap-q .blank{display:inline-block;border-bottom:4px dashed var(--muted);color:transparent}
+  .big-choices{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin:12px 0}
+  .big-choices .btn{font-size:1.7rem;padding:12px 22px;min-width:110px}
   .tip{background:#eef9f0;border-radius:12px;padding:10px 14px;font-size:.95rem;text-align:left;max-width:560px;margin:10px auto 0}
 
   .sentence{font-size:1.4rem;line-height:1.6;margin:8px 0 12px}
   .sentence .gap{display:inline-block;min-width:8ch;border-bottom:3px solid var(--navy);margin:0 4px}
 
   label.chk{display:inline-flex;align-items:center;gap:6px;font-size:.95rem;color:var(--muted);user-select:none}
+
+  /* ---------- penalty shootout ---------- */
+  .pitch{
+    position:relative;height:300px;border-radius:18px;overflow:hidden;margin:0 auto;max-width:640px;user-select:none;
+    background:repeating-linear-gradient(90deg,#34a853 0 50px,#2e9a4b 50px 100px);
+    -webkit-tap-highlight-color:transparent
+  }
+  .pitch .box{position:absolute;left:4%;right:4%;top:0;height:200px;border:3px solid rgba(255,255,255,.7);border-top:0}
+  .pitch .spot{position:absolute;left:50%;bottom:36px;width:8px;height:8px;margin-left:-4px;border-radius:50%;background:#fff}
+  .pitch .crowd{position:absolute;left:0;right:0;top:0;height:18px;background:repeating-linear-gradient(90deg,#75AADB 0 14px,#fff 14px 28px);opacity:.8}
+  .goalframe{
+    position:absolute;left:12%;right:12%;top:26px;height:120px;border:7px solid #fff;border-bottom:0;border-radius:6px 6px 0 0;
+    background:
+      repeating-linear-gradient(0deg,rgba(255,255,255,.35) 0 1px,transparent 1px 12px),
+      repeating-linear-gradient(90deg,rgba(255,255,255,.35) 0 1px,transparent 1px 12px),
+      rgba(0,0,0,.12);
+  }
+  .pitch.aim .goalframe{cursor:crosshair;animation:glow 1s infinite alternate}
+  @keyframes glow{from{box-shadow:0 0 0 0 rgba(245,183,0,.0)}to{box-shadow:0 0 0 6px rgba(245,183,0,.8)}}
+  .keeper{position:absolute;width:58px;height:80px;top:64px;left:50%;margin-left:-29px;transition:left .45s ease-out,transform .45s ease-out;z-index:2}
+  .pball{position:absolute;width:40px;height:40px;font-size:36px;line-height:40px;text-align:center;z-index:3;transition:left .6s ease-out,top .6s ease-out,transform .6s ease-out}
+  .pk-msg{position:absolute;left:0;right:0;top:40%;text-align:center;font-size:3rem;font-weight:900;z-index:4;pointer-events:none;opacity:0}
+  .pk-msg.show{animation:pop 1.3s forwards}
+  .pk-msg.goal{color:var(--gold);text-shadow:0 4px 0 var(--navy)}
+  .pk-msg.save{color:#fff;text-shadow:0 4px 0 var(--bad)}
+  .pk-hint{position:absolute;left:0;right:0;bottom:66px;text-align:center;color:#fff;font-weight:800;font-size:1.15rem;text-shadow:0 2px 0 rgba(0,0,0,.4);z-index:4;pointer-events:none}
+  .pk-start{position:absolute;inset:0;display:flex;flex-direction:column;gap:10px;align-items:center;justify-content:center;background:rgba(29,43,83,.45);z-index:5;color:#fff;text-align:center;padding:16px}
+  .pk-start h3{margin:0;font-size:1.5rem;text-shadow:0 2px 0 rgba(0,0,0,.3)}
+  .board{display:flex;align-items:center;justify-content:center;gap:14px;margin:12px 0 4px;font-weight:800;font-size:1.3rem}
+  .board .num{background:var(--navy);color:#fff;border-radius:10px;padding:4px 12px;min-width:44px;text-align:center}
+  .dots{display:flex;gap:6px;justify-content:center;font-size:1.25rem;margin-bottom:6px}
+  .pk-word{display:flex;gap:12px;align-items:center;justify-content:center;flex-wrap:wrap;margin:8px 0}
+
+  /* ---------- trophies ---------- */
+  .badges{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px}
+  .badge{border:3px solid #f0d27a;background:#fffbea;border-radius:16px;padding:10px;text-align:center}
+  .badge .e{font-size:44px;line-height:1.2}
+  .badge b{display:block;font-size:.95rem}
+  .badge span{font-size:.8rem;color:var(--muted)}
+  .badge.locked{border-color:#e1e8f2;background:#f6f8fb;filter:grayscale(1);opacity:.6}
+  .lvl{font-size:1.4rem;font-weight:800}
 
   /* ---------- parents ---------- */
   .form{display:grid;grid-template-columns:1fr 1fr;gap:10px}
@@ -147,7 +214,7 @@
   h2{margin:0 0 10px;font-size:1.25rem}
   h3{margin:16px 0 8px;font-size:1.05rem}
 
-  /* ---------- goal overlay ---------- */
+  /* ---------- overlays ---------- */
   #goal{position:fixed;inset:0;pointer-events:none;z-index:50;display:none}
   #goal.on{display:block}
   #goal .net{position:absolute;left:50%;top:14%;transform:translateX(-50%);font-size:90px}
@@ -159,20 +226,28 @@
   .conf{position:fixed;top:-40px;font-size:28px;z-index:49;pointer-events:none;animation:fall linear forwards}
   @keyframes fall{to{transform:translateY(110vh) rotate(540deg)}}
 
-  #toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--navy);color:#fff;padding:10px 16px;border-radius:12px;z-index:60;display:none;max-width:90vw;text-align:center}
+  #award{position:fixed;inset:0;background:rgba(29,43,83,.6);z-index:70;display:none;align-items:center;justify-content:center;padding:16px}
+  #award.on{display:flex}
+  #award .box{background:#fff;border-radius:24px;padding:22px;text-align:center;max-width:340px;width:100%;box-shadow:0 10px 30px rgba(0,0,0,.3);animation:popin .5s}
+  #award .e{font-size:84px;line-height:1.1;animation:spin 1.2s}
+  #award h2{margin:6px 0}
+  @keyframes popin{from{transform:scale(.4);opacity:0}to{transform:scale(1);opacity:1}}
+
+  #toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--navy);color:#fff;padding:10px 16px;border-radius:12px;z-index:80;display:none;max-width:90vw;text-align:center}
 
   @media (max-width:600px){
     .coach{width:84px;flex-basis:84px;height:112px}
     .coach .photo{width:80px;height:80px}
     .title{font-size:1.05rem}
     .bubble{font-size:.95rem}
-    .word,.suffix-q{font-size:2rem}
+    .word,.gap-q{font-size:2rem}
     .pic{width:140px;height:140px}
     .pic .emoji{font-size:80px}
     .form{grid-template-columns:1fr}
     nav button{font-size:.88rem;padding:9px 8px}
-    .big-choices .btn{min-width:110px;font-size:1.4rem;padding:12px 16px}
+    .big-choices .btn{min-width:90px;font-size:1.4rem;padding:12px 14px}
     #goal .txt{font-size:3rem}
+    .pitch{height:270px}
   }
 </style>
 </head>
@@ -180,32 +255,37 @@
 
 <header>
   <div class="head-in">
-    <div class="coach bounce" id="coach"></div>
+    <div class="coach bounce" id="coach" title="Tap Leo!"></div>
     <div class="bubble-area">
       <p class="title">⚽ Spelling Champions with Leo Messi</p>
       <div class="bubble" id="bubble">Hi! Ready to score some spelling goals?</div>
       <div class="scores">
-        <span class="chip">⚽ Goals: <span id="sGoals">0</span></span>
-        <span class="chip">🔥 Streak: <span id="sStreak">0</span></span>
-        <span class="chip">🏆 Best: <span id="sBest">0</span></span>
+        <span class="chip">⚽ <span id="sGoals">0</span> goals</span>
+        <span class="chip">🔥 Streak <span id="sStreak">0</span></span>
+        <span class="chip">⭐ <span id="sLevel">Rookie</span></span>
+        <button class="chip" id="voiceBtn">🔊 Leo talks</button>
       </div>
+      <div class="mission"><span id="mText">🎯 Today's mission</span><div class="bar"><i id="mBar" style="width:0"></i></div></div>
     </div>
   </div>
 </header>
 
 <div class="wrap">
+  <div class="units" id="units"></div>
   <nav id="tabs">
     <button data-tab="learn" class="on">📚 Learn</button>
+    <button data-tab="penalty" class="hot">🥅 Penalty match</button>
     <button data-tab="spell">✍️ Spell it</button>
-    <button data-tab="suffix">🧩 -able / -ible</button>
+    <button data-tab="gap">🧩 Missing letters</button>
     <button data-tab="blank">📝 Fill the blank</button>
+    <button data-tab="trophies">🏆 Trophies</button>
     <button data-tab="parents">👨‍👩‍👧 Parents</button>
   </nav>
 
   <!-- LEARN -->
   <section class="panel on" id="p-learn">
     <div class="card center">
-      <div class="row c" style="justify-content:space-between">
+      <div class="row sb">
         <button class="btn w sm" id="lPrev">◀ Back</button>
         <span class="muted" id="lCount"></span>
         <button class="btn w sm" id="lNext">Next ▶</button>
@@ -219,7 +299,7 @@
       </div>
     </div>
     <div class="card center">
-      <div class="row c" style="justify-content:space-between">
+      <div class="row sb">
         <b>All words</b>
         <label class="chk"><input type="checkbox" id="lTricky"> Only my tricky words</label>
       </div>
@@ -227,10 +307,48 @@
     </div>
   </section>
 
+  <!-- PENALTY -->
+  <section class="panel" id="p-penalty">
+    <div class="card center">
+      <div class="pitch" id="pitch">
+        <div class="crowd"></div>
+        <div class="box"></div>
+        <div class="goalframe" id="goalframe"></div>
+        <div class="keeper" id="keeper"></div>
+        <div class="spot"></div>
+        <div class="pball" id="pball">⚽</div>
+        <div class="pk-hint" id="pkHint"></div>
+        <div class="pk-msg" id="pkMsg"></div>
+        <div class="pk-start" id="pkStart">
+          <h3>🥅 Penalty Shootout!</h3>
+          <div>Spell the word correctly to take the shot.<br>Then tap the goal to choose your corner!</div>
+          <button class="btn o big" id="pkGo">⚽ Start the match</button>
+        </div>
+      </div>
+      <div class="board"><span>You</span><span class="num" id="pkYou">0</span><span>–</span><span class="num" id="pkKeep">0</span><span>Keeper</span></div>
+      <div class="dots" id="pkDots"></div>
+      <div id="pkPanel" hidden>
+        <div class="pk-word">
+          <div class="pic md" id="pkPic"></div>
+          <div>
+            <div class="ar-mean" id="pkAr" style="font-size:1.35rem"></div>
+            <div class="row c">
+              <button class="btn sm" id="pkSay">🔊 Hear</button>
+              <button class="btn w sm" id="pkSlow">🐢 Slowly</button>
+            </div>
+          </div>
+        </div>
+        <input class="answer" id="pkIn" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="spell the word…">
+        <div class="fb" id="pkFb"></div>
+        <button class="btn g big" id="pkCheck">✅ Ready to shoot!</button>
+      </div>
+    </div>
+  </section>
+
   <!-- SPELL -->
   <section class="panel" id="p-spell">
     <div class="card center">
-      <div class="row c" style="justify-content:space-between">
+      <div class="row sb">
         <span class="muted small" id="spInfo"></span>
         <label class="chk"><input type="checkbox" id="spTricky"> Only tricky words</label>
       </div>
@@ -252,26 +370,17 @@
     </div>
   </section>
 
-  <!-- SUFFIX -->
-  <section class="panel" id="p-suffix">
+  <!-- MISSING LETTERS -->
+  <section class="panel" id="p-gap">
     <div class="card center">
-      <p class="muted" style="margin:0 0 6px">Which ending is correct?</p>
-      <div id="sfPic" class="pic"></div>
-      <div class="ar-mean" id="sfAr"></div>
-      <div class="suffix-q" id="sfQ"></div>
-      <div class="big-choices">
-        <button class="btn" id="sfAble">-able</button>
-        <button class="btn o" id="sfIble">-ible</button>
-      </div>
-      <div class="fb" id="sfFb"></div>
-      <button class="btn w" id="sfNext">Next ▶</button>
-      <div class="tip">
-        <b>⚽ Coach's tip:</b> If the beginning is a <b>whole word</b> on its own, it is usually <span class="suf able">able</span>
-        (work → work<span class="suf able">able</span>, account → account<span class="suf able">able</span>).
-        If the beginning is <b>not</b> a real word, it is usually <span class="suf ible">ible</span>
-        (ed → ed<span class="suf ible">ible</span>, cred → cred<span class="suf ible">ible</span>).
-        Some words break the rule (digest → digest<span class="suf ible">ible</span>) — those you just have to learn! 💪
-      </div>
+      <p class="muted" style="margin:0 0 6px">Which letters are missing?</p>
+      <div id="gpPic" class="pic"></div>
+      <div class="ar-mean" id="gpAr"></div>
+      <div class="gap-q" id="gpQ"></div>
+      <div class="big-choices" id="gpChoices"></div>
+      <div class="fb" id="gpFb"></div>
+      <button class="btn w" id="gpNext">Next ▶</button>
+      <div class="tip" id="gpTip"></div>
     </div>
   </section>
 
@@ -295,6 +404,26 @@
     </div>
   </section>
 
+  <!-- TROPHIES -->
+  <section class="panel" id="p-trophies">
+    <div class="card center">
+      <div class="muted">Your level</div>
+      <div class="lvl" id="tLevel"></div>
+      <div class="bar light" style="max-width:420px;margin:8px auto"><i id="tBar"></i></div>
+      <div class="muted small" id="tNext"></div>
+      <div class="row c" style="margin-top:10px;gap:16px">
+        <span>⚽ <b id="tGoals">0</b> goals</span>
+        <span>🏆 <b id="tBest">0</b> best streak</span>
+        <span>📘 <b id="tMaster">0</b> words mastered</span>
+        <span>🥅 <b id="tPk">0</b> matches won</span>
+      </div>
+    </div>
+    <div class="card">
+      <h2>🏆 Trophy cabinet</h2>
+      <div class="badges" id="badges"></div>
+    </div>
+  </section>
+
   <!-- PARENTS -->
   <section class="panel" id="p-parents">
     <div class="card" id="gate">
@@ -315,6 +444,10 @@
             <input id="pName" placeholder="e.g. Sara">
           </div>
           <div>
+            <label for="pMission">Daily mission (goals per day)</label>
+            <input id="pMission" type="number" min="1" max="100">
+          </div>
+          <div class="full">
             <label>Coach picture (optional — e.g. your favourite Messi photo)</label>
             <div class="row">
               <input type="file" id="pCoach" accept="image/*" style="flex:1;min-width:0">
@@ -329,6 +462,8 @@
         <div class="form">
           <div><label for="fWord">English word *</label><input id="fWord" autocapitalize="off" spellcheck="false"></div>
           <div><label for="fAr">Arabic meaning *</label><input id="fAr" dir="rtl"></div>
+          <div><label for="fUnit">Lesson (words are grouped by this)</label><input id="fUnit" list="unitList" placeholder="e.g. Page 60"><datalist id="unitList"></datalist></div>
+          <div><label for="fFocus">Letters to highlight (optional, e.g. ea, ough)</label><input id="fFocus" autocapitalize="off" spellcheck="false"></div>
           <div class="full"><label for="fDef">Simple meaning (English)</label><input id="fDef"></div>
           <div class="full"><label for="fEx">Example sentence (must include the word, used in "Fill the blank")</label><textarea id="fEx"></textarea></div>
           <div><label for="fEmoji">Emoji picture (if no photo)</label><input id="fEmoji" placeholder="e.g. 🍎"></div>
@@ -344,7 +479,7 @@
       </div>
 
       <div class="card">
-        <div class="row" style="justify-content:space-between">
+        <div class="row sb">
           <h2 style="margin:0">📋 Word list (<span id="pCount">0</span>)</h2>
           <div class="row">
             <button class="btn w sm" id="pExport">⬇️ Backup</button>
@@ -355,7 +490,7 @@
         <div class="list" id="pList"></div>
         <h3>Reset</h3>
         <div class="row">
-          <button class="btn w sm" id="pResetScore">Reset scores &amp; progress</button>
+          <button class="btn w sm" id="pResetScore">Reset scores, trophies &amp; progress</button>
           <button class="btn r sm" id="pResetWords">Restore the original word list</button>
         </div>
       </div>
@@ -364,33 +499,51 @@
 </div>
 
 <div id="goal"><div class="net">🥅</div><div class="ball">⚽</div><div class="txt">GOOOOL!</div></div>
+<div id="award"><div class="box"><div class="e" id="aE"></div><div class="muted" id="aKind">New trophy!</div><h2 id="aT"></h2><p class="muted" id="aD"></p><button class="btn o big" id="aOk">Yay! ⚽</button></div></div>
 <div id="toast"></div>
 
 <script>
 (function(){
 "use strict";
 
-/* ===================== Starting words (Grade 5, Term 1, pages 67–70) ===================== */
+/* ===================== Starting words ===================== */
+const U1 = "-able / -ible", U2 = "Vowel teams";
 const DEFAULT_WORDS = [
-  {word:"forcible",     ar:"قوي، بالقوة",              emoji:"💪", def:"Done with physical strength or force.", ex:"His speech was strong, plain and forcible."},
-  {word:"accountable",  ar:"مسؤول (عن أفعاله)",         emoji:"🙋‍♀️", def:"You are responsible for your own actions.", ex:"The students should be organized and accountable."},
-  {word:"justifiable",  ar:"له ما يبرره، مُبَرَّر",       emoji:"⚖️", def:"Done for a good reason; easy to explain or defend.", ex:"We took a break for a justifiable reason."},
-  {word:"considerable", ar:"كبير، كثير، معتبر",          emoji:"📈", def:"Large in number, amount or degree.", ex:"He fell ill and lost considerable weight last summer."},
-  {word:"digestible",   ar:"سهل الهضم، قابل للهضم",       emoji:"🍌", def:"Food that your body can break down easily.", ex:"Bananas are easily digestible."},
-  {word:"credible",     ar:"موثوق، جدير بالثقة",          emoji:"🤝", def:"Being honest and believable.", ex:"He is not a credible witness for your case."},
-  {word:"tangible",     ar:"ملموس",                      emoji:"👆", def:"Capable of being touched or felt.", ex:"There should be some tangible evidence that the economy is starting to recover."},
-  {word:"allowable",    ar:"مسموح به",                   emoji:"✅", def:"Allowed; not against the rules.", ex:"Inform your group of the rules of the party, including what is allowable and what is not."},
-  {word:"irritable",    ar:"سريع الغضب، عصبي",            emoji:"😠", def:"Easily annoyed or angry.", ex:"He had been waiting for over an hour and was beginning to feel irritable."},
-  {word:"combustible",  ar:"قابل للاشتعال",               emoji:"🔥", def:"Able to catch fire and burn.", ex:"The ability of coal to release a combustible gas has long been known."},
-  {word:"edible",       ar:"صالح للأكل",                  emoji:"🍎", def:"Safe and suitable to eat.", ex:"They might not look pretty but they are perfectly edible and tasty too."},
-  {word:"perishable",   ar:"سريع التلف، قابل للفساد",      emoji:"🥚", def:"Food that goes bad (decays) quickly.", ex:"Raw eggs are highly perishable and must be chilled before and after cooking."},
-  {word:"producible",   ar:"قابل للإنتاج",                emoji:"🏭", def:"Able to be made, created or manufactured.", ex:"My dad works in a producible company in the field of electricity."},
-  {word:"workable",     ar:"قابل للتنفيذ، عملي",          emoji:"🛠️", def:"A plan or idea that can work.", ex:"We had a workable plan and it was my job to put it into effect."},
-  {word:"advisable",    ar:"مُستحسن، من الحكمة",           emoji:"💡", def:"Wise; a good idea (recommended).", ex:"It is advisable to drink water after playing football."},
-  {word:"reducible",    ar:"قابل للتقليل",                emoji:"📉", def:"Can be made smaller or less.", ex:"The noise is reducible if we close the window."},
-  {word:"admissible",   ar:"مقبول، يمكن قبوله",            emoji:"🎟️", def:"Allowed to be accepted.", ex:"Late homework is not admissible in our class."},
-  {word:"available",    ar:"متوفر، متاح",                 emoji:"🛒", def:"Free or ready to be used or bought.", ex:"Tickets for the match are available online."},
-  {word:"noticeable",   ar:"ملحوظ، واضح",                 emoji:"👀", def:"Easy to see or notice.", ex:"Her improvement in spelling is very noticeable."}
+  // Grade 5 Term 1, pages 67–70
+  {unit:U1, word:"forcible",     ar:"قوي، بالقوة",              emoji:"💪", def:"Done with physical strength or force.", ex:"His speech was strong, plain and forcible."},
+  {unit:U1, word:"accountable",  ar:"مسؤول (عن أفعاله)",         emoji:"🙋‍♀️", def:"You are responsible for your own actions.", ex:"The students should be organized and accountable."},
+  {unit:U1, word:"justifiable",  ar:"له ما يبرره، مُبَرَّر",       emoji:"⚖️", def:"Done for a good reason; easy to explain or defend.", ex:"We took a break for a justifiable reason."},
+  {unit:U1, word:"considerable", ar:"كبير، كثير، معتبر",          emoji:"📈", def:"Large in number, amount or degree.", ex:"He fell ill and lost considerable weight last summer."},
+  {unit:U1, word:"digestible",   ar:"سهل الهضم، قابل للهضم",       emoji:"🍌", def:"Food that your body can break down easily.", ex:"Bananas are easily digestible."},
+  {unit:U1, word:"credible",     ar:"موثوق، جدير بالثقة",          emoji:"🤝", def:"Being honest and believable.", ex:"He is not a credible witness for your case."},
+  {unit:U1, word:"tangible",     ar:"ملموس",                      emoji:"👆", def:"Capable of being touched or felt.", ex:"There should be some tangible evidence that the economy is starting to recover."},
+  {unit:U1, word:"allowable",    ar:"مسموح به",                   emoji:"✅", def:"Allowed; not against the rules.", ex:"Inform your group of the rules of the party, including what is allowable and what is not."},
+  {unit:U1, word:"irritable",    ar:"سريع الغضب، عصبي",            emoji:"😠", def:"Easily annoyed or angry.", ex:"He had been waiting for over an hour and was beginning to feel irritable."},
+  {unit:U1, word:"combustible",  ar:"قابل للاشتعال",               emoji:"🔥", def:"Able to catch fire and burn.", ex:"The ability of coal to release a combustible gas has long been known."},
+  {unit:U1, word:"edible",       ar:"صالح للأكل",                  emoji:"🍎", def:"Safe and suitable to eat.", ex:"They might not look pretty but they are perfectly edible and tasty too."},
+  {unit:U1, word:"perishable",   ar:"سريع التلف، قابل للفساد",      emoji:"🥚", def:"Food that goes bad (decays) quickly.", ex:"Raw eggs are highly perishable and must be chilled before and after cooking."},
+  {unit:U1, word:"producible",   ar:"قابل للإنتاج",                emoji:"🏭", def:"Able to be made, created or manufactured.", ex:"My dad works in a producible company in the field of electricity."},
+  {unit:U1, word:"workable",     ar:"قابل للتنفيذ، عملي",          emoji:"🛠️", def:"A plan or idea that can work.", ex:"We had a workable plan and it was my job to put it into effect."},
+  {unit:U1, word:"advisable",    ar:"مُستحسن، من الحكمة",           emoji:"💡", def:"Wise; a good idea (recommended).", ex:"It is advisable to drink water after playing football."},
+  {unit:U1, word:"reducible",    ar:"قابل للتقليل",                emoji:"📉", def:"Can be made smaller or less.", ex:"The noise is reducible if we close the window."},
+  {unit:U1, word:"admissible",   ar:"مقبول، يمكن قبوله",            emoji:"🎟️", def:"Allowed to be accepted.", ex:"Late homework is not admissible in our class."},
+  {unit:U1, word:"available",    ar:"متوفر، متاح",                 emoji:"🛒", def:"Free or ready to be used or bought.", ex:"Tickets for the match are available online."},
+  {unit:U1, word:"noticeable",   ar:"ملحوظ، واضح",                 emoji:"👀", def:"Easy to see or notice.", ex:"Her improvement in spelling is very noticeable."},
+  // Grade 5 Term 1, vowel teams (digraphs & diphthongs), pages 56–58
+  {unit:U2, focus:"ay", word:"bayonet",   ar:"حَرْبة (سونكي)",          emoji:"🗡️", def:"A knife fixed to the end of a rifle.", ex:"The old soldier's rifle had a bayonet on the end."},
+  {unit:U2, focus:"oy", word:"royalty",   ar:"العائلة المالكة، المَلَكيّة", emoji:"👑", def:"A family of kings, queens, princes and princesses.", ex:"Queen Elizabeth of England was a member of Britain's royalty."},
+  {unit:U2, focus:"ea", word:"zealous",   ar:"متحمّس جداً",             emoji:"🤩", def:"Spending a lot of time and energy supporting something you believe in.", ex:"She was a zealous worker for charitable bodies."},
+  {unit:U2, focus:"ee", word:"committee", ar:"لجنة",                    emoji:"👥", def:"A group of people who come together to work on a project.", ex:"The committee will meet again next March to discuss some decisions."},
+  {unit:U2, focus:"eu", word:"leukemia",  ar:"سرطان الدم (اللوكيميا)",   emoji:"🩸", def:"An illness (a type of cancer) of the blood cells.", ex:"After suffering from leukemia for a long time, she was cured and now she is good."},
+  {unit:U2, focus:"ow", word:"cowardice", ar:"الجُبن",                  emoji:"🐔", def:"A lack of bravery; the opposite of courage.", ex:"Running away from his friends was an act of cowardice."},
+  {unit:U2, focus:"ea", word:"realm",     ar:"مملكة، عالَم، مجال",        emoji:"🏰", def:"An area that is ruled by someone or something.", ex:"Hollywood is the realm of film stars."},
+  {unit:U2, focus:"au", word:"nautical",  ar:"بحري، ملاحي",              emoji:"⚓", def:"Relating to ships, sailing or navigation.", ex:"Kiel was nearly three hundred nautical miles away, at the northern tip of Germany."},
+  {unit:U2, focus:"au", word:"gauntlet",  ar:"قفّاز حديدي (درع لليد)",    emoji:"🧤", def:"A steel glove worn with armour to protect the hand.", ex:"The knight wore silver armor, his gauntlet was made of steel."},
+  {unit:U2, focus:"oi", word:"embroider", ar:"يُطرِّز",                  emoji:"🪡", def:"To decorate cloth with needlework.", ex:"My grandmother will embroider my name on a pillow."},
+  {unit:U2, focus:"ea", word:"treasury",  ar:"خزينة، بيت المال",          emoji:"🏦", def:"A place where money and valuable things are kept.", ex:"The country keeps its gold in the treasury."},
+  {unit:U2, focus:"ea", word:"zeal",      ar:"حماس، شغف",                emoji:"🙌", def:"Strong eagerness and enthusiasm for something.", ex:"She always does her homework with zeal and energy."},
+  {unit:U2, focus:"ea", word:"treachery", ar:"خيانة، غدر",               emoji:"🐍", def:"Trickery, cheating and deceit.", ex:"The world is full of danger and treachery."},
+  {unit:U2, focus:"oo", word:"typhoon",   ar:"إعصار",                    emoji:"🌀", def:"A giant rotating storm that brings wind, rain and destruction.", ex:"The typhoon brought strong wind and heavy rain."}
 ];
 
 const KEY = "leoSpelling.v1";
@@ -399,22 +552,43 @@ const uid = () => Math.random().toString(36).slice(2, 10);
 const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const rnd = a => a[Math.floor(Math.random() * a.length)];
 const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const lc = s => String(s).toLowerCase();
+const today = () => new Date().toISOString().slice(0, 10);
 
+function freshWords(){ return DEFAULT_WORDS.map(w => ({img: "", focus: "", ...w, id: uid()})); }
 function freshState(){
-  return {words: DEFAULT_WORDS.map(w => ({...w, id: uid(), img: ""})), name: "", goals: 0, streak: 0, best: 0, stats: {}, coachImg: ""};
+  return {words: freshWords(), seeded: DEFAULT_WORDS.map(w => w.word), name: "", goals: 0, streak: 0, best: 0, stats: {},
+          coachImg: "", unit: "all", voice: true, badges: {}, pkWins: 0, pkPerfect: 0, missions: 0, missionGoal: 10, day: {d: today(), g: 0, done: false}};
 }
 function load(){
-  try { const s = JSON.parse(localStorage.getItem(KEY)); if (s && Array.isArray(s.words)) return Object.assign(freshState(), s); } catch (e) {}
-  return freshState();
+  let s = null;
+  try { s = JSON.parse(localStorage.getItem(KEY)); } catch (e) {}
+  if (!s || !Array.isArray(s.words)) return freshState();
+  // Older saves: remember which starter words were already offered, then add any new starter words once.
+  if (!Array.isArray(s.seeded)) s.seeded = s.words.map(w => w.word);
+  s = Object.assign(freshState(), s);
+  const have = new Set(s.words.map(w => lc(w.word))), seeded = new Set(s.seeded.map(lc));
+  DEFAULT_WORDS.forEach(d => {
+    const mine = s.words.find(w => lc(w.word) === lc(d.word));
+    if (mine) { if (!mine.unit) mine.unit = d.unit; if (mine.focus == null) mine.focus = d.focus || ""; }
+    else if (!seeded.has(lc(d.word)) && !have.has(lc(d.word))) s.words.push({img: "", focus: "", ...d, id: uid()});
+    if (!seeded.has(lc(d.word))) s.seeded.push(d.word);
+  });
+  return s;
 }
 let S = load();
 function save(){
   try { localStorage.setItem(KEY, JSON.stringify(S)); }
   catch (e) { toast("Could not save — storage is full. Try smaller photos or remove some."); }
 }
+save();
 function stat(w){ return S.stats[w.id] || (S.stats[w.id] = {ok: 0, miss: 0, run: 0}); }
 function isTricky(w){ const s = S.stats[w.id]; return !!s && s.miss > 0 && s.run < 2; }
-function trickyWords(){ return S.words.filter(isTricky); }
+function isMastered(w){ const s = S.stats[w.id]; return !!s && s.ok > 0 && !isTricky(w); }
+function unitOf(w){ return w.unit || "My words"; }
+function units(){ return [...new Set(S.words.map(unitOf))]; }
+function pool(){ return S.unit === "all" ? S.words : S.words.filter(w => unitOf(w) === S.unit); }
+function trickyWords(){ return pool().filter(isTricky); }
 
 /* ===================== Speech ===================== */
 const synth = window.speechSynthesis;
@@ -438,21 +612,32 @@ function speak(text, lang, rate){
   if (lang && lang.startsWith("ar") && !voiceFor("ar")) toast("No Arabic voice on this device — the meaning is shown on screen.");
   synth.speak(utter(text, lang, rate));
 }
+// Waits for Leo to finish talking before saying the new word.
+function speakSoon(text, rate){
+  if (!synth) return;
+  let n = 0;
+  (function wait(){ if (synth.speaking && n++ < 20) setTimeout(wait, 200); else speak(text, "en-US", rate); })();
+}
 // Says the word, then each letter (with an optional callback per letter), then the word again.
 function spellOut(word, onLetter){
   if (!synth) { toast("This browser cannot speak. Try Chrome or Safari."); return; }
   synth.cancel();
-  const letters = word.split("");
   synth.speak(utter(word, "en-US", 0.85));
-  letters.forEach((ch, i) => {
+  word.split("").forEach((ch, i) => {
     if (!/[a-z]/i.test(ch)) return;
-    const u = utter(ch.toUpperCase() === ch ? ch : ch.toUpperCase(), "en-US", 0.8);
+    const u = utter(ch.toUpperCase(), "en-US", 0.8);
     u.onstart = () => onLetter && onLetter(i);
     synth.speak(u);
   });
   const end = utter(word, "en-US", 0.85);
   end.onstart = () => onLetter && onLetter(-1);
   synth.speak(end);
+}
+const EMOJI_RE = /[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{2B00}-\u{2BFF}\u{FE0F}\u{200D}\u{20E3}]/gu;
+function coachVoice(text){
+  if (!S.voice || !synth) return;
+  synth.cancel();
+  synth.speak(utter(text.replace(EMOJI_RE, "").replace(/#/g, "number "), "en-US", 1));
 }
 
 /* ===================== Coach Leo ===================== */
@@ -462,18 +647,14 @@ const COACH_SVG = `
     <clipPath id="shirtClip"><path d="M30 74 Q60 64 90 74 L92 122 Q60 128 28 122 Z"/></clipPath>
   </defs>
   <ellipse cx="60" cy="154" rx="34" ry="5" fill="rgba(0,0,0,.25)"/>
-  <!-- legs -->
   <rect x="42" y="132" width="11" height="18" rx="4" fill="#f1c7a0"/>
   <rect x="67" y="132" width="11" height="18" rx="4" fill="#f1c7a0"/>
   <rect x="40" y="142" width="15" height="9" rx="3" fill="#fff"/>
   <rect x="65" y="142" width="15" height="9" rx="3" fill="#fff"/>
   <path d="M38 150 h18 v5 h-20 z" fill="#111"/><path d="M64 150 h18 v5 h-20 z" fill="#111"/>
-  <!-- shorts -->
   <path d="M30 118 H90 L88 136 H64 L60 128 L56 136 H32 Z" fill="#1d2b53"/>
-  <!-- arms -->
   <g class="arm l"><rect x="14" y="76" width="16" height="12" rx="6" fill="#75AADB"/><rect x="14" y="86" width="11" height="26" rx="5" fill="#f1c7a0"/></g>
   <g class="arm r"><rect x="90" y="76" width="16" height="12" rx="6" fill="#75AADB"/><rect x="95" y="86" width="11" height="26" rx="5" fill="#f1c7a0"/></g>
-  <!-- shirt -->
   <g clip-path="url(#shirtClip)">
     <rect x="26" y="60" width="70" height="70" fill="#fff"/>
     <rect x="33" y="60" width="9" height="70" fill="#75AADB"/>
@@ -482,58 +663,165 @@ const COACH_SVG = `
     <rect x="87" y="60" width="9" height="70" fill="#75AADB"/>
   </g>
   <text x="60" y="108" text-anchor="middle" font-family="Arial Black,Arial,sans-serif" font-weight="900" font-size="24" fill="#1d2b53" stroke="#fff" stroke-width="1.2">10</text>
-  <!-- neck -->
   <rect x="53" y="60" width="14" height="10" fill="#e8b58c"/>
-  <!-- head -->
   <ellipse cx="60" cy="40" rx="23" ry="25" fill="#f1c7a0"/>
   <ellipse cx="37" cy="42" rx="4" ry="6" fill="#e8b58c"/><ellipse cx="83" cy="42" rx="4" ry="6" fill="#e8b58c"/>
-  <!-- hair -->
   <path d="M36 36 Q34 12 60 12 Q88 12 84 36 Q80 24 70 22 Q60 28 46 24 Q40 28 36 36 Z" fill="#5a3b22"/>
-  <!-- beard -->
   <path d="M38 44 Q40 66 60 67 Q80 66 82 44 Q78 56 72 56 Q60 60 48 56 Q42 56 38 44 Z" fill="#6b4529"/>
   <path d="M50 51 Q60 47 70 51 Q60 55 50 51 Z" fill="#6b4529"/>
-  <!-- face -->
   <ellipse cx="51" cy="38" rx="3" ry="3.6" fill="#1d2b53"/><ellipse cx="69" cy="38" rx="3" ry="3.6" fill="#1d2b53"/>
   <circle cx="52" cy="37" r="1" fill="#fff"/><circle cx="70" cy="37" r="1" fill="#fff"/>
   <path d="M46 31 Q51 28 56 31" stroke="#5a3b22" stroke-width="2" fill="none" stroke-linecap="round"/>
   <path d="M64 31 Q69 28 74 31" stroke="#5a3b22" stroke-width="2" fill="none" stroke-linecap="round"/>
   <path d="M52 54 Q60 60 68 54" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round"/>
-  <!-- ball -->
   <g transform="translate(92 140)"><circle r="9" fill="#fff" stroke="#111" stroke-width="1.2"/><path d="M0 -4 L4 -1 L2.5 4 L-2.5 4 L-4 -1 Z" fill="#111"/></g>
+</svg>`;
+const KEEPER_SVG = `
+<svg viewBox="0 0 58 80" width="58" height="80">
+  <rect x="17" y="58" width="9" height="18" rx="3" fill="#2b2b2b"/><rect x="32" y="58" width="9" height="18" rx="3" fill="#2b2b2b"/>
+  <rect x="2" y="30" width="12" height="9" rx="4" fill="#f5b700" transform="rotate(-35 8 34)"/>
+  <rect x="44" y="30" width="12" height="9" rx="4" fill="#f5b700" transform="rotate(35 50 34)"/>
+  <circle cx="5" cy="24" r="6" fill="#fff" stroke="#999"/><circle cx="53" cy="24" r="6" fill="#fff" stroke="#999"/>
+  <rect x="14" y="30" width="30" height="30" rx="8" fill="#f5b700"/>
+  <text x="29" y="52" text-anchor="middle" font-family="Arial Black,Arial" font-size="13" font-weight="900" fill="#1d2b53">1</text>
+  <circle cx="29" cy="18" r="12" fill="#e3b48c"/>
+  <path d="M17 15 Q29 2 41 15 Q35 9 29 10 Q23 9 17 15Z" fill="#222"/>
+  <circle cx="25" cy="18" r="1.8" fill="#222"/><circle cx="33" cy="18" r="1.8" fill="#222"/>
+  <path d="M25 24 Q29 22 33 24" stroke="#222" stroke-width="1.6" fill="none"/>
 </svg>`;
 
 function renderCoach(){
-  $("coach").innerHTML = S.coachImg ? `<img class="photo" src="${esc(S.coachImg)}" alt="Coach">` : COACH_SVG;
+  $("coach").innerHTML = (S.coachImg ? `<img class="photo" src="${esc(S.coachImg)}" alt="Coach">` : COACH_SVG) + `<span class="tapme">tap me!</span>`;
 }
 function nm(){ return S.name ? " " + S.name : ""; }
 const PRAISE = [
-  () => [`GOOOOL! ⚽ That's Messi-level spelling${nm()}!`, "أحسنتِ يا بطلة! 🏆"],
-  () => [`Top corner! 🎯 Perfect spelling${nm()}!`, "رائعة! استمري!"],
+  () => [`GOOOOL! That's Messi-level spelling${nm()}! ⚽`, "أحسنتِ يا بطلة! 🏆"],
+  () => [`Top corner! Perfect spelling${nm()}! 🎯`, "رائعة! استمري!"],
   () => [`Vamos${nm()}! Another goal for your team! 🇦🇷`, "ممتاز! 👏"],
   () => [`You are the number 10 of spelling! 🔟`, "أنتِ نجمة! ⭐"],
-  () => [`What a strike! Champions practise every day — just like you!`, "شاطرة! 💙"],
+  () => [`What a strike! Champions practise every day, just like you!`, "شاطرة! 💙"],
   () => [`Hat-trick feeling! Keep scoring${nm()}! ⚽⚽⚽`, "برافو عليكِ!"]
 ];
 const RETRY = [
   () => [`Almost! Even the best players miss sometimes. Try again! 💪`, "حاولي مرة ثانية!"],
   () => [`Look at the red letters and shoot again${nm()}!`, "قريبة جداً!"],
-  () => [`Don't give up — champions keep trying! ⚽`, "لا تستسلمي! 💪"]
+  () => [`Don't give up, champions keep trying! ⚽`, "لا تستسلمي! 💪"]
 ];
 const LEARN_TIPS = [
   () => [`Listen, look, and say the letters with me!`, "اسمعي وانظري وتهجّي معي"],
-  () => [`Watch the ending: is it -able or -ible? 👀`, "انتبهي للنهاية!"],
+  () => [`Watch the coloured letters, they are the tricky part! 👀`, "انتبهي للحروف الملوّنة!"],
   () => [`Practice makes champions${nm()}! 🏆`, "التمرين يصنع الأبطال"]
 ];
-function say(pair, mood){
-  const [en, ar] = pair();
-  $("bubble").innerHTML = `${esc(en)}<span class="ar">${esc(ar)}</span>`;
+const FACTS = [
+  () => [`Fun fact: Messi is left-footed! ⚽`, "معلومة: ميسي يلعب بقدمه اليسرى!"],
+  () => [`Fun fact: Messi was born in Rosario, Argentina. 🇦🇷`, "معلومة: وُلد ميسي في مدينة روساريو في الأرجنتين."],
+  () => [`Fun fact: Messi won the World Cup with Argentina in 2022! 🏆`, "معلومة: فاز ميسي بكأس العالم مع الأرجنتين عام 2022!"],
+  () => [`Fun fact: When Messi was little, he was smaller than the other kids, but he practised every single day! 💪`, "معلومة: كان ميسي صغير الحجم، لكنه تمرّن كل يوم!"],
+  () => [`Fun fact: Messi celebrates by pointing both fingers up to the sky. ☝️☝️`, "معلومة: ميسي يحتفل برفع إصبعيه إلى السماء."],
+  () => [`Fun fact: Messi wears the number 10 shirt for Argentina. 🔟`, "معلومة: ميسي يرتدي القميص رقم 10 مع الأرجنتين."]
+];
+function setBubble(en, ar, extra){
+  $("bubble").innerHTML = `${esc(en)}<span class="ar">${esc(ar)}</span>${extra || ""}`;
+}
+function animateCoach(mood){
   const c = $("coach");
-  c.classList.remove("cheer", "sad", "bounce"); void c.offsetWidth;
-  c.classList.add(mood === "cheer" ? "cheer" : mood === "sad" ? "sad" : "bounce");
-  if (mood) setTimeout(() => { c.classList.remove("cheer", "sad"); c.classList.add("bounce"); }, 1600);
+  c.classList.remove("cheer", "spin", "sad", "bounce"); void c.offsetWidth;
+  c.classList.add(mood || "bounce");
+  if (mood) setTimeout(() => { c.classList.remove("cheer", "spin", "sad"); c.classList.add("bounce"); }, 1600);
+}
+function say(pair, mood, quiet){
+  const [en, ar] = pair();
+  setBubble(en, ar);
+  animateCoach(mood === "cheer" ? rnd(["cheer", "spin"]) : mood);
+  if (!quiet) coachVoice(en);
+}
+
+// Tapping Leo: keepy-uppies, a fun fact, or a quick challenge.
+let tapN = 0;
+$("coach").addEventListener("click", () => {
+  const tap = $("coach").querySelector(".tapme"); if (tap) tap.remove();
+  const kind = tapN++ % 3;
+  if (kind === 0) {
+    const b = document.createElement("span"); b.className = "kick"; b.textContent = "⚽";
+    $("coach").appendChild(b); setTimeout(() => b.remove(), 3100);
+    say(() => [`Keepy-uppy! 1, 2, 3, 4! Can you spell as many words as I can do kick-ups?`, "هيا نلعب ونتعلم!"], "cheer");
+  } else if (kind === 1) {
+    say(rnd(FACTS), "spin");
+  } else {
+    const list = pool(); if (!list.length) return;
+    const w = rnd(list);
+    setBubble(`Quick challenge! Can you spell the word that means "${w.ar}"?`, "تحدٍّ سريع! هل تستطيعين تهجئة هذه الكلمة؟",
+      `<div class="go"><button class="btn o sm" id="chGo">Yes! Let's go ⚽</button></div>`);
+    animateCoach("cheer");
+    coachVoice("Quick challenge! Can you spell this word?");
+    $("chGo").onclick = () => { showTab("spell"); nextSpell(w); };
+  }
+});
+$("voiceBtn").onclick = () => {
+  S.voice = !S.voice; save(); renderVoice();
+  if (S.voice) coachVoice("Hi! I will talk to you now.");
+  else if (synth) synth.cancel();
+};
+function renderVoice(){ $("voiceBtn").textContent = S.voice ? "🔊 Leo talks" : "🔇 Leo quiet"; }
+
+/* ===================== Levels, mission, trophies ===================== */
+const LEVELS = [[0, "Rookie 🌱"], [10, "Academy Star ⭐"], [30, "First Team 👟"], [60, "Captain 🎽"], [120, "Legend 🌟"], [250, "The GOAT 🐐"]];
+function levelInfo(){
+  let i = 0; while (i + 1 < LEVELS.length && S.goals >= LEVELS[i + 1][0]) i++;
+  const next = LEVELS[i + 1];
+  return {name: LEVELS[i][1], next, pct: next ? (S.goals - LEVELS[i][0]) / (next[0] - LEVELS[i][0]) * 100 : 100};
+}
+const BADGES = [
+  {id: "g1",   e: "⚽", t: "First Goal",        d: "Score your first goal",              test: () => S.goals >= 1},
+  {id: "s3",   e: "🎩", t: "Hat-trick Hero",    d: "3 goals in a row",                   test: () => S.best >= 3},
+  {id: "g10",  e: "👟", t: "Golden Boot",       d: "Score 10 goals",                     test: () => S.goals >= 10},
+  {id: "pk",   e: "🥅", t: "Shootout Winner",   d: "Win a penalty match",                test: () => S.pkWins >= 1},
+  {id: "s10",  e: "🔥", t: "On Fire",           d: "10 goals in a row",                  test: () => S.best >= 10},
+  {id: "day",  e: "📅", t: "Mission Complete",  d: "Finish a daily mission",             test: () => S.missions >= 1},
+  {id: "g25",  e: "🎽", t: "Captain's Armband", d: "Score 25 goals",                     test: () => S.goals >= 25},
+  {id: "pk5",  e: "🎯", t: "Perfect Penalties", d: "Score 5 out of 5 in a match",        test: () => S.pkPerfect >= 1},
+  {id: "day5", e: "🗓️", t: "Training Every Day", d: "Finish 5 daily missions",           test: () => S.missions >= 5},
+  {id: "g50",  e: "🏆", t: "Champions Cup",     d: "Score 50 goals",                     test: () => S.goals >= 50},
+  {id: "all",  e: "📘", t: "Word Master",       d: "Spell every word right at least once", test: () => S.words.length > 0 && S.words.every(w => S.stats[w.id] && S.stats[w.id].ok > 0)},
+  {id: "g100", e: "🌟", t: "Ballon d'Or",       d: "Score 100 goals",                    test: () => S.goals >= 100},
+  {id: "g250", e: "🐐", t: "The GOAT",          d: "Score 250 goals",                    test: () => S.goals >= 250}
+];
+const awardQ = [];
+let awardOpen = false;
+function queueAward(a){ awardQ.push(a); if (!awardOpen) setTimeout(showAward, 1700); }
+function showAward(){
+  if (awardOpen || !awardQ.length) return;
+  const a = awardQ.shift(); awardOpen = true;
+  $("aE").textContent = a.e; $("aT").textContent = a.t; $("aD").textContent = a.d; $("aKind").textContent = a.kind || "New trophy unlocked!";
+  $("award").classList.add("on");
+  goal(true);
+  say(() => [`Amazing${nm()}! You won: ${a.t}! 🏆`, "مبروك! ربحتِ كأساً جديدة! 🏆"], "cheer");
+}
+$("aOk").onclick = () => { $("award").classList.remove("on"); awardOpen = false; setTimeout(showAward, 300); renderTrophies(); };
+function checkBadges(){
+  BADGES.forEach(b => { if (!S.badges[b.id] && b.test()) { S.badges[b.id] = today(); queueAward(b); } });
+  save();
+}
+function rollDay(){ if (S.day.d !== today()) S.day = {d: today(), g: 0, done: false}; }
+function renderMission(){
+  rollDay();
+  const g = Math.min(S.day.g, S.missionGoal);
+  $("mText").textContent = S.day.done ? `🎯 Today's mission complete! (${S.day.g} goals today)` : `🎯 Today's mission: ${g} / ${S.missionGoal} goals`;
+  $("mBar").style.width = (g / S.missionGoal * 100) + "%";
 }
 function updateScores(){
-  $("sGoals").textContent = S.goals; $("sStreak").textContent = S.streak; $("sBest").textContent = S.best;
+  $("sGoals").textContent = S.goals; $("sStreak").textContent = S.streak;
+  $("sLevel").textContent = levelInfo().name;
+  renderMission();
+}
+function renderTrophies(){
+  const L = levelInfo();
+  $("tLevel").textContent = L.name;
+  $("tBar").style.width = L.pct + "%";
+  $("tNext").textContent = L.next ? `${L.next[0] - S.goals} more goals to become ${L.next[1]}` : "You reached the top level!";
+  $("tGoals").textContent = S.goals; $("tBest").textContent = S.best; $("tPk").textContent = S.pkWins;
+  $("tMaster").textContent = `${S.words.filter(isMastered).length}/${S.words.length}`;
+  $("badges").innerHTML = BADGES.map(b => `<div class="badge ${S.badges[b.id] ? "" : "locked"}"><div class="e">${S.badges[b.id] ? b.e : "🔒"}</div><b>${esc(b.t)}</b><span>${esc(b.d)}</span></div>`).join("");
 }
 
 /* ===================== Shared helpers ===================== */
@@ -541,21 +829,26 @@ function pic(w){
   return w.img ? `<img src="${esc(w.img)}" alt="${esc(w.word)}" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'emoji',textContent:'${esc(w.emoji || "📘")}'}))">`
                : `<span class="emoji">${esc(w.emoji || "📘")}</span>`;
 }
-function splitSuffix(word){
+// The tricky part of a word: the parent's highlight letters, or the -able / -ible ending.
+function gapOf(w){
+  const word = w.word;
+  if (w.focus) {
+    const i = lc(word).indexOf(lc(w.focus));
+    if (i >= 0) return {start: i, len: w.focus.length, part: lc(w.focus), cls: "team"};
+  }
   const m = word.match(/^(.+?)(able|ible)$/i);
-  return m ? {base: m[1], suf: m[2].toLowerCase()} : null;
+  return m ? {start: m[1].length, len: 4, part: lc(m[2]), cls: lc(m[2]), suffix: true} : null;
 }
-function wordHTML(word, letterSpans){
-  const sp = splitSuffix(word);
+function wordHTML(w, letterSpans){
+  const word = w.word, g = gapOf(w);
   const letters = (s, off) => letterSpans ? s.split("").map((c, i) => `<span class="l" data-i="${i + off}">${esc(c)}</span>`).join("") : esc(s);
-  if (!sp) return letters(word, 0);
-  return letters(sp.base, 0) + `<span class="suf ${sp.suf}">${letters(word.slice(sp.base.length), sp.base.length)}</span>`;
+  if (!g) return letters(word, 0);
+  const a = word.slice(0, g.start), b = word.slice(g.start, g.start + g.len), c = word.slice(g.start + g.len);
+  return letters(a, 0) + `<span class="suf ${g.cls}">${letters(b, g.start)}</span>` + letters(c, g.start + g.len);
 }
-function exampleHTML(w){
-  if (!w.ex) return "";
-  const re = new RegExp("\\b(" + w.word.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + ")\\b", "ig");
-  return esc(w.ex).replace(re, "<b>$1</b>");
-}
+const reEsc = s => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+function wordRe(w, flags){ return new RegExp("\\b(" + reEsc(w.word) + ")\\b", flags || "i"); }
+function exampleHTML(w){ return w.ex ? esc(w.ex).replace(wordRe(w, "ig"), "<b>$1</b>") : ""; }
 function norm(s){ return s.trim().toLowerCase().replace(/\s+/g, " "); }
 
 // Align the typed answer to the target with edit distance so the colours point at the real mistakes.
@@ -574,10 +867,12 @@ function diffHTML(typed, target){
   return `<div class="diff">${out.reverse().join("")}</div>`;
 }
 
-function goal(){
-  const g = $("goal");
-  g.classList.remove("on"); void g.offsetWidth; g.classList.add("on");
-  setTimeout(() => g.classList.remove("on"), 1500);
+function goal(confettiOnly){
+  if (!confettiOnly) {
+    const g = $("goal");
+    g.classList.remove("on"); void g.offsetWidth; g.classList.add("on");
+    setTimeout(() => g.classList.remove("on"), 1500);
+  }
   const bits = ["⚽", "⭐", "🎉", "💙", "🤍", "🏆", "✨"];
   for (let k = 0; k < 22; k++) {
     const s = document.createElement("span");
@@ -589,14 +884,23 @@ function goal(){
     setTimeout(() => s.remove(), 3800);
   }
 }
-function scored(w){
+function scored(w, opts){
+  opts = opts || {};
   const s = stat(w); s.ok++; s.run++;
   S.goals++; S.streak++; if (S.streak > S.best) S.best = S.streak;
-  save(); updateScores(); goal(); say(rnd(PRAISE), "cheer");
+  rollDay(); S.day.g++;
+  if (!S.day.done && S.day.g >= S.missionGoal) {
+    S.day.done = true; S.missions++;
+    queueAward({e: "🎯", t: "Today's mission complete!", d: `You scored ${S.missionGoal} goals today. Leo is proud of you!`, kind: "Daily mission"});
+  }
+  save(); updateScores();
+  if (!opts.noOverlay) goal();
+  say(rnd(PRAISE), "cheer", opts.quiet);
+  checkBadges();
 }
-function missed(w){
+function missed(w, quiet){
   const s = stat(w); s.miss++; s.run = 0; S.streak = 0;
-  save(); updateScores(); say(rnd(RETRY), "sad");
+  save(); updateScores(); say(rnd(RETRY), "sad", quiet);
 }
 let toastT;
 function toast(msg){
@@ -604,42 +908,61 @@ function toast(msg){
   clearTimeout(toastT); toastT = setTimeout(() => t.style.display = "none", 3200);
 }
 
-/* ===================== Tabs ===================== */
-let tab = "learn";
-$("tabs").addEventListener("click", e => {
+/* ===================== Lessons + tabs ===================== */
+function renderUnits(){
+  const us = units();
+  if (S.unit !== "all" && !us.includes(S.unit)) S.unit = "all";
+  $("units").innerHTML = `<b>📘 Lesson:</b>` + [["all", `All words (${S.words.length})`]].concat(us.map(u => [u, `${u} (${S.words.filter(w => unitOf(w) === u).length})`]))
+    .map(([v, t]) => `<button data-u="${esc(v)}" class="${S.unit === v ? "on" : ""}">${esc(t)}</button>`).join("");
+  $("unitList").innerHTML = us.map(u => `<option value="${esc(u)}">`).join("");
+}
+$("units").onclick = e => {
   const b = e.target.closest("button"); if (!b) return;
-  tab = b.dataset.tab;
-  document.querySelectorAll("#tabs button").forEach(x => x.classList.toggle("on", x === b));
-  document.querySelectorAll(".panel").forEach(p => p.classList.toggle("on", p.id === "p-" + tab));
+  S.unit = b.dataset.u; save(); renderUnits(); resetGames(); refreshTab();
+};
+
+let tab = "learn";
+function showTab(t){
+  tab = t;
+  document.querySelectorAll("#tabs button").forEach(x => x.classList.toggle("on", x.dataset.tab === t));
+  document.querySelectorAll(".panel").forEach(p => p.classList.toggle("on", p.id === "p-" + t));
   if (synth) synth.cancel();
+  refreshTab();
+}
+function refreshTab(){
   if (tab === "learn") renderLearn();
   if (tab === "spell" && !sp.cur) nextSpell();
-  if (tab === "suffix" && !sf.cur) nextSuffix();
+  if (tab === "gap" && !gp.cur) nextGap();
   if (tab === "blank" && !bl.cur) nextBlank();
+  if (tab === "penalty") pkLayout();
+  if (tab === "trophies") renderTrophies();
   if (tab === "parents") openParents();
-});
+}
+$("tabs").addEventListener("click", e => { const b = e.target.closest("button"); if (b) showTab(b.dataset.tab); });
 
 /* ===================== Learn ===================== */
 let li = 0;
-function learnList(){ const t = $("lTricky").checked ? trickyWords() : S.words; return t.length ? t : S.words; }
+function learnList(){ const t = $("lTricky").checked ? trickyWords() : pool(); return t.length ? t : pool(); }
 function renderLearn(){
   const list = learnList();
   if (!list.length) { $("lCard").innerHTML = `<p class="muted">No words yet — ask a parent to add some!</p>`; $("lJump").innerHTML = ""; $("lCount").textContent = ""; return; }
   if (li >= list.length) li = 0;
-  const w = list[li], s = S.stats[w.id];
+  const w = list[li], s = S.stats[w.id], g = gapOf(w);
   $("lCount").textContent = `${li + 1} / ${list.length}`;
   $("lCard").innerHTML = `
     <div class="pic">${pic(w)}</div>
-    <div class="word" id="lWord">${wordHTML(w.word, true)}</div>
+    <div class="word" id="lWord">${wordHTML(w, true)}</div>
     <div class="ar-mean">${esc(w.ar)}</div>
     ${w.def ? `<div class="def">${esc(w.def)}</div>` : ""}
     ${w.ex ? `<div class="ex">📖 ${exampleHTML(w)}</div>` : ""}
-    <div class="stars">${s && s.ok ? "⚽".repeat(Math.min(s.ok, 10)) : ""} ${isTricky(w) ? '<span class="tag">tricky word</span>' : ""}</div>`;
+    <div class="stars">${s && s.ok ? "⚽".repeat(Math.min(s.ok, 10)) : ""}
+      ${g && !g.suffix ? `<span class="tag u">vowel team: ${esc(g.part)}</span>` : ""}
+      ${isTricky(w) ? '<span class="tag">tricky word</span>' : ""}</div>`;
   $("lJump").innerHTML = list.map((x, i) => `<button data-i="${i}" class="${i === li ? "on" : ""} ${isTricky(x) ? "tricky" : ""}">${esc(x.word)}</button>`).join("");
 }
 function curLearn(){ return learnList()[li]; }
-$("lPrev").onclick = () => { const n = learnList().length; li = (li - 1 + n) % n; renderLearn(); };
-$("lNext").onclick = () => { li = (li + 1) % learnList().length; renderLearn(); };
+$("lPrev").onclick = () => { const n = learnList().length; if (n) { li = (li - 1 + n) % n; renderLearn(); } };
+$("lNext").onclick = () => { const n = learnList().length; if (n) { li = (li + 1) % n; renderLearn(); } };
 $("lJump").onclick = e => { const b = e.target.closest("button"); if (b) { li = +b.dataset.i; renderLearn(); } };
 $("lTricky").onchange = () => { if ($("lTricky").checked && !trickyWords().length) toast("No tricky words yet — great job! 🎉"); li = 0; renderLearn(); };
 $("lSay").onclick = () => { const w = curLearn(); if (w) speak(w.word, "en-US", 0.85); };
@@ -647,108 +970,250 @@ $("lAr").onclick = () => { const w = curLearn(); if (w) speak(w.ar, "ar-SA", 0.9
 $("lEx").onclick = () => { const w = curLearn(); if (w && w.ex) speak(w.ex, "en-US", 0.9); };
 $("lSpell").onclick = () => {
   const w = curLearn(); if (!w) return;
-  say(rnd(LEARN_TIPS));
+  say(rnd(LEARN_TIPS), null, true);
   spellOut(w.word, i => {
     document.querySelectorAll("#lWord .l").forEach(el => el.classList.toggle("hot", +el.dataset.i === i));
   });
 };
 
+/* ===================== Penalty shootout ===================== */
+const PK_ROUNDS = 5;
+const pk = {queue: [], cur: null, round: 0, you: 0, keep: 0, res: [], phase: "idle"};
+function pkGeom(){
+  const P = $("pitch").getBoundingClientRect(), G = $("goalframe").getBoundingClientRect();
+  return {W: P.width, H: P.height, gl: G.left - P.left + 7, gr: G.right - P.left - 7, gt: G.top - P.top + 7, gb: G.bottom - P.top, P};
+}
+function pkReset(){
+  const g = pkGeom(), b = $("pball"), k = $("keeper");
+  b.style.transition = "none"; k.style.transition = "none";
+  b.style.left = (g.W / 2 - 20) + "px"; b.style.top = (g.H - 64) + "px"; b.style.transform = "scale(1)";
+  k.style.left = "50%"; k.style.transform = "rotate(0)";
+  void b.offsetWidth;
+  b.style.transition = ""; k.style.transition = "";
+}
+function pkLayout(){ if (!$("keeper").innerHTML) $("keeper").innerHTML = KEEPER_SVG; if (pk.phase !== "anim") pkReset(); pkBoard(); }
+function pkBoard(){
+  $("pkYou").textContent = pk.you; $("pkKeep").textContent = pk.keep;
+  $("pkDots").innerHTML = Array.from({length: PK_ROUNDS}, (_, i) => pk.res[i] === true ? "⚽" : pk.res[i] === false ? "❌" : "⚪").join("");
+}
+function pkStart(){
+  const list = pool(); if (!list.length) { toast("No words in this lesson yet."); return; }
+  pk.queue = []; while (pk.queue.length < PK_ROUNDS) pk.queue.push(...shuffle(list));
+  pk.queue = pk.queue.slice(0, PK_ROUNDS);
+  pk.round = 0; pk.you = 0; pk.keep = 0; pk.res = [];
+  $("pkStart").hidden = true;
+  say(() => [`Penalty time${nm()}! Spell the word, then pick your corner! 🥅`, "وقت ركلات الترجيح! هيا!"], "cheer");
+  pkNext();
+}
+function pkNext(){
+  pkReset(); pkBoard();
+  $("pitch").classList.remove("aim");
+  if (pk.round >= PK_ROUNDS) return pkEnd();
+  pk.cur = pk.queue[pk.round]; pk.phase = "type";
+  const w = pk.cur;
+  $("pkPanel").hidden = false;
+  $("pkPic").innerHTML = pic(w); $("pkAr").textContent = w.ar;
+  $("pkIn").value = ""; $("pkIn").className = "answer"; $("pkIn").hidden = false; $("pkCheck").hidden = false;
+  $("pkFb").innerHTML = "";
+  $("pkHint").textContent = `Penalty ${pk.round + 1} of ${PK_ROUNDS}: spell the word!`;
+  speakSoon(w.word, 0.85);
+  $("pkIn").focus({preventScroll: true});
+}
+function pkCheck(){
+  if (pk.phase !== "type") return;
+  const w = pk.cur, typed = norm($("pkIn").value), target = lc(w.word);
+  if (!typed) { $("pkIn").focus(); return; }
+  if (typed === target) {
+    pk.phase = "aim";
+    $("pkIn").className = "answer good";
+    $("pkFb").innerHTML = `✅ ${wordHTML(w)} — now tap the goal! 🎯`;
+    $("pkCheck").hidden = true;
+    $("pkHint").textContent = "👆 Tap the goal to shoot!";
+    $("pitch").classList.add("aim");
+    say(() => [`Perfect spelling! Now choose your corner and shoot! 🎯`, "تهجئة صحيحة! اختاري الزاوية واركلي!"], "cheer");
+    $("pitch").scrollIntoView({behavior: "smooth", block: "center"});
+  } else {
+    pk.phase = "anim";
+    $("pkIn").className = "answer bad";
+    $("pkFb").innerHTML = diffHTML(typed, target) + `<div>The keeper saved it! It's spelled <b>${wordHTML(w)}</b></div>`;
+    $("pkCheck").hidden = true;
+    missed(w, true);
+    const g = pkGeom();
+    pkShoot(g.gl + Math.random() * (g.gr - g.gl), g.gt + 20 + Math.random() * (g.gb - g.gt - 40), false);
+    spellOut(w.word);
+  }
+}
+function pkShoot(x, y, isGoal){
+  const g = pkGeom(), b = $("pball"), k = $("keeper"), mid = (g.gl + g.gr) / 2;
+  pk.phase = "anim";
+  $("pitch").classList.remove("aim");
+  $("pkHint").textContent = "";
+  let kx;
+  if (isGoal) kx = x < mid ? g.gr - 40 : g.gl + 40;      // keeper dives the wrong way
+  else { kx = Math.min(Math.max(x, g.gl + 29), g.gr - 29); y = Math.max(y, g.gt + 40); }  // keeper gets to it
+  const tilt = isGoal ? (kx > mid ? 70 : -70) : (kx > mid + 10 ? 35 : kx < mid - 10 ? -35 : 0);
+  setTimeout(() => { k.style.left = (kx / g.W * 100) + "%"; k.style.transform = `rotate(${tilt}deg)`; }, 120);
+  b.style.left = (x - 20) + "px"; b.style.top = (y - 20) + "px"; b.style.transform = "scale(.65) rotate(540deg)";
+  setTimeout(() => {
+    const m = $("pkMsg");
+    m.className = "pk-msg"; void m.offsetWidth;
+    m.className = "pk-msg show " + (isGoal ? "goal" : "save");
+    m.textContent = isGoal ? "GOOOOL! ⚽" : "SAVED! 🧤";
+    if (isGoal) { pk.you++; pk.res[pk.round] = true; scored(pk.cur, {noOverlay: true}); goal(true); }
+    else { pk.keep++; pk.res[pk.round] = false; }
+    pk.round++; pkBoard();
+    setTimeout(pkNext, isGoal ? 2200 : 3600);
+  }, 650);
+}
+$("pitch").addEventListener("click", e => {
+  if (pk.phase !== "aim") return;
+  const g = pkGeom();
+  const x = Math.min(Math.max(e.clientX - g.P.left, g.gl + 14), g.gr - 14);
+  const y = Math.min(Math.max(e.clientY - g.P.top, g.gt + 14), g.gb - 14);
+  pkShoot(x, y, true);
+});
+function pkEnd(){
+  pk.phase = "idle"; pk.cur = null;
+  $("pkPanel").hidden = true;
+  const won = pk.you > pk.keep;
+  if (won) S.pkWins++;
+  if (pk.you === PK_ROUNDS) S.pkPerfect++;
+  save();
+  const st = $("pkStart");
+  st.innerHTML = won
+    ? `<h3>🏆 You won ${pk.you} – ${pk.keep}!</h3><div>Champions! Leo is so proud of you!</div><button class="btn o big" id="pkGo">⚽ Play again</button>`
+    : `<h3>Final score ${pk.you} – ${pk.keep}</h3><div>Good try! Practise your tricky words and win the next one! 💪</div><button class="btn o big" id="pkGo">⚽ Play again</button>`;
+  st.hidden = false;
+  $("pkGo").onclick = pkStart;
+  if (won) { goal(true); say(() => [`We are the champions${nm()}! You won the match ${pk.you} to ${pk.keep}! 🏆`, "مبروك! فزتِ بالمباراة! 🏆"], "cheer"); }
+  else say(() => [`Great effort! Every champion loses sometimes. Let's train and play again! 💪`, "محاولة رائعة! هيا نتمرن ونلعب مرة ثانية!"], "sad");
+  checkBadges();
+}
+$("pkGo").onclick = pkStart;
+$("pkCheck").onclick = pkCheck;
+$("pkIn").addEventListener("keydown", e => { if (e.key === "Enter") pkCheck(); });
+$("pkSay").onclick = () => pk.cur && speak(pk.cur.word, "en-US", 0.85);
+$("pkSlow").onclick = () => pk.cur && speak(pk.cur.word, "en-US", 0.45);
+window.addEventListener("resize", () => { if (tab === "penalty" && pk.phase !== "anim") pkReset(); });
+
 /* ===================== Spell it ===================== */
 const sp = {queue: [], cur: null, tries: 0, hints: 0, copy: false, done: false};
-function spellPool(){ const t = $("spTricky").checked ? trickyWords() : []; return t.length ? t : S.words; }
-function nextSpell(){
-  if (!S.words.length) { $("spFb").textContent = "No words yet — ask a parent to add some!"; return; }
-  if (!sp.queue.length) sp.queue = shuffle(spellPool());
-  sp.cur = sp.queue.pop(); sp.tries = 0; sp.hints = 0; sp.copy = false; sp.done = false;
+function spellPool(){ const t = $("spTricky").checked ? trickyWords() : []; return t.length ? t : pool(); }
+function nextSpell(force){
+  if (!pool().length && !force) { $("spFb").textContent = "No words yet — ask a parent to add some!"; return; }
+  if (!force && !sp.queue.length) sp.queue = shuffle(spellPool());
+  sp.cur = force || sp.queue.pop(); sp.tries = 0; sp.hints = 0; sp.copy = false; sp.done = false;
   const w = sp.cur;
   $("spPic").innerHTML = pic(w);
   $("spAr").textContent = w.ar;
   $("spDef").hidden = true; $("spDef").textContent = w.def || "";
-  $("spIn").value = ""; $("spIn").className = "answer"; $("spIn").placeholder = "type here…";
+  $("spIn").value = ""; $("spIn").className = "answer";
   $("spFb").innerHTML = "";
   $("spNext").textContent = "Skip ▶";
   $("spInfo").textContent = `Words left in this round: ${sp.queue.length + 1}`;
-  setTimeout(() => speak(w.word, "en-US", 0.85), 250);
+  speakSoon(w.word, 0.85);
   $("spIn").focus({preventScroll: true});
 }
 function checkSpell(){
   const w = sp.cur; if (!w || sp.done) return;
-  const typed = norm($("spIn").value), target = w.word.toLowerCase();
+  const typed = norm($("spIn").value), target = lc(w.word);
   if (!typed) { $("spIn").focus(); return; }
   if (typed === target) {
     sp.done = true; $("spIn").className = "answer good";
-    if (sp.copy) { $("spFb").innerHTML = `✅ Well done! Now you know <b>${wordHTML(w.word)}</b>.`; say(LEARN_TIPS[2]); }
-    else { scored(w); $("spFb").innerHTML = `✅ ${wordHTML(w.word)} ${sp.hints ? "" : "— no hints! ⭐"}`; }
+    if (sp.copy) { $("spFb").innerHTML = `✅ Well done! Now you know <b>${wordHTML(w)}</b>.`; say(LEARN_TIPS[2]); }
+    else { scored(w); $("spFb").innerHTML = `✅ ${wordHTML(w)} ${sp.hints ? "" : "— no hints! ⭐"}`; }
     $("spNext").textContent = "Next word ▶";
-    setTimeout(() => { if (sp.cur === w && tab === "spell") nextSpell(); }, 2200);
+    setTimeout(() => { if (sp.cur === w && tab === "spell") nextSpell(); }, 2600);
     return;
   }
   $("spIn").className = "answer"; void $("spIn").offsetWidth; $("spIn").className = "answer bad";
-  if (sp.copy) { $("spFb").innerHTML = diffHTML(typed, target) + `<div class="small muted">Copy it exactly: <b>${wordHTML(w.word)}</b></div>`; return; }
-  sp.tries++; missed(w);
+  if (sp.copy) { $("spFb").innerHTML = diffHTML(typed, target) + `<div class="small muted">Copy it exactly: <b>${wordHTML(w)}</b></div>`; return; }
+  sp.tries++;
   if (sp.tries >= 2) {
+    missed(w, true);
     sp.copy = true;
-    $("spFb").innerHTML = diffHTML(typed, target) + `<div>The correct spelling is <span class="word" style="font-size:1.6rem">${wordHTML(w.word)}</span></div><div class="small muted">Now type it correctly once ✍️</div>`;
+    $("spFb").innerHTML = diffHTML(typed, target) + `<div>The correct spelling is <span class="word" style="font-size:1.6rem">${wordHTML(w)}</span></div><div class="small muted">Now type it correctly once ✍️</div>`;
     spellOut(w.word);
     $("spIn").value = "";
   } else {
+    missed(w);
     $("spFb").innerHTML = diffHTML(typed, target) + `<div class="small muted">Green = correct, red = check again. One more try!</div>`;
   }
   $("spIn").focus({preventScroll: true});
 }
 $("spCheck").onclick = checkSpell;
 $("spIn").addEventListener("keydown", e => { if (e.key === "Enter") { sp.done ? nextSpell() : checkSpell(); } });
-$("spNext").onclick = nextSpell;
+$("spNext").onclick = () => nextSpell();
 $("spSay").onclick = () => sp.cur && speak(sp.cur.word, "en-US", 0.85);
 $("spSlow").onclick = () => sp.cur && speak(sp.cur.word, "en-US", 0.45);
 $("spMean").onclick = () => { if (!sp.cur) return; $("spDef").hidden = !$("spDef").hidden; if (!$("spDef").hidden && sp.cur.def) speak(sp.cur.def, "en-US", 0.9); };
 $("spHint").onclick = () => {
   const w = sp.cur; if (!w || sp.done) return;
-  const target = w.word.toLowerCase(), typed = norm($("spIn").value);
+  const target = lc(w.word), typed = norm($("spIn").value);
   let k = 0; while (k < typed.length && typed[k] === target[k]) k++;
   sp.hints++;
   $("spIn").value = target.slice(0, Math.min(k + 1, target.length - 1));
   $("spIn").focus();
-  const s = splitSuffix(w.word);
-  if (s && sp.hints === 2) toast(`Hint: this word ends with -${s.suf}`);
+  const g = gapOf(w);
+  if (g && sp.hints === 2) toast(g.suffix ? `Hint: this word ends with -${g.part}` : `Hint: look for the letters "${g.part}"`);
 };
 $("spTricky").onchange = () => { if ($("spTricky").checked && !trickyWords().length) toast("No tricky words yet — great job! 🎉"); sp.queue = []; nextSpell(); };
 
-/* ===================== -able / -ible ===================== */
-const sf = {queue: [], cur: null, done: false};
-function nextSuffix(){
-  const pool = S.words.filter(w => splitSuffix(w.word));
-  if (!pool.length) { $("sfQ").textContent = "Add some -able / -ible words first!"; return; }
-  if (!sf.queue.length) sf.queue = shuffle(pool);
-  sf.cur = sf.queue.pop(); sf.done = false;
-  const w = sf.cur, s = splitSuffix(w.word);
-  $("sfPic").innerHTML = pic(w);
-  $("sfAr").textContent = w.ar;
-  $("sfQ").innerHTML = `${esc(s.base)}<span class="blank">able</span>`;
-  $("sfFb").innerHTML = "";
-  $("sfAble").disabled = $("sfIble").disabled = false;
+/* ===================== Missing letters ===================== */
+const LOOKALIKES = {
+  ea: ["ee", "ie", "e"], ee: ["ea", "e", "ie"], oo: ["ou", "u", "o"], oi: ["oy", "io", "o"], oy: ["oi", "oe", "o"],
+  au: ["aw", "ou", "a"], aw: ["au", "or", "a"], eu: ["ew", "u", "oo"], ew: ["eu", "oo", "u"], ow: ["ou", "oa", "o"],
+  ou: ["ow", "oo", "u"], ay: ["ai", "a", "ey"], ai: ["ay", "a", "ei"], oa: ["ow", "o", "oe"], ie: ["ei", "ee", "y"], ei: ["ie", "ay", "ee"]
+};
+const VOWELS = ["ea", "ee", "oo", "oi", "oy", "au", "ou", "ow", "ai", "ay", "ie", "ei"];
+function choicesFor(g){
+  if (g.suffix) return ["able", "ible"];
+  const alt = (LOOKALIKES[g.part] || shuffle(VOWELS)).filter(x => x !== g.part);
+  return shuffle([g.part, ...alt.slice(0, 2)]);
 }
-function answerSuffix(choice){
-  const w = sf.cur; if (!w || sf.done) return;
-  sf.done = true; $("sfAble").disabled = $("sfIble").disabled = true;
-  const s = splitSuffix(w.word);
-  $("sfQ").innerHTML = wordHTML(w.word);
-  if (choice === s.suf) { scored(w); $("sfFb").innerHTML = `✅ Yes! <b>${esc(w.word)}</b>`; }
-  else { missed(w); $("sfFb").innerHTML = `❌ It's <span class="suf ${s.suf}">-${s.suf}</span> → <b>${esc(w.word)}</b>`; }
+const gp = {queue: [], cur: null, done: false};
+function nextGap(){
+  const list = pool().filter(gapOf);
+  if (!list.length) {
+    $("gpPic").innerHTML = pic({emoji: "🧩"}); $("gpAr").textContent = ""; $("gpChoices").innerHTML = ""; $("gpTip").innerHTML = "";
+    $("gpQ").innerHTML = `<span class="muted" style="font-size:1.1rem">No words with highlighted letters in this lesson yet.</span>`; return;
+  }
+  if (!gp.queue.length) gp.queue = shuffle(list);
+  gp.cur = gp.queue.pop(); gp.done = false;
+  const w = gp.cur, g = gapOf(w);
+  $("gpPic").innerHTML = pic(w);
+  $("gpAr").textContent = w.ar;
+  $("gpQ").innerHTML = esc(w.word.slice(0, g.start)) + `<span class="blank">${"x".repeat(Math.max(g.len, 3))}</span>` + esc(w.word.slice(g.start + g.len));
+  $("gpChoices").innerHTML = choicesFor(g).map((c, i) => `<button class="btn ${["", "o", "p"][i]}" data-c="${esc(c)}">${g.suffix ? "-" : ""}${esc(c)}</button>`).join("");
+  $("gpFb").innerHTML = "";
+  $("gpTip").innerHTML = g.suffix
+    ? `<b>⚽ Coach's tip:</b> If the beginning is a <b>whole word</b>, it is usually <span class="suf able">able</span> (work → work<span class="suf able">able</span>).
+       If it is <b>not</b> a real word, it is usually <span class="suf ible">ible</span> (ed → ed<span class="suf ible">ible</span>).
+       Some words break the rule (digest → digest<span class="suf ible">ible</span>) — those you just have to learn! 💪`
+    : `<b>⚽ Coach's tip:</b> A <b>vowel team</b> is two letters that make one sound together:
+       <span class="suf team">ea</span> in z<span class="suf team">ea</span>l, <span class="suf team">ee</span> in committ<span class="suf team">ee</span>,
+       <span class="suf team">oo</span> in typh<span class="suf team">oo</span>n, <span class="suf team">oi</span>/<span class="suf team">oy</span> in embr<span class="suf team">oi</span>der and r<span class="suf team">oy</span>alty. Say the word slowly and listen! 👂`;
+  speakSoon(w.word, 0.85);
+}
+$("gpChoices").onclick = e => {
+  const b = e.target.closest("button"); const w = gp.cur; if (!b || !w || gp.done) return;
+  gp.done = true;
+  $("gpChoices").querySelectorAll("button").forEach(x => x.disabled = true);
+  const g = gapOf(w);
+  $("gpQ").innerHTML = wordHTML(w);
+  if (b.dataset.c === g.part) { scored(w); $("gpFb").innerHTML = `✅ Yes! <b>${esc(w.word)}</b>`; }
+  else { missed(w, true); $("gpFb").innerHTML = `❌ It's <span class="suf ${g.cls}">${esc(g.part)}</span> → <b>${esc(w.word)}</b>`; }
   spellOut(w.word);
-  setTimeout(() => { if (sf.cur === w && tab === "suffix") nextSuffix(); }, 3800);
-}
-$("sfAble").onclick = () => answerSuffix("able");
-$("sfIble").onclick = () => answerSuffix("ible");
-$("sfNext").onclick = nextSuffix;
+  setTimeout(() => { if (gp.cur === w && tab === "gap") nextGap(); }, 4200);
+};
+$("gpNext").onclick = nextGap;
 
 /* ===================== Fill the blank ===================== */
 const bl = {queue: [], cur: null, tries: 0, done: false};
-function wordRe(w){ return new RegExp("\\b" + w.word.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "\\b", "i"); }
 function nextBlank(){
-  const pool = S.words.filter(w => w.ex && wordRe(w).test(w.ex));
-  if (!pool.length) { $("blS").textContent = "Add example sentences that include the word first!"; return; }
-  if (!bl.queue.length) bl.queue = shuffle(pool);
+  const list = pool().filter(w => w.ex && wordRe(w).test(w.ex));
+  if (!list.length) { $("blS").textContent = "Add example sentences that include the word first!"; return; }
+  if (!bl.queue.length) bl.queue = shuffle(list);
   bl.cur = bl.queue.pop(); bl.tries = 0; bl.done = false;
   const w = bl.cur;
   $("blS").innerHTML = esc(w.ex).replace(wordRe(w), `<span class="gap">&nbsp;</span>`);
@@ -759,13 +1224,13 @@ function nextBlank(){
 }
 function checkBlank(){
   const w = bl.cur; if (!w || bl.done) return;
-  const typed = norm($("blIn").value), target = w.word.toLowerCase();
+  const typed = norm($("blIn").value), target = lc(w.word);
   if (!typed) return;
   if (typed === target) {
     bl.done = true; $("blIn").className = "answer good";
-    if (bl.tries < 2) scored(w);
+    if (bl.tries < 2) scored(w, {quiet: true});
     $("blS").innerHTML = exampleHTML(w);
-    $("blFb").innerHTML = `✅ ${wordHTML(w.word)}`;
+    $("blFb").innerHTML = `✅ ${wordHTML(w)}`;
     $("blNext").textContent = "Next ▶";
     speak(w.ex, "en-US", 0.9);
     return;
@@ -774,7 +1239,7 @@ function checkBlank(){
   bl.tries++;
   if (bl.tries <= 2) missed(w);
   $("blFb").innerHTML = bl.tries >= 2
-    ? diffHTML(typed, target) + `<div>The answer is <b>${wordHTML(w.word)}</b> — type it to score the next one!</div>`
+    ? diffHTML(typed, target) + `<div>The answer is <b>${wordHTML(w)}</b> — type it to finish!</div>`
     : diffHTML(typed, target) + `<div class="small muted">Try again — use a hint if you need it.</div>`;
 }
 $("blCheck").onclick = checkBlank;
@@ -800,19 +1265,21 @@ $("gIn").addEventListener("keydown", e => { if (e.key === "Enter") tryGate(); })
 
 function renderParents(){
   $("pName").value = S.name || "";
+  $("pMission").value = S.missionGoal;
   $("pCount").textContent = S.words.length;
   $("pList").innerHTML = S.words.map(w => {
     const s = S.stats[w.id];
     return `<div class="item">
       <div class="pic sm">${pic(w)}</div>
-      <div class="t"><b>${wordHTML(w.word)}</b> <span class="a">${esc(w.ar)}</span>
-        <div class="d">${esc(w.def || "")}${s ? ` · ⚽ ${s.ok} ✗ ${s.miss}` : ""}${isTricky(w) ? " · tricky" : ""}</div></div>
+      <div class="t"><b>${wordHTML(w)}</b> <span class="a">${esc(w.ar)}</span>
+        <div class="d">${esc(unitOf(w))} · ${esc(w.def || "")}${s ? ` · ⚽ ${s.ok} ✗ ${s.miss}` : ""}${isTricky(w) ? " · tricky" : ""}</div></div>
       <button class="btn w sm" data-edit="${w.id}">✏️</button>
       <button class="btn w sm" data-del="${w.id}">🗑️</button>
     </div>`;
   }).join("") || `<p class="muted">No words yet.</p>`;
 }
 $("pName").oninput = () => { S.name = $("pName").value.trim(); save(); };
+$("pMission").onchange = () => { S.missionGoal = Math.max(1, Math.min(100, +$("pMission").value || 10)); save(); updateScores(); };
 
 // Shrink photos before saving so many words fit in browser storage.
 function readImage(file, max){
@@ -843,8 +1310,7 @@ $("pCoach").onchange = async e => {
 $("pCoachDel").onclick = () => { S.coachImg = ""; save(); renderCoach(); };
 
 function previewForm(){
-  const tmp = {word: $("fWord").value, emoji: $("fEmoji").value.trim() || "📘", img: formImg || $("fUrl").value.trim()};
-  $("fPrev").innerHTML = pic(tmp);
+  $("fPrev").innerHTML = pic({word: $("fWord").value, emoji: $("fEmoji").value.trim() || "📘", img: formImg || $("fUrl").value.trim()});
 }
 $("fEmoji").oninput = previewForm;
 $("fUrl").oninput = () => { formImg = ""; previewForm(); };
@@ -858,7 +1324,8 @@ $("fClearImg").onclick = () => { formImg = ""; $("fUrl").value = ""; previewForm
 
 function clearForm(){
   editId = null; formImg = "";
-  ["fWord", "fAr", "fDef", "fEx", "fEmoji", "fUrl"].forEach(id => $(id).value = "");
+  ["fWord", "fAr", "fDef", "fEx", "fEmoji", "fUrl", "fFocus"].forEach(id => $(id).value = "");
+  $("fUnit").value = S.unit !== "all" ? S.unit : "";
   $("fTitle").textContent = "➕ Add a new word"; $("fSave").textContent = "➕ Add word"; $("fCancel").hidden = true;
   previewForm();
 }
@@ -866,19 +1333,22 @@ $("fCancel").onclick = clearForm;
 $("fSave").onclick = () => {
   const word = $("fWord").value.trim(), ar = $("fAr").value.trim();
   if (!word || !ar) { toast("Please fill in the English word and the Arabic meaning."); return; }
-  if (S.words.some(w => w.word.toLowerCase() === word.toLowerCase() && w.id !== editId)) { toast(`"${word}" is already in the list.`); return; }
-  const data = {word, ar, def: $("fDef").value.trim(), ex: $("fEx").value.trim(), emoji: $("fEmoji").value.trim(), img: formImg || $("fUrl").value.trim()};
+  if (S.words.some(w => lc(w.word) === lc(word) && w.id !== editId)) { toast(`"${word}" is already in the list.`); return; }
+  const data = {word, ar, unit: $("fUnit").value.trim() || "My words", focus: $("fFocus").value.trim(), def: $("fDef").value.trim(),
+                ex: $("fEx").value.trim(), emoji: $("fEmoji").value.trim(), img: formImg || $("fUrl").value.trim()};
+  if (data.focus && !lc(word).includes(lc(data.focus))) { toast(`"${data.focus}" is not inside "${word}".`); return; }
   if (data.ex && !wordRe(data).test(data.ex)) toast("Saved. Tip: include the exact word in the sentence so it appears in Fill the blank.");
   if (editId) { Object.assign(S.words.find(w => w.id === editId), data); toast(`Updated "${word}" ✅`); }
   else { S.words.push({id: uid(), ...data}); toast(`Added "${word}" ✅`); }
-  save(); clearForm(); renderParents(); resetGames();
+  save(); clearForm(); renderParents(); renderUnits(); resetGames();
 };
 $("pList").onclick = e => {
   const ed = e.target.closest("[data-edit]"), del = e.target.closest("[data-del]");
   if (ed) {
     const w = S.words.find(x => x.id === ed.dataset.edit); if (!w) return;
     editId = w.id;
-    $("fWord").value = w.word; $("fAr").value = w.ar; $("fDef").value = w.def || ""; $("fEx").value = w.ex || ""; $("fEmoji").value = w.emoji || "";
+    $("fWord").value = w.word; $("fAr").value = w.ar; $("fDef").value = w.def || ""; $("fEx").value = w.ex || "";
+    $("fEmoji").value = w.emoji || ""; $("fUnit").value = unitOf(w); $("fFocus").value = w.focus || "";
     formImg = w.img && w.img.startsWith("data:") ? w.img : "";
     $("fUrl").value = w.img && !w.img.startsWith("data:") ? w.img : "";
     $("fTitle").textContent = `✏️ Edit "${w.word}"`; $("fSave").textContent = "💾 Save changes"; $("fCancel").hidden = false;
@@ -889,11 +1359,11 @@ $("pList").onclick = e => {
     const w = S.words.find(x => x.id === del.dataset.del); if (!w) return;
     if (!confirm(`Delete "${w.word}"?`)) return;
     S.words = S.words.filter(x => x.id !== w.id); delete S.stats[w.id];
-    save(); renderParents(); resetGames();
+    save(); renderParents(); renderUnits(); resetGames();
   }
 };
 $("pExport").onclick = () => {
-  const blob = new Blob([JSON.stringify({app: "leo-spelling", version: 1, name: S.name, words: S.words}, null, 2)], {type: "application/json"});
+  const blob = new Blob([JSON.stringify({app: "leo-spelling", version: 2, name: S.name, words: S.words}, null, 2)], {type: "application/json"});
   const a = document.createElement("a");
   a.href = URL.createObjectURL(blob); a.download = "spelling-words-backup.json";
   document.body.appendChild(a); a.click(); a.remove();
@@ -908,28 +1378,30 @@ $("pImport").onchange = e => {
       const list = (Array.isArray(d) ? d : d.words || []).filter(w => w && w.word && w.ar);
       if (!list.length) throw new Error();
       const replace = confirm(`Found ${list.length} words.\n\nOK = replace the current list\nCancel = add them to the current list`);
-      const incoming = list.map(w => ({id: uid(), word: String(w.word), ar: String(w.ar), def: w.def || "", ex: w.ex || "", emoji: w.emoji || "", img: w.img || ""}));
+      const incoming = list.map(w => ({id: uid(), word: String(w.word), ar: String(w.ar), unit: w.unit || "My words", focus: w.focus || "",
+                                        def: w.def || "", ex: w.ex || "", emoji: w.emoji || "", img: w.img || ""}));
       if (replace) { S.words = incoming; S.stats = {}; }
-      else incoming.forEach(w => { if (!S.words.some(x => x.word.toLowerCase() === w.word.toLowerCase())) S.words.push(w); });
+      else incoming.forEach(w => { if (!S.words.some(x => lc(x.word) === lc(w.word))) S.words.push(w); });
       if (d.name && !S.name) S.name = d.name;
-      save(); renderParents(); resetGames(); toast("Words restored ✅");
+      save(); renderParents(); renderUnits(); resetGames(); toast("Words restored ✅");
     } catch (err) { toast("That file doesn't look like a word backup."); }
   };
   r.readAsText(f); e.target.value = "";
 };
 $("pResetScore").onclick = () => {
-  if (!confirm("Reset goals, streaks and tricky-word progress?")) return;
-  S.goals = 0; S.streak = 0; S.best = 0; S.stats = {}; save(); updateScores(); renderParents();
+  if (!confirm("Reset goals, streaks, trophies and tricky-word progress?")) return;
+  Object.assign(S, {goals: 0, streak: 0, best: 0, stats: {}, badges: {}, pkWins: 0, pkPerfect: 0, missions: 0, day: {d: today(), g: 0, done: false}});
+  save(); updateScores(); renderParents();
 };
 $("pResetWords").onclick = () => {
-  if (!confirm("Replace the whole list with the original 19 words? Words you added will be removed (make a Backup first if you want to keep them).")) return;
-  S.words = freshState().words; S.stats = {}; save(); renderParents(); resetGames();
+  if (!confirm(`Replace the whole list with the original ${DEFAULT_WORDS.length} words? Words you added will be removed (make a Backup first if you want to keep them).`)) return;
+  S.words = freshWords(); S.stats = {}; S.unit = "all"; save(); renderParents(); renderUnits(); resetGames();
 };
-function resetGames(){ sp.queue = []; sp.cur = null; sf.queue = []; sf.cur = null; bl.queue = []; bl.cur = null; li = 0; }
+function resetGames(){ sp.queue = []; sp.cur = null; gp.queue = []; gp.cur = null; bl.queue = []; bl.cur = null; li = 0; }
 
 /* ===================== Start ===================== */
-renderCoach(); updateScores(); renderLearn();
-say(() => [`Hi${nm()}! I'm your coach. Let's score some spelling goals today! ⚽`, "هيا نتعلم التهجئة معاً!"]);
+renderCoach(); renderVoice(); renderUnits(); updateScores(); renderLearn();
+say(() => [`Hi${nm()}! I'm your coach. Tap me, or try the Penalty match! ⚽`, "هيا نتعلم التهجئة معاً!"], null, true);
 })();
 </script>
 </body>
