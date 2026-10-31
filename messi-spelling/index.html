@@ -271,6 +271,14 @@
 </header>
 
 <div class="wrap">
+  <div class="card" id="soundWarn" hidden style="margin-top:14px;border:3px solid var(--gold)">
+    <b>🔇 No sound?</b>
+    <ul class="small" style="margin:6px 0 0;padding-left:20px">
+      <li>Open the page in <b>Safari</b> or <b>Chrome</b>. File previews and apps like WhatsApp, Files or Drive open pages without sound.</li>
+      <li>On iPhone/iPad, turn <b>off silent mode</b> (the switch on the side) and turn the volume up.</li>
+      <li>Best: use the online link from your parents, which works on every device.</li>
+    </ul>
+  </div>
   <div class="units" id="units"></div>
   <nav id="tabs">
     <button data-tab="learn" class="on">📚 Learn</button>
@@ -448,6 +456,10 @@
             <input id="pMission" type="number" min="1" max="100">
           </div>
           <div class="full">
+            <label>Sound check</label>
+            <div class="row"><button class="btn sm" id="pTest">🔊 Test sound</button><span class="small muted" id="pTestInfo"></span></div>
+          </div>
+          <div class="full">
             <label>Coach picture (optional — e.g. your favourite Messi photo)</label>
             <div class="row">
               <input type="file" id="pCoach" accept="image/*" style="flex:1;min-width:0">
@@ -591,27 +603,62 @@ function pool(){ return S.unit === "all" ? S.words : S.words.filter(w => unitOf(
 function trickyWords(){ return pool().filter(isTricky); }
 
 /* ===================== Speech ===================== */
-const synth = window.speechSynthesis;
-let voices = [];
+const synth = ("speechSynthesis" in window && "SpeechSynthesisUtterance" in window) ? window.speechSynthesis : null;
+let voices = [], badVoices = new Set();
 function loadVoices(){ voices = synth ? synth.getVoices() : []; }
-if (synth) { loadVoices(); synth.onvoiceschanged = loadVoices; }
+if (synth) { loadVoices(); synth.addEventListener ? synth.addEventListener("voiceschanged", loadVoices) : (synth.onvoiceschanged = loadVoices); }
+// Prefer voices installed on the device: online voices go silent when the file is opened without internet.
 function voiceFor(lang){
-  const l = lang.toLowerCase();
-  return voices.find(v => v.lang.toLowerCase() === l) ||
-         voices.find(v => v.lang.toLowerCase().startsWith(l.slice(0, 2)));
+  if (!voices.length) loadVoices();
+  const l = lang.toLowerCase().replace("_", "-");
+  const ok = voices.filter(v => !badVoices.has(v.name));
+  const match = ok.filter(v => v.lang.toLowerCase().replace("_", "-") === l);
+  const near = ok.filter(v => v.lang.toLowerCase().startsWith(l.slice(0, 2)));
+  const list = match.length ? match : near;
+  return list.find(v => v.localService) || list[0];
 }
 function utter(text, lang, rate){
   const u = new SpeechSynthesisUtterance(text);
-  u.lang = lang || "en-US"; u.rate = rate || 0.9;
+  u.lang = lang || "en-US"; u.rate = rate || 0.9; u.volume = 1;
   const v = voiceFor(u.lang); if (v) u.voice = v;
+  // If a voice fails, forget it and say the text again with the device's default voice.
+  u.onerror = e => {
+    if (e.error === "interrupted" || e.error === "canceled" || u._retried) return;
+    if (u.voice) badVoices.add(u.voice.name);
+    const again = new SpeechSynthesisUtterance(text);
+    again.lang = u.lang; again.rate = u.rate; again._retried = true;
+    synth.speak(again);
+  };
   return u;
 }
-function speak(text, lang, rate){
-  if (!synth) { toast("This browser cannot speak. Try Chrome or Safari."); return; }
+// Chrome sometimes gets stuck "paused", and Safari drops a speak() that comes right after cancel().
+function sayQueue(list){
+  if (!synth) { noSound(); return; }
+  const busy = synth.speaking || synth.pending;
   synth.cancel();
-  if (lang && lang.startsWith("ar") && !voiceFor("ar")) toast("No Arabic voice on this device — the meaning is shown on screen.");
-  synth.speak(utter(text, lang, rate));
+  synth.resume();
+  const go = () => list.forEach(u => synth.speak(u));
+  busy ? setTimeout(go, 120) : go();
 }
+function noSound(){
+  toast("Sound is not available here. Open the page in Safari or Chrome (not a file preview).");
+  $("soundWarn").hidden = false;
+}
+function speak(text, lang, rate){
+  if (!synth) { noSound(); return; }
+  if (lang && lang.startsWith("ar") && !voiceFor("ar")) toast("No Arabic voice on this device — the meaning is shown on screen.");
+  sayQueue([utter(text, lang, rate)]);
+}
+// iPhone/iPad only allow speech after the first tap, so "unlock" it then.
+let unlocked_audio = false;
+function unlockAudio(){
+  if (unlocked_audio || !synth) return;
+  unlocked_audio = true;
+  const u = new SpeechSynthesisUtterance(" "); u.volume = 0;
+  synth.speak(u);
+}
+document.addEventListener("touchend", unlockAudio, {once: true, capture: true});
+document.addEventListener("click", unlockAudio, {once: true, capture: true});
 // Waits for Leo to finish talking before saying the new word.
 function speakSoon(text, rate){
   if (!synth) return;
@@ -620,24 +667,23 @@ function speakSoon(text, rate){
 }
 // Says the word, then each letter (with an optional callback per letter), then the word again.
 function spellOut(word, onLetter){
-  if (!synth) { toast("This browser cannot speak. Try Chrome or Safari."); return; }
-  synth.cancel();
-  synth.speak(utter(word, "en-US", 0.85));
+  if (!synth) { noSound(); return; }
+  const list = [utter(word, "en-US", 0.85)];
   word.split("").forEach((ch, i) => {
     if (!/[a-z]/i.test(ch)) return;
     const u = utter(ch.toUpperCase(), "en-US", 0.8);
     u.onstart = () => onLetter && onLetter(i);
-    synth.speak(u);
+    list.push(u);
   });
   const end = utter(word, "en-US", 0.85);
   end.onstart = () => onLetter && onLetter(-1);
-  synth.speak(end);
+  list.push(end);
+  sayQueue(list);
 }
 const EMOJI_RE = /[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{2B00}-\u{2BFF}\u{FE0F}\u{200D}\u{20E3}]/gu;
 function coachVoice(text){
   if (!S.voice || !synth) return;
-  synth.cancel();
-  synth.speak(utter(text.replace(EMOJI_RE, "").replace(/#/g, "number "), "en-US", 1));
+  sayQueue([utter(text.replace(EMOJI_RE, "").replace(/#/g, "number "), "en-US", 1)]);
 }
 
 /* ===================== Coach Leo ===================== */
@@ -1399,7 +1445,16 @@ $("pResetWords").onclick = () => {
 };
 function resetGames(){ sp.queue = []; sp.cur = null; gp.queue = []; gp.cur = null; bl.queue = []; bl.cur = null; li = 0; }
 
+$("pTest").onclick = () => {
+  if (!synth) { $("pTestInfo").textContent = "❌ This app/browser has no speech. Open the page in Safari or Chrome."; noSound(); return; }
+  loadVoices();
+  const en = voiceFor("en-US"), ar = voiceFor("ar-SA");
+  $("pTestInfo").textContent = `Voices found: ${voices.length}. English: ${en ? en.name : "default"}. Arabic: ${ar ? ar.name : "none"}. Not hearing anything? Turn off silent mode and turn the volume up.`;
+  speak("Hello! This is Leo. Can you hear me?", "en-US", 0.95);
+};
+
 /* ===================== Start ===================== */
+if (!synth) $("soundWarn").hidden = false;
 renderCoach(); renderVoice(); renderUnits(); updateScores(); renderLearn();
 say(() => [`Hi${nm()}! I'm your coach. Tap me, or try the Penalty match! ⚽`, "هيا نتعلم التهجئة معاً!"], null, true);
 })();
