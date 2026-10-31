@@ -235,6 +235,63 @@
 
   #toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--navy);color:#fff;padding:10px 16px;border-radius:12px;z-index:80;display:none;max-width:90vw;text-align:center}
 
+  /* ---------- modes ---------- */
+  .modes{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:14px 0 0}
+  .modes button{background:#fff;color:var(--navy);border-radius:16px;padding:10px 6px;font-weight:800;font-size:1rem;box-shadow:0 4px 0 #c9d9ee;border:2px solid #dbe7f6}
+  .modes button.on{background:var(--navy);color:#fff;border-color:var(--navy);box-shadow:0 4px 0 #0e1733}
+
+  /* ---------- grammar ---------- */
+  .ar-line{direction:rtl;text-align:right;color:var(--sky-d);font-weight:700;margin:-6px 0 8px}
+  .ar{font-family:"Geeza Pro","Noto Naskh Arabic","Segoe UI",Tahoma,sans-serif;color:var(--sky-d);font-weight:700}
+  .rules{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0}
+  .rule{background:#f4f9ff;border:2px solid #dbe7f6;border-radius:14px;padding:10px;font-size:.95rem;line-height:1.4}
+  .rule .mk{font-size:1.3rem;color:var(--bad)}
+  .demo{font-size:1.5rem;font-weight:800;margin:8px 0;text-align:center}
+  .c-subj{color:#2f6fd6}
+  .c-pred{color:#d4610f}
+  .bar-l{color:var(--navy);font-weight:900;margin:0 4px}
+  .gsent{font-size:1.6rem;font-weight:800;line-height:1.4;margin:10px 0}
+  .gtask{font-size:1.05rem;margin:6px 0 10px}
+  .gtask .ar{display:block;direction:rtl;font-size:.95rem}
+  .gchoices{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px auto;max-width:560px}
+  .gchoices.c3{grid-template-columns:1fr 1fr 1fr}
+  .gchoices .btn{font-size:1.1rem;padding:12px 8px;line-height:1.2}
+  .gchoices .btn small{display:block;font-size:.8rem;font-weight:600;opacity:.8;margin-top:2px}
+  .gchoices .btn[disabled]{opacity:.5}
+  .gchoices .btn.right{opacity:1;background:var(--ok);color:#fff;border-color:var(--ok);box-shadow:0 4px 0 #157541}
+  .gchoices .btn.wrong{opacity:1;background:var(--bad);color:#fff;border-color:var(--bad);box-shadow:0 4px 0 #a52a24}
+  .gexp{font-size:1rem;font-weight:600;color:var(--navy);background:#f4f9ff;border-radius:12px;padding:8px 12px;margin:8px auto 0;max-width:560px}
+  .gexp .ar{display:block;direction:rtl;margin-top:3px}
+  .nball{display:inline-flex;align-items:center;gap:8px;background:#fff;border:3px solid var(--navy);border-radius:999px;padding:8px 18px;font-size:1.7rem;font-weight:800;margin:14px 0;transition:transform .6s ease-in,opacity .6s}
+  .nball.l{transform:translate(-90px,40px) scale(.7) rotate(-20deg)}
+  .nball.r{transform:translate(90px,40px) scale(.7) rotate(20deg)}
+  .tilebox{min-height:64px;border:3px dashed #cfe0f5;border-radius:16px;padding:6px;margin:8px auto;max-width:620px;background:#fbfdff}
+  .tilebox.pool{border-style:solid;background:#f4f9ff}
+  .tilebox:empty::before{content:"tap the word cards below ⬇️";color:var(--muted);display:block;padding:14px}
+  .tilebox.pool:empty::before{content:"✔ all cards used"}
+  .tile{display:inline-block;padding:8px 12px;border-radius:12px;background:#fff;border:2px solid #cfe0f5;font-weight:800;font-size:1.25rem;margin:4px;color:var(--navy);box-shadow:0 3px 0 #c9d9ee}
+  .tile.mk{background:#fff6d6;border-color:#f0d27a}
+  .tile.bad{border-color:var(--bad);background:#ffe5e3}
+  .tile.good{border-color:var(--ok);background:#eafbf1}
+  .goalline{font-size:1.1rem;margin:4px 0}
+  .sp-words{display:flex;flex-wrap:wrap;justify-content:center;gap:4px;margin:10px 0;font-size:1.5rem;font-weight:800}
+  .sw{padding:6px 9px;border-radius:12px;border:3px solid transparent;background:#f4f9ff;color:var(--navy);cursor:pointer;transition:background .2s}
+  .sw.subj{background:#e4eeff;color:#2f6fd6}
+  .sw.pred{background:#fff0e1;color:#d4610f}
+  .sw.sel{border-color:var(--navy);text-decoration:underline;text-decoration-thickness:3px}
+  .sw.bad{border-color:var(--bad)}
+  .sw.capd{background:#fff6d6;border-color:#f0d27a}
+  .sw.off{cursor:default;opacity:.55}
+  .divider{font-size:2rem;font-weight:900;color:var(--navy);align-self:center;padding:0 2px}
+  .steps{display:flex;gap:6px;justify-content:center;margin:6px 0}
+  .steps span{background:#eef3fa;border-radius:999px;padding:3px 10px;font-size:.85rem;font-weight:700;color:var(--muted)}
+  .steps span.on{background:var(--sky);color:#fff}
+  .steps span.done{background:var(--ok);color:#fff}
+  .report{display:flex;flex-direction:column;gap:10px;text-align:left}
+  .report .r b{display:flex;justify-content:space-between;gap:8px}
+  .report .need{color:var(--bad);font-size:.85rem;font-weight:700}
+  .report .gooda{color:var(--ok);font-size:.85rem;font-weight:700}
+
   @media (max-width:600px){
     .coach{width:84px;flex-basis:84px;height:112px}
     .coach .photo{width:80px;height:80px}
@@ -248,6 +305,12 @@
     .big-choices .btn{min-width:90px;font-size:1.4rem;padding:12px 14px}
     #goal .txt{font-size:3rem}
     .pitch{height:270px}
+    .rules,.gchoices{grid-template-columns:1fr}
+    .gchoices.c3{grid-template-columns:1fr}
+    .gsent{font-size:1.3rem}
+    .sp-words{font-size:1.2rem}
+    .tile{font-size:1.1rem;padding:7px 10px}
+    .modes button{font-size:.85rem;padding:9px 4px}
   }
 </style>
 </head>
@@ -279,15 +342,29 @@
       <li>Best: use the online link from your parents, which works on every device.</li>
     </ul>
   </div>
+  <div class="modes" id="modes">
+    <button data-mode="spell" class="on">📘 Spelling</button>
+    <button data-mode="grammar">🧠 Grammar</button>
+    <button data-mode="trophies">🏆 Trophies</button>
+    <button data-mode="parents">👨‍👩‍👧 Parents</button>
+  </div>
   <div class="units" id="units"></div>
+  <nav id="gtabs" hidden>
+    <button data-tab="g-learn">📖 Lessons</button>
+    <button data-tab="g-cup" class="hot">🏆 Grammar Cup</button>
+    <button data-tab="g-types">🗣️ Kinds of sentences</button>
+    <button data-tab="g-change">🔄 Change it</button>
+    <button data-tab="g-sp">✂️ Subject | Predicate</button>
+    <button data-tab="g-frag">🧩 Fragment or run-on?</button>
+    <button data-tab="g-noun">🏷️ Common or proper?</button>
+    <button data-tab="g-caps">🔠 Capital detective</button>
+  </nav>
   <nav id="tabs">
     <button data-tab="learn" class="on">📚 Learn</button>
     <button data-tab="penalty" class="hot">🥅 Penalty match</button>
     <button data-tab="spell">✍️ Spell it</button>
     <button data-tab="gap">🧩 Missing letters</button>
     <button data-tab="blank">📝 Fill the blank</button>
-    <button data-tab="trophies">🏆 Trophies</button>
-    <button data-tab="parents">👨‍👩‍👧 Parents</button>
   </nav>
 
   <!-- LEARN -->
@@ -412,6 +489,129 @@
     </div>
   </section>
 
+  <!-- ===================== GRAMMAR ===================== -->
+  <section class="panel" id="p-g-learn">
+    <div class="card">
+      <h2>📢❓ Lesson 1 · Four kinds of sentences</h2>
+      <p class="ar-line">أنواع الجمل الأربعة</p>
+      <p>A <b>sentence</b> is a group of words that tells a <b>complete idea</b>. It starts with a <b>capital letter</b> and ends with an <b>end mark</b>.</p>
+      <div class="rules">
+        <div class="rule"><b>📢 Declarative</b> <span class="ar">خبرية</span><br>tells something → ends with <b class="mk">.</b><br><i>The ship sailed across the ocean.</i></div>
+        <div class="rule"><b>❓ Interrogative</b> <span class="ar">استفهامية</span><br>asks a question → ends with <b class="mk">?</b><br><i>What color is the dog?</i></div>
+        <div class="rule"><b>👉 Imperative</b> <span class="ar">أمرية</span><br>gives a command or request → ends with <b class="mk">.</b> (the subject <i>you</i> is hidden)<br><i>Open the door, please.</i></div>
+        <div class="rule"><b>😲 Exclamatory</b> <span class="ar">تعجبية</span><br>shows strong feeling → ends with <b class="mk">!</b><br><i>What a hard test that was!</i></div>
+      </div>
+      <p class="small muted">Question words: who, what, where, when, why, how, which, is, are, do, does, did, can, could, will, should, may…</p>
+      <p class="small"><b>Change the type:</b> Maria <u>will</u> be home soon. → <u>Will</u> Maria be home soon?</p>
+      <div class="row"><button class="btn sm" data-read="l1">🔊 Read to me</button><button class="btn o sm" data-go="g-types">▶ Play: Kinds of sentences</button><button class="btn o sm" data-go="g-change">▶ Play: Change it</button></div>
+    </div>
+    <div class="card">
+      <h2>✂️ Lesson 2 · Subjects and predicates</h2>
+      <p class="ar-line">المبتدأ (الفاعل) والخبر (المُسنَد)</p>
+      <p>The <b class="c-subj">subject</b> tells <b>who or what</b> the sentence is about. The <b class="c-pred">predicate</b> tells <b>what the subject does or is</b>.</p>
+      <div class="demo"><span class="c-subj">The brown <u>dog</u></span> <span class="bar-l">|</span> <span class="c-pred"><u>barked</u> loudly.</span></div>
+      <ul class="small">
+        <li><b>Complete subject:</b> all the subject words → <i>The brown dog</i></li>
+        <li><b>Simple subject:</b> the main word → <i>dog</i></li>
+        <li><b>Complete predicate:</b> all the predicate words → <i>barked loudly</i></li>
+        <li><b>Simple predicate:</b> the main verb → <i>barked</i> (it can be 2 words: <i>can learn</i>, <i>is hanging</i>)</li>
+      </ul>
+      <p><b>🧩 Fragment</b> <span class="ar">جملة ناقصة</span>: not a complete thought — <i>Running through the park.</i><br>
+         <b>🚂 Run-on</b> <span class="ar">جملتان بدون فاصل</span>: two sentences stuck together — <i>I went to the park I played on the swings.</i><br>
+         <span class="small">Fix a run-on: <i>I went to the park. I played on the swings.</i> or <i>I went to the park, and I played on the swings.</i></span></p>
+      <div class="row"><button class="btn sm" data-read="l2">🔊 Read to me</button><button class="btn o sm" data-go="g-sp">▶ Play: Subject | Predicate</button><button class="btn o sm" data-go="g-frag">▶ Play: Fragment or run-on?</button></div>
+    </div>
+    <div class="card">
+      <h2>🏷️ Lesson 3 · Common and proper nouns</h2>
+      <p class="ar-line">الاسم العام واسم العَلَم</p>
+      <div class="rules">
+        <div class="rule"><b>🏷️ Common noun</b> <span class="ar">اسم عام</span><br>a general name → <b>no capital</b><br><i>teacher, city, book, happiness</i></div>
+        <div class="rule"><b>👑 Proper noun</b> <span class="ar">اسم عَلَم</span><br>a special name → <b>Capital letter!</b><br><i>Emma, New York, Monday, NASA</i></div>
+      </div>
+      <ul class="small">
+        <li>Capitalize days and months: <i>Class meets on <b>M</b>ondays in <b>M</b>ay.</i></li>
+        <li>Capitalize the first and important words in a title: <i><b>T</b>he <b>W</b>ind in the <b>W</b>illows</i></li>
+        <li>Abbreviations start with a capital and often end with a period: <i>Dr., Mr., Ms., Ave., St., Jan.</i></li>
+      </ul>
+      <div class="row"><button class="btn sm" data-read="l3">🔊 Read to me</button><button class="btn o sm" data-go="g-noun">▶ Play: Common or proper?</button><button class="btn o sm" data-go="g-caps">▶ Play: Capital detective</button></div>
+    </div>
+    <div class="card center">
+      <b>Ready to show what you know?</b>
+      <div style="margin-top:8px"><button class="btn o big" data-go="g-cup">🏆 Play the Grammar Cup</button></div>
+    </div>
+  </section>
+
+  <section class="panel" id="p-g-types"><div class="card center" id="typesCard"></div></section>
+  <section class="panel" id="p-g-frag"><div class="card center" id="fragCard"></div></section>
+  <section class="panel" id="p-g-noun"><div class="card center" id="nounCard"></div></section>
+
+  <section class="panel" id="p-g-change">
+    <div class="card center">
+      <p class="muted" style="margin:0">🔄 Change the sentence · <span dir="rtl">غيّري نوع الجملة</span></p>
+      <div class="gsent" id="chFrom"></div>
+      <div class="goalline" id="chGoal"></div>
+      <div class="tilebox" id="chBuilt"></div>
+      <div class="tilebox pool" id="chPool"></div>
+      <div class="fb" id="chFb"></div>
+      <div class="row c">
+        <button class="btn g" id="chCheck">⚽ Check</button>
+        <button class="btn w" id="chClear">↩️ Start again</button>
+        <button class="btn w" id="chNext">Skip ▶</button>
+      </div>
+      <div class="tip">Tap the word cards in the right order. <b>Questions</b> often start with a helping verb (is, will, can, do, does, did) and then the subject. <b>Statements</b> start with the subject.</div>
+    </div>
+  </section>
+
+  <section class="panel" id="p-g-sp">
+    <div class="card center">
+      <p class="muted" style="margin:0">✂️ Subject | Predicate</p>
+      <div class="steps" id="spgSteps"></div>
+      <div class="gtask" id="spgTask"></div>
+      <div class="sp-words" id="spgWords"></div>
+      <div class="fb" id="spgFb"></div>
+      <div class="row c">
+        <button class="btn g" id="spgCheck" hidden>⚽ Check</button>
+        <button class="btn w" id="spgSay">🔊 Hear it</button>
+        <button class="btn w" id="spgNext">Skip ▶</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel" id="p-g-caps">
+    <div class="card center">
+      <p class="muted" style="margin:0">🔠 Capital detective · <span dir="rtl">ابحثي عن الحروف الكبيرة</span></p>
+      <div class="gtask">Tap every word that needs a <b>capital letter</b>.<span id="cpMarkTask"> Then choose the <b>end mark</b>.</span></div>
+      <div class="sp-words" id="cpWords"></div>
+      <div class="big-choices" id="cpMarks"></div>
+      <div class="fb" id="cpFb"></div>
+      <div class="row c">
+        <button class="btn g" id="cpCheck">⚽ Check</button>
+        <button class="btn w" id="cpNext">Skip ▶</button>
+      </div>
+      <div class="tip">Capitals for: the <b>first word</b>, the word <b>I</b>, names of <b>people</b> and <b>places</b>, <b>days</b> and <b>months</b>, titles like <b>Dr.</b> and <b>Ms.</b>, and important words in <b>book titles</b>.
+        <div class="ar" style="direction:rtl;margin-top:4px">الحرف الكبير: أول كلمة، كلمة I، أسماء الأشخاص والأماكن، الأيام والشهور، والألقاب.</div></div>
+    </div>
+  </section>
+
+  <section class="panel" id="p-g-cup">
+    <div class="card center">
+      <h2 style="margin-bottom:4px">🏆 The Grammar Cup</h2>
+      <div id="cupIntro">
+        <p>10 questions from all your grammar lessons. Score <b>8 or more</b> to win the cup!</p>
+        <button class="btn o big" id="cupGo">⚽ Kick off</button>
+      </div>
+      <div id="cupPlay" hidden>
+        <div class="dots" id="cupDots"></div>
+        <div class="muted" id="cupTitle"></div>
+        <div id="cupPrompt"></div>
+        <div class="gchoices" id="cupChoices"></div>
+        <div class="fb" id="cupFb"></div>
+        <div class="row c"><button class="btn w" id="cupSay">🔊 Hear it</button><button class="btn g" id="cupNext" hidden>Next ▶</button></div>
+      </div>
+      <div id="cupEnd" hidden></div>
+    </div>
+  </section>
+
   <!-- TROPHIES -->
   <section class="panel" id="p-trophies">
     <div class="card center">
@@ -425,6 +625,11 @@
         <span>📘 <b id="tMaster">0</b> words mastered</span>
         <span>🥅 <b id="tPk">0</b> matches won</span>
       </div>
+    </div>
+    <div class="card">
+      <h2>🧠 Grammar report</h2>
+      <p class="muted small" style="margin-top:-4px">How well each grammar lesson is understood (from her answers in the games).</p>
+      <div class="report" id="gReport"></div>
     </div>
     <div class="card">
       <h2>🏆 Trophy cabinet</h2>
@@ -570,7 +775,7 @@ const today = () => new Date().toISOString().slice(0, 10);
 function freshWords(){ return DEFAULT_WORDS.map(w => ({img: "", focus: "", ...w, id: uid()})); }
 function freshState(){
   return {words: freshWords(), seeded: DEFAULT_WORDS.map(w => w.word), name: "", goals: 0, streak: 0, best: 0, stats: {},
-          coachImg: "", unit: "all", voice: true, badges: {}, pkWins: 0, pkPerfect: 0, missions: 0, missionGoal: 10, day: {d: today(), g: 0, done: false}};
+          coachImg: "", unit: "all", voice: true, badges: {}, pkWins: 0, pkPerfect: 0, missions: 0, missionGoal: 10, day: {d: today(), g: 0, done: false}, gstats: {}, cupWins: 0};
 }
 function load(){
   let s = null;
@@ -830,6 +1035,8 @@ const BADGES = [
   {id: "g50",  e: "🏆", t: "Champions Cup",     d: "Score 50 goals",                     test: () => S.goals >= 50},
   {id: "all",  e: "📘", t: "Word Master",       d: "Spell every word right at least once", test: () => S.words.length > 0 && S.words.every(w => S.stats[w.id] && S.stats[w.id].ok > 0)},
   {id: "g100", e: "🌟", t: "Ballon d'Or",       d: "Score 100 goals",                    test: () => S.goals >= 100},
+  {id: "gram", e: "🧠", t: "Grammar Star",      d: "Get 5 right in every grammar game",  test: () => Object.keys(GSKILLS).every(k => S.gstats[k] && S.gstats[k].ok >= 5)},
+  {id: "gcup", e: "🥇", t: "Grammar Cup Winner", d: "Score 8 or more in the Grammar Cup", test: () => S.cupWins >= 1},
   {id: "g250", e: "🐐", t: "The GOAT",          d: "Score 250 goals",                    test: () => S.goals >= 250}
 ];
 const awardQ = [];
@@ -867,6 +1074,7 @@ function renderTrophies(){
   $("tNext").textContent = L.next ? `${L.next[0] - S.goals} more goals to become ${L.next[1]}` : "You reached the top level!";
   $("tGoals").textContent = S.goals; $("tBest").textContent = S.best; $("tPk").textContent = S.pkWins;
   $("tMaster").textContent = `${S.words.filter(isMastered).length}/${S.words.length}`;
+  $("gReport").innerHTML = grammarReportHTML();
   $("badges").innerHTML = BADGES.map(b => `<div class="badge ${S.badges[b.id] ? "" : "locked"}"><div class="e">${S.badges[b.id] ? b.e : "🔒"}</div><b>${esc(b.t)}</b><span>${esc(b.d)}</span></div>`).join("");
 }
 
@@ -931,8 +1139,11 @@ function goal(confettiOnly){
   }
 }
 function scored(w, opts){
-  opts = opts || {};
   const s = stat(w); s.ok++; s.run++;
+  award(opts);
+}
+function award(opts){
+  opts = opts || {};
   S.goals++; S.streak++; if (S.streak > S.best) S.best = S.streak;
   rollDay(); S.day.g++;
   if (!S.day.done && S.day.g >= S.missionGoal) {
@@ -941,12 +1152,13 @@ function scored(w, opts){
   }
   save(); updateScores();
   if (!opts.noOverlay) goal();
-  say(rnd(PRAISE), "cheer", opts.quiet);
+  say(rnd(opts.praise || PRAISE), "cheer", opts.quiet);
   checkBadges();
 }
+function penalize(){ S.streak = 0; save(); updateScores(); }
 function missed(w, quiet){
-  const s = stat(w); s.miss++; s.run = 0; S.streak = 0;
-  save(); updateScores(); say(rnd(RETRY), "sad", quiet);
+  const s = stat(w); s.miss++; s.run = 0;
+  penalize(); say(rnd(RETRY), "sad", quiet);
 }
 let toastT;
 function toast(msg){
@@ -967,10 +1179,15 @@ $("units").onclick = e => {
   S.unit = b.dataset.u; save(); renderUnits(); resetGames(); refreshTab();
 };
 
-let tab = "learn";
+let tab = "learn", lastTab = {spell: "learn", grammar: "g-learn"};
+const modeOf = t => t.startsWith("g-") ? "grammar" : (t === "trophies" || t === "parents") ? t : "spell";
 function showTab(t){
   tab = t;
-  document.querySelectorAll("#tabs button").forEach(x => x.classList.toggle("on", x.dataset.tab === t));
+  const m = modeOf(t);
+  if (lastTab[m]) lastTab[m] = t;
+  document.querySelectorAll("#modes button").forEach(x => x.classList.toggle("on", x.dataset.mode === m));
+  $("units").hidden = m !== "spell"; $("tabs").hidden = m !== "spell"; $("gtabs").hidden = m !== "grammar";
+  document.querySelectorAll("#tabs button, #gtabs button").forEach(x => x.classList.toggle("on", x.dataset.tab === t));
   document.querySelectorAll(".panel").forEach(p => p.classList.toggle("on", p.id === "p-" + t));
   if (synth) synth.cancel();
   refreshTab();
@@ -983,8 +1200,11 @@ function refreshTab(){
   if (tab === "penalty") pkLayout();
   if (tab === "trophies") renderTrophies();
   if (tab === "parents") openParents();
+  if (GREFRESH[tab]) GREFRESH[tab]();
 }
 $("tabs").addEventListener("click", e => { const b = e.target.closest("button"); if (b) showTab(b.dataset.tab); });
+$("gtabs").addEventListener("click", e => { const b = e.target.closest("button"); if (b) showTab(b.dataset.tab); });
+$("modes").addEventListener("click", e => { const b = e.target.closest("button"); if (b) showTab(lastTab[b.dataset.mode] || b.dataset.mode); });
 
 /* ===================== Learn ===================== */
 let li = 0;
@@ -1436,7 +1656,7 @@ $("pImport").onchange = e => {
 };
 $("pResetScore").onclick = () => {
   if (!confirm("Reset goals, streaks, trophies and tricky-word progress?")) return;
-  Object.assign(S, {goals: 0, streak: 0, best: 0, stats: {}, badges: {}, pkWins: 0, pkPerfect: 0, missions: 0, day: {d: today(), g: 0, done: false}});
+  Object.assign(S, {goals: 0, streak: 0, best: 0, stats: {}, gstats: {}, cupWins: 0, badges: {}, pkWins: 0, pkPerfect: 0, missions: 0, day: {d: today(), g: 0, done: false}});
   save(); updateScores(); renderParents();
 };
 $("pResetWords").onclick = () => {
@@ -1453,10 +1673,518 @@ $("pTest").onclick = () => {
   speak("Hello! This is Leo. Can you hear me?", "en-US", 0.95);
 };
 
+/* ===================== Grammar ===================== */
+// Sentences come from her Grade 5 Term 1 grammar booklet (pp. 2–7, 14–16) and the lesson slides.
+const GSKILLS = {
+  types: "Kinds of sentences", change: "Change the sentence", sp: "Subject & predicate",
+  frag: "Sentence, fragment or run-on", noun: "Common & proper nouns", caps: "Capital letters & end marks"
+};
+const GGAME = {types: "g-types", change: "g-change", sp: "g-sp", frag: "g-frag", noun: "g-noun", caps: "g-caps"};
+function gstat(k){ return S.gstats[k] || (S.gstats[k] = {ok: 0, miss: 0}); }
+const GPRAISE = [
+  () => [`GOOOL! Grammar genius${nm()}! 🧠⚽`, "أحسنتِ! عبقرية في القواعد!"],
+  () => [`Perfect pass! You really understand it${nm()}!`, "ممتاز! فهمتِ الدرس!"],
+  () => [`Top corner! That's championship grammar! 🏆`, "رائعة يا بطلة!"],
+  () => [`Vamos${nm()}! Another goal for team grammar! 🇦🇷`, "برافو عليكِ! 👏"]
+];
+function gRight(k, opts){ gstat(k).ok++; award(Object.assign({praise: GPRAISE}, opts)); }
+function gWrong(k, en, ar){
+  gstat(k).miss++; penalize();
+  setBubble(en, ar); animateCoach("sad"); coachVoice(en);
+}
+
+const TYPE_INFO = {
+  D:  {label: "📢 Declarative",   sub: "tells something  .",  name: "declarative",   en: "It tells us something, so it is declarative. It ends with a period.", ar: "تخبرنا بشيء، فهي جملة خبرية وتنتهي بنقطة."},
+  IN: {label: "❓ Interrogative", sub: "asks a question  ?",  name: "interrogative", en: "It asks a question, so it is interrogative. It ends with a question mark.", ar: "تسأل سؤالاً، فهي جملة استفهامية وتنتهي بعلامة استفهام."},
+  IM: {label: "👉 Imperative",    sub: "gives a command  .",  name: "imperative",    en: "It tells someone to do something, so it is imperative. The subject 'you' is hidden.", ar: "تطلب أو تأمر بفعل شيء، فهي جملة أمرية والفاعل (أنت) مخفي."},
+  E:  {label: "😲 Exclamatory",   sub: "strong feeling  !",   name: "exclamatory",   en: "It shows a strong feeling, so it is exclamatory. It ends with an exclamation mark.", ar: "تُظهر شعوراً قوياً، فهي جملة تعجبية وتنتهي بعلامة تعجب."}
+};
+const TYPE_ITEMS = [
+  ["Is it hard for you to spell words?", "IN"], ["I really enjoy a game called Scrabble.", "D"], ["Pick up seven of the letter tiles.", "IM"],
+  ["Players spell words with their letters.", "D"], ["What a terrible bunch of letters I have!", "E"], ["How can I build my vocabulary?", "IN"],
+  ["Look in this thesaurus.", "IM"], ["A thesaurus lists synonyms for words.", "D"], ["What a lot of synonyms there are for big!", "E"],
+  ["How do you remember new words?", "IN"], ["I try to use the new word often each day.", "D"], ["Please write original sentences with your vocabulary words.", "IM"],
+  ["What are synonyms and antonyms?", "IN"], ["Synonyms have similar meanings.", "D"], ["Think of a synonym for happy.", "IM"],
+  ["I am attending a new school this year.", "D"], ["Was it easy to make new friends?", "IN"], ["Remember to smile at people.", "IM"],
+  ["Ask them about their interests.", "IM"], ["How did you learn your way around?", "IN"], ["My lockermate was a big help.", "D"],
+  ["How relieved you must have been!", "E"], ["The teachers were very nice too.", "D"], ["My dog loves to play in the park.", "D"],
+  ["Where is the nearest bus stop?", "IN"], ["The classroom has twenty-five desks.", "D"], ["Have you finished your reading log?", "IN"],
+  ["Our school trip is next Friday.", "D"], ["What did you eat for breakfast?", "IN"], ["Open the door, please.", "IM"],
+  ["What a nice day!", "E"], ["What a hard test that was!", "E"], ["Be careful when crossing the street.", "IM"],
+  ["Don't touch the hot stove.", "IM"], ["When will the football game start?", "IN"], ["The blue bird sings loudly.", "D"],
+  ["Messi scored an amazing goal!", "E"], ["Pass me the ball, please.", "IM"], ["Who is on your team?", "IN"], ["Wow, that ending is awesome!", "E"]
+].map(([s, k]) => ({s, k}));
+
+const FRAG_INFO = {
+  S:  {label: "✅ Sentence", sub: "complete thought", en: "It has a subject and a predicate and tells a complete thought, so it is a sentence.", ar: "فيها فاعل وخبر وتعطي فكرة كاملة، فهي جملة صحيحة."},
+  F:  {label: "🧩 Fragment", sub: "missing a part",   en: "It is missing a subject or a predicate, so it is a fragment. It is not a complete thought.", ar: "ينقصها فاعل أو خبر، فهي جملة ناقصة."},
+  RO: {label: "🚂 Run-on",   sub: "2 sentences stuck", en: "Two sentences are joined without a period or 'and', so it is a run-on.", ar: "جملتان ملتصقتان بدون نقطة أو أداة ربط."}
+};
+const FRAG_ITEMS = [
+  ["Talked endlessly about the weather.", "F", "My aunt talked endlessly about the weather."],
+  ["People can do little about it, though.", "S"],
+  ["Meteorology is the science of weather we depend on meteorologists.", "RO", "Meteorology is the science of weather. We depend on meteorologists."],
+  ["We cannot change the weather they can predict it.", "RO", "We cannot change the weather. They can predict it."],
+  ["Advance warning of storms.", "F", "Advance warning of storms helps people."],
+  ["People can protect themselves from the worst weather.", "S"],
+  ["Tornadoes and hurricanes.", "F", "Tornadoes and hurricanes are dangerous."],
+  ["Fewer deaths from these storms today.", "F", "There are fewer deaths from these storms today."],
+  ["Walking to school every day.", "F", "I enjoy walking to school every day."],
+  ["The dog barked loudly.", "S"],
+  ["I love pizza I eat it every Friday.", "RO", "I love pizza. I eat it every Friday."],
+  ["The cat chased the mouse.", "S"],
+  ["Running through the park.", "F", "The children were running through the park."],
+  ["I went to the park I played on the swings.", "RO", "I went to the park, and I played on the swings."],
+  ["Children are part of the family they should help their parents.", "RO", "Children are part of the family. They should help their parents."],
+  ["Can clean their rooms.", "F", "They can clean their rooms."],
+  ["Kitchen duty can be fun many children are good cooks.", "RO", "Kitchen duty can be fun. Many children are good cooks."],
+  ["Eat and play together too.", "F", "Families eat and play together too."],
+  ["The flowers bloom in spring.", "S"],
+  ["Messi kicked the ball it flew into the net.", "RO", "Messi kicked the ball. It flew into the net."],
+  ["After the football match.", "F", "We ate dinner after the football match."],
+  ["Jessica and Michael went to the museum last weekend.", "S"]
+].map(([s, k, fix]) => ({s, k, fix}));
+
+const NOUN_ITEMS = [
+  ["teacher", "C", "a person"], ["doctor", "C", "a person"], ["school", "C", "a place"], ["city", "C", "a place"], ["park", "C", "a place"],
+  ["book", "C", "a thing"], ["apple", "C", "a thing"], ["car", "C", "a thing"], ["happiness", "C", "an idea"], ["freedom", "C", "an idea"],
+  ["family", "C", "a group of people"], ["coast", "C", "a place"], ["football", "C", "a sport"], ["cousins", "C", "people"],
+  ["grandparents", "C", "people"], ["teenagers", "C", "people"], ["museum", "C", "a place"], ["country", "C", "a place"],
+  ["month", "C", "a thing"], ["stadium", "C", "a place"], ["player", "C", "a person"], ["river", "C", "a place"],
+  ["emma", "P", "a person's name", "Emma"], ["michael", "P", "a person's name", "Michael"], ["new york", "P", "a city", "New York"],
+  ["eiffel tower", "P", "a famous place", "Eiffel Tower"], ["monday", "P", "a day of the week", "Monday"], ["toyota", "P", "a company", "Toyota"],
+  ["nasa", "P", "an organization", "NASA"], ["paris", "P", "a city", "Paris"], ["mars", "P", "a planet", "Mars"],
+  ["california", "P", "a state", "California"], ["seattle", "P", "a city", "Seattle"], ["april", "P", "a month", "April"],
+  ["september", "P", "a month", "September"], ["wednesday", "P", "a day of the week", "Wednesday"], ["main st.", "P", "a street", "Main St."],
+  ["dr.", "P", "a title", "Dr."], ["mrs.", "P", "a title", "Mrs."], ["argentina", "P", "a country", "Argentina"],
+  ["riyadh", "P", "a city", "Riyadh"], ["lionel messi", "P", "a person's name", "Lionel Messi"], ["ramadan", "P", "a special month", "Ramadan"],
+  ["yellowstone national park", "P", "a special place", "Yellowstone National Park"], ["google", "P", "a company", "Google"]
+].map(([w, k, cat, fix]) => ({w, k, cat, fix: fix || w}));
+
+let hideMarks = false;
+const BANKS = {
+  types: {
+    skill: "types", q: "What kind of sentence is this?", qar: "ما نوع هذه الجملة؟", items: TYPE_ITEMS, cols: 2,
+    choices: ["D", "IN", "IM", "E"].map(k => ({k, html: `${TYPE_INFO[k].label}<small>${TYPE_INFO[k].sub}</small>`})),
+    prompt: it => `<div class="gsent">${esc(hideMarks ? it.s.replace(/[.?!]+$/, "") : it.s)}</div>`,
+    say: it => it.s,
+    reveal: it => `<b>${esc(it.s)}</b> → ${TYPE_INFO[it.k].label}`,
+    explain: it => [TYPE_INFO[it.k].en, TYPE_INFO[it.k].ar]
+  },
+  frag: {
+    skill: "frag", q: "Is it a sentence, a fragment, or a run-on?", qar: "هل هي جملة كاملة أم ناقصة أم ملتصقة؟", items: FRAG_ITEMS, cols: 3,
+    choices: ["S", "F", "RO"].map(k => ({k, html: `${FRAG_INFO[k].label}<small>${FRAG_INFO[k].sub}</small>`})),
+    prompt: it => `<div class="gsent">${esc(it.s)}</div>`,
+    say: it => it.s,
+    reveal: it => `${FRAG_INFO[it.k].label}${it.fix ? `<div class="small" style="margin-top:4px">✍️ Fixed: <b>${esc(it.fix)}</b></div>` : ""}`,
+    explain: it => [FRAG_INFO[it.k].en, FRAG_INFO[it.k].ar]
+  },
+  noun: {
+    skill: "noun", q: "Common noun or proper noun?", qar: "اسم عام أم اسم علم؟", items: NOUN_ITEMS, cols: 2,
+    choices: [{k: "C", html: "🥅 Common noun<small>a general name</small>"}, {k: "P", html: "🥅 Proper noun<small>a special name → Capital!</small>"}],
+    prompt: it => `<div class="nball" id="nballEl">⚽ <span>${esc(it.w)}</span></div>`,
+    say: it => it.fix,
+    after: (it, k) => { const b = document.getElementById("nballEl"); if (b) { b.classList.add(k === "C" ? "l" : "r"); setTimeout(() => { b.classList.remove("l", "r"); b.querySelector("span").textContent = it.fix; }, 650); } },
+    reveal: it => it.k === "P" ? `👑 Proper noun → <b>${esc(it.fix)}</b> (${esc(it.cat)})` : `🏷️ Common noun → <b>${esc(it.w)}</b> (${esc(it.cat)})`,
+    explain: it => it.k === "P"
+      ? [`${it.fix} is the special name of ${it.cat.replace(/^an? /, "a ")}, so it is a proper noun and needs a capital letter.`, "هذا اسم خاص (اسم علم)، لذلك نبدأه بحرف كبير."]
+      : [`"${it.w}" is a general name for ${it.cat}, not a special name, so it is a common noun with no capital letter.`, "هذا اسم عام وليس اسماً خاصاً، لذلك لا يحتاج حرفاً كبيراً."]
+  }
+};
+
+// One multiple-choice question; used by the three choice games and by the Grammar Cup.
+function askMCQ(px, bn, it, cb){
+  const B = BANKS[bn];
+  $(px + "Prompt").innerHTML = B.prompt(it);
+  const box = $(px + "Choices");
+  box.className = "gchoices" + (B.cols === 3 ? " c3" : "");
+  box.innerHTML = B.choices.map(c => `<button class="btn w" data-k="${c.k}">${c.html}</button>`).join("");
+  $(px + "Fb").innerHTML = "";
+  $(px + "Next").hidden = true;
+  let done = false;
+  box.onclick = e => {
+    const b = e.target.closest("button"); if (!b || done) return;
+    done = true;
+    const ok = b.dataset.k === it.k;
+    box.querySelectorAll("button").forEach(x => { x.disabled = true; if (x.dataset.k === it.k) x.classList.add("right"); });
+    if (!ok) b.classList.add("wrong");
+    if (B.after) B.after(it, b.dataset.k);
+    const [en, ar] = B.explain(it);
+    $(px + "Fb").innerHTML = `${ok ? "✅" : "❌"} ${B.reveal(it)}<div class="gexp">${esc(en)}<span class="ar">${esc(ar)}</span></div>`;
+    if (ok) gRight(B.skill); else gWrong(B.skill, en, ar);
+    $(px + "Next").hidden = false;
+    if (cb) cb(ok);
+  };
+}
+const mq = {};
+function buildMCQPanel(bn, title, extra){
+  const B = BANKS[bn];
+  $(bn + "Card").innerHTML = `
+    <p class="muted" style="margin:0">${title}</p>
+    <div class="gtask"><b>${esc(B.q)}</b><span class="ar">${esc(B.qar)}</span></div>
+    ${extra || ""}
+    <div id="${bn}Prompt"></div>
+    <div id="${bn}Choices"></div>
+    <div class="fb" id="${bn}Fb"></div>
+    <div class="row c"><button class="btn w" id="${bn}Say">🔊 Hear it</button><button class="btn g" id="${bn}Next" hidden>Next ▶</button></div>`;
+  $(bn + "Next").onclick = () => nextMCQ(bn);
+  $(bn + "Say").onclick = () => mq[bn] && mq[bn].cur && speak(B.say(mq[bn].cur), "en-US", 0.9);
+}
+function nextMCQ(bn){
+  const st = mq[bn] || (mq[bn] = {queue: [], cur: null});
+  if (!st.queue.length) st.queue = shuffle(BANKS[bn].items);
+  st.cur = st.queue.pop();
+  askMCQ(bn, bn, st.cur);
+}
+buildMCQPanel("types", "🗣️ Kinds of sentences · أنواع الجمل",
+  `<label class="chk"><input type="checkbox" id="typesHard"> Hard mode: hide the end marks</label>`);
+buildMCQPanel("frag", "🧩 Sentence, fragment or run-on?");
+buildMCQPanel("noun", "🏷️ Common or proper? Kick the ball into the right goal!");
+$("typesHard").onchange = () => { hideMarks = $("typesHard").checked; nextMCQ("types"); };
+
+/* ----- Change the sentence (word cards) ----- */
+const CHANGE_ITEMS = [
+  ["Maria will be home soon.", "Will Maria be home soon?"],
+  ["The bus will arrive at eight o'clock.", "Will the bus arrive at eight o'clock?"],
+  ["Have you finished your homework?", "You have finished your homework."],
+  ["The museum is closed on Mondays.", "Is the museum closed on Mondays?"],
+  ["Did the rain stop last night?", "The rain stopped last night."],
+  ["Our teacher is planning a field trip.", "Is our teacher planning a field trip?"],
+  ["Can birds see in the dark?", "Birds can see in the dark."],
+  ["The new library opens next week.", "Does the new library open next week?"],
+  ["Does your sister play the piano?", "Your sister plays the piano."],
+  ["Messi is playing tonight.", "Is Messi playing tonight?"],
+  ["The children are playing.", "Are the children playing?"],
+  ["Is the kitten in the box?", "The kitten is in the box."],
+  ["You can kick the ball far.", "Can you kick the ball far?"],
+  ["Are the players ready?", "The players are ready."]
+].map(([from, to]) => ({from, to}));
+const ch = {queue: [], cur: null, target: [], pool: [], built: [], tries: 0, done: false};
+const ctoks = s => s.replace(/([.?!])$/, " $1").split(/\s+/);
+function nextChange(){
+  if (!ch.queue.length) ch.queue = shuffle(CHANGE_ITEMS);
+  const it = ch.cur = ch.queue.pop();
+  ch.target = ctoks(it.to); ch.tries = 0; ch.done = false; ch.built = [];
+  // Lower-case the first card so the capital letter does not give the answer away (names stay capitalised).
+  const keepCap = new Set(ctoks(it.from).slice(1).filter(t => /^[A-Z]/.test(t)).concat(["I"]));
+  ch.pool = shuffle(ch.target.map((t, i) => ({id: i, t: i === 0 && !keepCap.has(t) ? t[0].toLowerCase() + t.slice(1) : t})));
+  $("chFrom").textContent = it.from;
+  $("chGoal").innerHTML = /\?$/.test(it.to)
+    ? `Make it a <b>question</b> ❓ <span class="small muted">(interrogative · استفهامية)</span>`
+    : `Make it a <b>statement</b> 📢 <span class="small muted">(declarative · خبرية)</span>`;
+  $("chFb").innerHTML = "";
+  $("chCheck").disabled = false;
+  renderChange();
+}
+function renderChange(bad){
+  const tile = (x, i, where) => `<button class="tile ${/^[.?!]$/.test(x.t) ? "mk" : ""} ${bad === i && where === "b" ? "bad" : ""} ${ch.done && where === "b" ? "good" : ""}" data-w="${where}" data-i="${i}">${esc(x.t)}</button>`;
+  $("chBuilt").innerHTML = ch.built.map((x, i) => tile(x, i, "b")).join("");
+  $("chPool").innerHTML = ch.pool.map((x, i) => tile(x, i, "p")).join("");
+}
+function moveTile(e){
+  const b = e.target.closest(".tile"); if (!b || ch.done) return;
+  const i = +b.dataset.i;
+  if (b.dataset.w === "p") ch.built.push(ch.pool.splice(i, 1)[0]);
+  else ch.pool.push(ch.built.splice(i, 1)[0]);
+  renderChange();
+}
+$("chBuilt").onclick = moveTile; $("chPool").onclick = moveTile;
+$("chClear").onclick = () => { if (ch.done) return; ch.pool = ch.pool.concat(ch.built); ch.built = []; renderChange(); };
+$("chNext").onclick = nextChange;
+$("chCheck").onclick = () => {
+  if (ch.done || !ch.cur) return;
+  if (ch.pool.length) { toast("Use all the word cards first 🙂"); return; }
+  const got = ch.built.map(x => lc(x.t)), want = ch.target.map(lc);
+  const bad = got.findIndex((t, i) => t !== want[i]);
+  const isQ = /\?$/.test(ch.cur.to);
+  if (bad < 0) {
+    ch.done = true;
+    ch.built = ch.target.map((t, i) => ({id: i, t}));
+    renderChange();
+    $("chFb").innerHTML = `✅ <b>${esc(ch.cur.to)}</b>`;
+    $("chNext").textContent = "Next ▶";
+    gRight("change", {quiet: true});
+    speak(ch.cur.to, "en-US", 0.9);
+    return;
+  }
+  ch.tries++;
+  const hint = isQ
+    ? ["A question starts with a helping verb like is, are, will, can, do or does. Then comes the subject.", "السؤال يبدأ بفعل مساعد مثل is أو will أو can ثم الفاعل."]
+    : ["A statement starts with the subject (who or what), then the verb. It ends with a period.", "الجملة الخبرية تبدأ بالفاعل ثم الفعل وتنتهي بنقطة."];
+  if (ch.tries >= 2) {
+    ch.done = true;
+    ch.built = ch.target.map((t, i) => ({id: i, t})); ch.pool = [];
+    renderChange();
+    $("chFb").innerHTML = `The answer is <b>${esc(ch.cur.to)}</b><div class="gexp">${esc(hint[0])}<span class="ar">${esc(hint[1])}</span></div>`;
+    $("chNext").textContent = "Next ▶";
+    gWrong("change", hint[0], hint[1]);
+  } else {
+    renderChange(bad);
+    $("chFb").innerHTML = `Card ${bad + 1} is not right yet. Try again!<div class="gexp">${esc(hint[0])}<span class="ar">${esc(hint[1])}</span></div>`;
+    gWrong("change", hint[0], hint[1]);
+  }
+};
+
+/* ----- Subject | Predicate ----- */
+// p = index of the first predicate word, ss = simple subject word(s), sv = simple predicate word(s)
+const SP_ITEMS = [
+  ["Many babies respond well to music.", 2, [1], [2]], ["Little babies can learn a lot.", 2, [1], [2, 3]],
+  ["I practice the piano every afternoon.", 1, [0], [1]], ["All people can enjoy good music.", 2, [1], [2, 3]],
+  ["My brother builds things with wood.", 2, [1], [2]], ["It looks something like a tray.", 1, [0], [1]],
+  ["Birds of all kinds are visiting it now.", 4, [0], [4, 5]], ["The hammer is not my friend.", 2, [1], [2]],
+  ["That birdhouse on the shelf is mine.", 5, [1], [5]], ["The clock is hanging on the wall in my bedroom.", 2, [1], [2, 3]],
+  ["The proud creator admires it every day.", 3, [2], [3]], ["The brown dog barked loudly.", 3, [2], [3]],
+  ["The cat slept on the warm windowsill.", 2, [1], [2]], ["The car stopped suddenly on the road.", 2, [1], [2]],
+  ["The flowers bloom in spring.", 2, [1], [2]], ["Most parents watch their babies with amazement.", 2, [1], [2]],
+  ["The students finished their homework quickly.", 2, [1], [2]], ["Jessica and Michael went to the museum last weekend.", 3, [0, 2], [3]],
+  ["Lionel Messi scored a beautiful goal.", 2, [1], [2]], ["The young players are training hard.", 3, [2], [3, 4]]
+].map(([s, p, ss, sv]) => ({s, p, ss, sv, w: s.split(" ")}));
+const spg = {queue: [], cur: null, step: 1, sel: new Set(), tries: 0};
+const STEP_TXT = {
+  1: ["Step 1: Tap the FIRST word of the <b class='c-pred'>predicate</b> (what the subject does or is).", "الخطوة ١: اضغطي على أول كلمة في الخبر (ماذا يفعل الفاعل أو ما هو)."],
+  2: ["Step 2: Tap the <b class='c-subj'>simple subject</b>: the main word that tells who or what. Then press Check.", "الخطوة ٢: اضغطي على الفاعل البسيط (الكلمة الرئيسية) ثم اضغطي Check."],
+  3: ["Step 3: Tap the <b class='c-pred'>simple predicate</b>: the main verb (it can be 2 words, like <i>can learn</i>). Then press Check.", "الخطوة ٣: اضغطي على الفعل الرئيسي (قد يكون كلمتين) ثم اضغطي Check."]
+};
+function nextSP(){
+  if (!spg.queue.length) spg.queue = shuffle(SP_ITEMS);
+  spg.cur = spg.queue.pop(); spg.step = 1; spg.sel = new Set(); spg.tries = 0;
+  $("spgFb").innerHTML = ""; $("spgNext").textContent = "Skip ▶";
+  renderSP();
+}
+function renderSP(badIdx){
+  const it = spg.cur, st = spg.step;
+  $("spgSteps").innerHTML = [1, 2, 3].map(n => `<span class="${n === st ? "on" : n < st ? "done" : ""}">${["", "Divide", "Simple subject", "Simple predicate"][n]}</span>`).join("");
+  $("spgTask").innerHTML = st <= 3 ? `${STEP_TXT[st][0]}<span class="ar">${STEP_TXT[st][1]}</span>` : "🎉 All done!";
+  let html = "";
+  it.w.forEach((w, i) => {
+    if (st > 1 && i === it.p) html += `<span class="divider">|</span>`;
+    const part = st > 1 ? (i < it.p ? "subj" : "pred") : "";
+    const off = (st === 2 && i >= it.p) || (st === 3 && i < it.p) || st > 3;
+    const under = (st > 2 && it.ss.includes(i)) || (st > 3 && it.sv.includes(i));
+    html += `<span class="sw ${part} ${spg.sel.has(i) || under ? "sel" : ""} ${badIdx && badIdx.includes(i) ? "bad" : ""} ${off ? "off" : ""}" data-i="${i}">${esc(w)}</span>`;
+  });
+  $("spgWords").innerHTML = html;
+  $("spgCheck").hidden = !(st === 2 || st === 3);
+}
+function spSummary(){
+  const it = spg.cur, words = (idx, sep) => idx.map(i => it.w[i].replace(/[.,]$/, "")).join(sep || " ");
+  const subj = it.w.slice(0, it.p).join(" "), pred = it.w.slice(it.p).join(" ");
+  return `<div class="gexp" style="text-align:left">
+    <span class="c-subj">Complete subject:</span> ${esc(subj)}<br><span class="c-pred">Complete predicate:</span> ${esc(pred)}<br>
+    <span class="c-subj">Simple subject:</span> ${esc(words(it.ss, " and "))}<br><span class="c-pred">Simple predicate:</span> ${esc(words(it.sv))}</div>`;
+}
+function spAdvance(){
+  spg.step++; spg.sel = new Set(); spg.tries = 0;
+  renderSP();
+  if (spg.step > 3) { $("spgFb").innerHTML = `✅ Super!${spSummary()}`; $("spgNext").textContent = "Next sentence ▶"; speak(spg.cur.s, "en-US", 0.9); }
+}
+$("spgWords").onclick = e => {
+  const el = e.target.closest(".sw"); if (!el || !spg.cur || el.classList.contains("off")) return;
+  const i = +el.dataset.i, it = spg.cur;
+  if (spg.step === 1) {
+    if (i === it.p) { $("spgFb").innerHTML = "✅ Yes! That's where the predicate starts."; gRight("sp", {quiet: true, noOverlay: true}); spAdvance(); return; }
+    spg.tries++;
+    if (spg.tries >= 2) {
+      gWrong("sp", `The subject is "${it.w.slice(0, it.p).join(" ")}". The predicate starts with "${it.w[it.p]}".`, "الفاعل هو الكلمات في البداية، والخبر يبدأ بعده.");
+      $("spgFb").innerHTML = `The predicate starts with <b>${esc(it.w[it.p])}</b>.`;
+      spAdvance();
+    } else {
+      gWrong("sp", "Ask yourself: who or what is this sentence about? All those words are the subject. The predicate starts at the verb.", "اسألي: عن مَن أو عن ماذا تتحدث الجملة؟ هذا هو الفاعل، والخبر يبدأ من الفعل.");
+      $("spgFb").innerHTML = "Not yet — try again!"; renderSP([i]);
+    }
+    return;
+  }
+  spg.sel.has(i) ? spg.sel.delete(i) : spg.sel.add(i);
+  renderSP();
+};
+$("spgCheck").onclick = () => {
+  const it = spg.cur; if (!it || spg.step < 2 || spg.step > 3) return;
+  const want = spg.step === 2 ? it.ss : it.sv;
+  const got = [...spg.sel].sort((a, b) => a - b);
+  if (!got.length) { toast("Tap a word first 🙂"); return; }
+  const ok = got.length === want.length && got.every((x, k) => x === want[k]);
+  const name = spg.step === 2 ? "simple subject" : "simple predicate";
+  if (ok) { $("spgFb").innerHTML = `✅ Correct ${name}!`; gRight("sp", {quiet: true, noOverlay: spg.step === 2}); spAdvance(); return; }
+  spg.tries++;
+  const hint = spg.step === 2
+    ? ["The simple subject is the most important word in the subject, usually a noun or a pronoun, like dog, babies or I.", "الفاعل البسيط هو أهم كلمة في الفاعل، غالباً اسم أو ضمير."]
+    : ["The simple predicate is the verb: the action word or is/are. Helping verbs like can, is and are count too!", "الفعل الرئيسي هو كلمة الحدث أو is/are، والأفعال المساعدة مثل can تُحسب معه."];
+  gWrong("sp", hint[0], hint[1]);
+  if (spg.tries >= 2) {
+    $("spgFb").innerHTML = `The ${name} is <b>${esc(want.map(k => it.w[k].replace(/[.,]$/, "")).join(" "))}</b>.`;
+    spAdvance();
+  } else { $("spgFb").innerHTML = `Not quite.<div class="gexp">${esc(hint[0])}<span class="ar">${esc(hint[1])}</span></div>`; spg.sel = new Set(); renderSP(); }
+};
+$("spgNext").onclick = nextSP;
+$("spgSay").onclick = () => spg.cur && speak(spg.cur.s, "en-US", 0.9);
+
+/* ----- Capital detective ----- */
+const CAPS_ITEMS = [
+  ["Alex Bishop lives in Seattle."], ["Class meets on Monday in May."],
+  ["Living in a big city such as Los Angeles or Detroit can be exciting."],
+  ["Tourists visit Chicago's Art Institute or New York's Museum of Modern Art."],
+  ["They also love remote attractions such as Mount Rushmore and Yellowstone National Park."],
+  ["You have an appointment on Monday, October 17, with Dr. Umesh R. Goswami."],
+  ["His office is at 1142 North Jefferson Ave., Suite 101."],
+  ["He has hung pictures of President Abraham Lincoln in the waiting room."],
+  ["We have a meeting on Tues., Jan. 18."], ["Our neighbor Ms. Carmen W. Ruiz has a cat."],
+  ["Emma and Michael went to New York for their vacation."], ["The Eiffel Tower is a famous landmark in Paris."],
+  ["My friend works at Google in California."], ["NASA is planning a mission to Mars next year."],
+  ["We celebrate Eid with our family in Riyadh."], ["Messi plays for Argentina."],
+  ["How can I build my vocabulary?", 1], ["Look in this thesaurus.", 1], ["Wow, that ending is awesome!", 1],
+  ["In fifth grade, we have a team of teachers.", 1], ["Who is on your team?", 1], ["What subject do you have first?", 1],
+  ["Please read this book.", 1], ["Did you finish your assignment?", 1], ["Do you have lunch after English?", 1],
+  ["I try to use the new word often each day.", 1], ["What a heavy book this dictionary is!", 1],
+  ["Have you read The Wind in the Willows?", 1], ["Is the museum closed on Mondays?", 1]
+].map(([t, m]) => ({t, m: !!m}));
+const cp = {queue: [], cur: null, toks: [], mark: null, chosen: null, tries: 0, done: false};
+function nextCaps(){
+  if (!cp.queue.length) cp.queue = shuffle(CAPS_ITEMS);
+  const it = cp.cur = cp.queue.pop();
+  const words = it.t.split(" ");
+  cp.mark = null;
+  if (it.m) { cp.mark = words[words.length - 1].slice(-1); words[words.length - 1] = words[words.length - 1].slice(0, -1); }
+  cp.toks = words.map(w => {
+    const li = w.search(/[A-Za-z]/);
+    const locked = li < 0 || /^[A-Z]{2,}[.,']?$/.test(w);
+    return {w, li, locked, want: li >= 0 && /[A-Z]/.test(w[li]), cap: locked, base: locked ? w : w.toLowerCase()};
+  });
+  cp.chosen = null; cp.tries = 0; cp.done = false;
+  $("cpMarkTask").hidden = !it.m;
+  $("cpMarks").innerHTML = it.m ? [".", "?", "!"].map(m => `<button class="btn w" data-m="${m}">${m}</button>`).join("") : "";
+  $("cpFb").innerHTML = ""; $("cpNext").textContent = "Skip ▶";
+  renderCaps();
+}
+function capWord(t){ return t.cap && !t.locked ? t.base.slice(0, t.li) + t.base[t.li].toUpperCase() + t.base.slice(t.li + 1) : t.base; }
+function renderCaps(bad){
+  $("cpWords").innerHTML = cp.toks.map((t, i) => {
+    const last = i === cp.toks.length - 1 && cp.cur.m;
+    return `<span class="sw ${t.cap && !t.locked ? "capd" : ""} ${t.locked ? "off" : ""} ${bad && bad.includes(i) ? "bad" : ""}" data-i="${i}">${esc(capWord(t))}${last ? `<b style="color:var(--bad)">${esc(cp.chosen || "_")}</b>` : ""}</span>`;
+  }).join("");
+  $("cpMarks").querySelectorAll("button").forEach(b => b.classList.toggle("o", b.dataset.m === cp.chosen));
+}
+$("cpWords").onclick = e => {
+  const el = e.target.closest(".sw"); if (!el || cp.done) return;
+  const t = cp.toks[+el.dataset.i]; if (t.locked) return;
+  t.cap = !t.cap; renderCaps();
+};
+$("cpMarks").onclick = e => { const b = e.target.closest("button"); if (!b || cp.done) return; cp.chosen = b.dataset.m; renderCaps(); };
+$("cpNext").onclick = nextCaps;
+$("cpCheck").onclick = () => {
+  if (!cp.cur || cp.done) return;
+  if (cp.cur.m && !cp.chosen) { toast("Choose the end mark: . ? or !"); return; }
+  const bad = cp.toks.map((t, i) => (!t.locked && t.cap !== t.want) ? i : -1).filter(i => i >= 0);
+  const markBad = cp.cur.m && cp.chosen !== cp.mark;
+  if (!bad.length && !markBad) {
+    cp.done = true;
+    $("cpFb").innerHTML = `✅ <b>${esc(cp.cur.t)}</b>`; $("cpNext").textContent = "Next ▶";
+    gRight("caps", {quiet: true});
+    speak(cp.cur.t, "en-US", 0.9);
+    return;
+  }
+  cp.tries++;
+  const missing = bad.filter(i => cp.toks[i].want).length, extra = bad.length - missing;
+  let msg = [];
+  if (missing) msg.push(`${missing} word${missing > 1 ? "s" : ""} still need${missing > 1 ? "" : "s"} a capital letter`);
+  if (extra) msg.push(`${extra} word${extra > 1 ? "s" : ""} should be small letters`);
+  if (markBad) msg.push("the end mark is not right");
+  const en = "Look for names of people, places, days, months and titles, and the first word of the sentence.";
+  const ar = "ابحثي عن أسماء الأشخاص والأماكن والأيام والشهور وأول كلمة في الجملة.";
+  gWrong("caps", en, ar);
+  if (cp.tries >= 2) {
+    cp.done = true;
+    cp.toks.forEach(t => { if (!t.locked) t.cap = t.want; }); cp.chosen = cp.mark;
+    renderCaps();
+    $("cpFb").innerHTML = `The correct sentence is:<div class="gsent" style="font-size:1.3rem">${esc(cp.cur.t)}</div>`;
+    $("cpNext").textContent = "Next ▶";
+  } else {
+    renderCaps();
+    $("cpFb").innerHTML = `Almost! ${esc(msg.join(", and "))}. Try again!<div class="gexp">${esc(en)}<span class="ar">${esc(ar)}</span></div>`;
+  }
+};
+
+/* ----- Grammar Cup ----- */
+const CUP_SIZE = 10;
+const cup = {qs: [], i: 0, res: []};
+function cupStart(){
+  const pick = (bn, n) => shuffle(BANKS[bn].items).slice(0, n).map(it => ({bn, it}));
+  cup.qs = shuffle([...pick("types", 4), ...pick("frag", 3), ...pick("noun", 3)]);
+  cup.i = 0; cup.res = [];
+  $("cupIntro").hidden = true; $("cupEnd").hidden = true; $("cupPlay").hidden = false;
+  say(() => [`Welcome to the Grammar Cup${nm()}! Show me what you know! 🏆`, "أهلاً بكِ في كأس القواعد!"], "cheer");
+  cupAsk();
+}
+function cupDots(){ $("cupDots").innerHTML = cup.qs.map((_, i) => cup.res[i] ? (cup.res[i].ok ? "⚽" : "❌") : "⚪").join(""); }
+function cupAsk(){
+  if (cup.i >= cup.qs.length) return cupEnd();
+  const q = cup.qs[cup.i];
+  $("cupTitle").textContent = `Question ${cup.i + 1} of ${cup.qs.length}: ${BANKS[q.bn].q}`;
+  askMCQ("cup", q.bn, q.it, ok => { cup.res[cup.i] = {bn: q.bn, ok}; cupDots(); });
+  $("cupNext").textContent = cup.i + 1 < cup.qs.length ? "Next question ▶" : "See my result 🏆";
+  cupDots();
+}
+function cupEnd(){
+  $("cupPlay").hidden = true;
+  const score = cup.res.filter(r => r.ok).length, won = score >= 8;
+  if (won) { S.cupWins++; save(); goal(true); }
+  const parts = ["types", "frag", "noun"].map(bn => {
+    const rs = cup.res.filter(r => r.bn === bn), ok = rs.filter(r => r.ok).length;
+    const good = ok === rs.length;
+    return `<div class="r"><b>${esc(GSKILLS[bn])} <span>${ok}/${rs.length}</span></b>
+      ${good ? `<span class="gooda">✅ You understand this!</span>` : `<span class="need">⚠️ Let's practise this one</span> <button class="btn o sm" data-go="${GGAME[bn]}">Practise ▶</button>`}</div>`;
+  }).join("");
+  $("cupEnd").innerHTML = `
+    <div style="font-size:64px">${won ? "🏆" : "💪"}</div>
+    <h2>${won ? "You won the Grammar Cup!" : "Good game!"} ${score} / ${CUP_SIZE}</h2>
+    <p class="muted">${won ? "Champion! Leo is so proud of you!" : "Score 8 or more to win the cup. Practise the lessons below and try again!"}</p>
+    <div class="report" style="max-width:420px;margin:0 auto 12px">${parts}</div>
+    <button class="btn o big" id="cupAgain">⚽ Play again</button>`;
+  $("cupEnd").hidden = false;
+  $("cupAgain").onclick = cupStart;
+  if (won) say(() => [`Champions! You won the Grammar Cup ${score} out of ${CUP_SIZE}! 🏆`, "مبروك! فزتِ بكأس القواعد! 🏆"], "cheer");
+  else say(() => [`Great effort${nm()}! ${score} out of ${CUP_SIZE}. Let's practise and win it next time! 💪`, "محاولة رائعة! هيا نتمرن ونفوز المرة القادمة!"], "sad");
+  checkBadges();
+}
+$("cupGo").onclick = cupStart;
+$("cupNext").onclick = () => { cup.i++; cupAsk(); };
+$("cupSay").onclick = () => { const q = cup.qs[cup.i]; if (q) speak(BANKS[q.bn].say(q.it), "en-US", 0.9); };
+
+/* ----- Lessons page ----- */
+const LESSON_READ = {
+  l1: "A sentence tells a complete idea. A declarative sentence tells something and ends with a period. An interrogative sentence asks a question and ends with a question mark. An imperative sentence gives a command and ends with a period. An exclamatory sentence shows strong feeling and ends with an exclamation mark.",
+  l2: "The subject tells who or what the sentence is about. The predicate tells what the subject does or is. In the sentence, the brown dog barked loudly, the complete subject is the brown dog, and the simple subject is dog. The complete predicate is barked loudly, and the simple predicate is barked. A fragment is not a complete thought. A run-on is two sentences joined without punctuation.",
+  l3: "A common noun is a general name, like teacher or city. It does not need a capital letter. A proper noun is a special name, like Emma, New York, or Monday. A proper noun always starts with a capital letter."
+};
+document.addEventListener("click", e => {
+  const go = e.target.closest("[data-go]");
+  if (go) { showTab(go.dataset.go); window.scrollTo({top: 0, behavior: "smooth"}); return; }
+  const rd = e.target.closest("[data-read]");
+  if (rd) speak(LESSON_READ[rd.dataset.read], "en-US", 0.9);
+});
+
+const GREFRESH = {
+  "g-types": () => { if (!mq.types) nextMCQ("types"); },
+  "g-frag": () => { if (!mq.frag) nextMCQ("frag"); },
+  "g-noun": () => { if (!mq.noun) nextMCQ("noun"); },
+  "g-change": () => { if (!ch.cur) nextChange(); },
+  "g-sp": () => { if (!spg.cur) nextSP(); },
+  "g-caps": () => { if (!cp.cur) nextCaps(); }
+};
+function grammarReportHTML(){
+  return Object.keys(GSKILLS).map(k => {
+    const s = S.gstats[k] || {ok: 0, miss: 0}, n = s.ok + s.miss, pct = n ? Math.round(s.ok / n * 100) : 0;
+    const note = !n ? `<span class="muted small">not played yet</span>`
+      : n >= 5 && pct < 70 ? `<span class="need">⚠️ needs practice</span>` : n >= 5 ? `<span class="gooda">✅ understands well</span>` : `<span class="muted small">keep playing</span>`;
+    return `<div class="r"><b>${esc(GSKILLS[k])} <span>${n ? pct + "% · " + s.ok + "/" + n : ""}</span></b>
+      <div class="bar light"><i style="width:${pct}%;background:${pct >= 70 ? "var(--ok)" : "var(--gold)"}"></i></div>${note}
+      <button class="btn w sm" data-go="${GGAME[k]}" style="margin-top:4px">Play ▶</button></div>`;
+  }).join("");
+}
+
 /* ===================== Start ===================== */
 if (!synth) $("soundWarn").hidden = false;
 renderCoach(); renderVoice(); renderUnits(); updateScores(); renderLearn();
-say(() => [`Hi${nm()}! I'm your coach. Tap me, or try the Penalty match! ⚽`, "هيا نتعلم التهجئة معاً!"], null, true);
+say(() => [`Hi${nm()}! I'm your coach. Tap me, try the Penalty match, or play Grammar! ⚽`, "هيا نتعلم التهجئة معاً!"], null, true);
 })();
 </script>
 </body>
