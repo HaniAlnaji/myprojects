@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Spelling with Leo</title>
+<title>Learn with Leo</title>
 <style>
   :root{
     --sky:#75AADB; --sky-d:#3b7fc4; --navy:#1d2b53; --gold:#f5b700;
@@ -200,7 +200,7 @@
   .form{display:grid;grid-template-columns:1fr 1fr;gap:10px}
   .form .full{grid-column:1/-1}
   .form label{display:block;font-size:.85rem;font-weight:700;color:var(--muted);margin-bottom:3px}
-  .form input,.form textarea{width:100%;padding:9px 10px;border-radius:10px;border:2px solid #dbe7f6;background:#fbfdff;color:var(--text)}
+  .form input,.form textarea,.form select{width:100%;padding:9px 10px;border-radius:10px;border:2px solid #dbe7f6;background:#fbfdff;color:var(--text)}
   .form textarea{min-height:58px;resize:vertical}
   .form input[dir=rtl]{text-align:right}
   .list{display:flex;flex-direction:column;gap:8px}
@@ -236,7 +236,7 @@
   #toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--navy);color:#fff;padding:10px 16px;border-radius:12px;z-index:80;display:none;max-width:90vw;text-align:center}
 
   /* ---------- modes ---------- */
-  .modes{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:14px 0 0}
+  .modes{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:14px 0 0}
   .modes button{background:#fff;color:var(--navy);border-radius:16px;padding:10px 6px;font-weight:800;font-size:1rem;box-shadow:0 4px 0 #c9d9ee;border:2px solid #dbe7f6}
   .modes button.on{background:var(--navy);color:#fff;border-color:var(--navy);box-shadow:0 4px 0 #0e1733}
 
@@ -292,6 +292,51 @@
   .report .need{color:var(--bad);font-size:.85rem;font-weight:700}
   .report .gooda{color:var(--ok);font-size:.85rem;font-weight:700}
 
+  /* ---------- math ---------- */
+  .bignum{font-size:4rem;font-weight:900;color:var(--navy);line-height:1.1;margin:6px 0}
+  .bignum .qmark{color:var(--gold)}
+  .bignum .ans{color:var(--ok)}
+  .bigbtn{font-size:2rem !important}
+  .pairs{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:8px 0}
+  .pairs.inl{display:inline-flex;margin:0 4px;vertical-align:middle}
+  .pair{background:#e4eeff;border-radius:10px;padding:2px 4px;font-size:1.2rem}
+  .pair.left{background:#ffe5e3;outline:2px dashed var(--bad)}
+  .arr{display:inline-flex;flex-direction:column;gap:4px;margin:8px auto;padding:8px;background:#f4f9ff;border-radius:14px}
+  .arow{display:flex;gap:4px;justify-content:center;font-size:1.8rem;border-radius:8px;padding:0 4px}
+  .arow span{border-radius:6px;padding:0 2px}
+  .arow.hl,.arow span.hl{background:#fff1b8}
+  .eqline{font-size:1.25rem;font-weight:700;margin:10px 0;line-height:2.2}
+  .nowrap{white-space:nowrap}
+  .nin{width:2.6em;font-size:1.5rem;text-align:center;border:3px solid #cfe0f5;border-radius:12px;padding:2px 4px;font-weight:800;color:var(--navy);background:#fbfdff;outline:none}
+  .nin.tot{width:3.2em;border-color:#f0d27a;background:#fffbea}
+  .nin:focus{border-color:var(--sky)}
+  .nin.good{border-color:var(--ok);background:#eafbf1}
+  .nin.bad{border-color:var(--bad);background:#ffe5e3;animation:shake .4s}
+  .hc{display:grid;grid-template-columns:repeat(10,1fr);gap:2px;max-width:440px;margin:8px auto;background:#e08a3c;padding:3px;border-radius:10px}
+  .hc span{background:#fff;font-size:.85rem;font-weight:700;padding:5px 0;border-radius:3px;line-height:1.2}
+  .hc span.pth{background:#d6f5e0}
+  .hc span.st{outline:3px solid var(--bad);outline-offset:-3px}
+  .hc span.ball{background:var(--gold);font-size:1rem}
+  .hcctl .btn{min-width:72px}
+  .bparts{display:flex;align-items:flex-end;justify-content:center;gap:14px;flex-wrap:wrap;margin:8px 0}
+  .bparts .plus{font-size:2rem;font-weight:900;align-self:center}
+  .bgrp,.bsum{display:inline-block;background:#f4f9ff;border-radius:14px;padding:8px 10px}
+  .bsum{background:#eafbf1;border:3px solid #9fdcb5;margin:10px auto;display:block;max-width:420px}
+  .blocks{display:flex;align-items:flex-end;justify-content:center;gap:3px;min-height:112px;flex-wrap:wrap}
+  .rod{width:12px;height:110px;border-radius:2px;background:repeating-linear-gradient(0deg,#4caf50 0 9px,#2e7d32 9px 11px);border:1px solid #2e7d32}
+  .rod.new{animation:popin .6s;box-shadow:0 0 0 3px var(--gold)}
+  .ones{display:inline-grid;grid-template-columns:repeat(2,12px);gap:2px;margin-left:6px;align-content:end}
+  .ones.bundle{outline:3px dashed var(--team);outline-offset:3px;border-radius:4px;animation:pulse .5s 2}
+  .cube{width:12px;height:12px;background:#4caf50;border:1px solid #2e7d32;border-radius:2px}
+  .story{font-size:1.3rem;font-weight:700;line-height:1.5;max-width:560px;margin:8px auto;text-align:left;background:#fffbea;border-radius:14px;padding:12px 14px;border-left:6px solid var(--gold)}
+  .sticon{font-size:2.6rem;float:left;margin:0 10px 0 0}
+  #profMenu{position:fixed;inset:0;background:rgba(29,43,83,.6);z-index:75;display:none;align-items:center;justify-content:center;padding:16px}
+  #profMenu.on{display:flex}
+  #profMenu .box{background:#fff;border-radius:22px;padding:18px;max-width:360px;width:100%;color:var(--navy)}
+  #profMenu .plist{display:flex;flex-direction:column;gap:8px;margin:10px 0}
+  #profMenu .plist button{text-align:left}
+  #profMenu input{width:100%;font-size:1.1rem;padding:8px 10px;border-radius:10px;border:2px solid #dbe7f6;margin:6px 0}
+
   @media (max-width:600px){
     .coach{width:84px;flex-basis:84px;height:112px}
     .coach .photo{width:80px;height:80px}
@@ -310,7 +355,15 @@
     .gsent{font-size:1.3rem}
     .sp-words{font-size:1.2rem}
     .tile{font-size:1.1rem;padding:7px 10px}
+    .modes{grid-template-columns:repeat(3,1fr)}
     .modes button{font-size:.85rem;padding:9px 4px}
+    .bignum{font-size:3rem}
+    .hc span{font-size:.72rem;padding:4px 0}
+    .story{font-size:1.1rem}
+    .nin{font-size:1.2rem;width:2.2em;padding:1px 2px}
+    .nin.tot{width:2.7em}
+    .eqline{font-size:1.05rem;line-height:2}
+    .arow{font-size:1.5rem}
   }
 </style>
 </head>
@@ -320,12 +373,13 @@
   <div class="head-in">
     <div class="coach bounce" id="coach" title="Tap Leo!"></div>
     <div class="bubble-area">
-      <p class="title">⚽ Spelling Champions with Leo Messi</p>
+      <p class="title">⚽ Champions with Leo Messi</p>
       <div class="bubble" id="bubble">Hi! Ready to score some spelling goals?</div>
       <div class="scores">
         <span class="chip">⚽ <span id="sGoals">0</span> goals</span>
         <span class="chip">🔥 Streak <span id="sStreak">0</span></span>
         <span class="chip">⭐ <span id="sLevel">Rookie</span></span>
+        <button class="chip" id="profBtn">👤</button>
         <button class="chip" id="voiceBtn">🔊 Leo talks</button>
       </div>
       <div class="mission"><span id="mText">🎯 Today's mission</span><div class="bar"><i id="mBar" style="width:0"></i></div></div>
@@ -345,6 +399,7 @@
   <div class="modes" id="modes">
     <button data-mode="spell" class="on">📘 Spelling</button>
     <button data-mode="grammar">🧠 Grammar</button>
+    <button data-mode="math">🔢 Math</button>
     <button data-mode="trophies">🏆 Trophies</button>
     <button data-mode="parents">👨‍👩‍👧 Parents</button>
   </div>
@@ -358,6 +413,16 @@
     <button data-tab="g-frag">🧩 Fragment or run-on?</button>
     <button data-tab="g-noun">🏷️ Common or proper?</button>
     <button data-tab="g-caps">🔠 Capital detective</button>
+  </nav>
+  <nav id="mtabs" hidden>
+    <button data-tab="m-learn">📖 Lessons</button>
+    <button data-tab="m-match" class="hot">🏆 Math Match</button>
+    <button data-tab="m-evenodd">👯 Even or odd</button>
+    <button data-tab="m-arrays">🟦 Arrays</button>
+    <button data-tab="m-chart">💯 Hundred chart</button>
+    <button data-tab="m-friendly">🤝 Friendly numbers</button>
+    <button data-tab="m-blocks">🧱 Tens &amp; ones</button>
+    <button data-tab="m-story">📖 Story problems</button>
   </nav>
   <nav id="tabs">
     <button data-tab="learn" class="on">📚 Learn</button>
@@ -612,6 +677,134 @@
     </div>
   </section>
 
+  <!-- ===================== MATH ===================== -->
+  <section class="panel" id="p-m-learn">
+    <div class="card">
+      <h2>👯 Even and odd numbers <span class="ar">الأعداد الزوجية والفردية</span></h2>
+      <p><b>Even</b> numbers make pairs with <b>nobody left over</b>: <span class="pairs inl"><span class="pair">⚽⚽</span><span class="pair">⚽⚽</span><span class="pair">⚽⚽</span></span> 6 is even.<br>
+         <b>Odd</b> numbers have <b>one left over</b>: <span class="pairs inl"><span class="pair">⚽⚽</span><span class="pair">⚽⚽</span><span class="pair left">⚽</span></span> 5 is odd.</p>
+      <p class="small">Look at the <b>ones digit</b>: 0, 2, 4, 6, 8 → even · 1, 3, 5, 7, 9 → odd</p>
+      <div class="row"><button class="btn sm" data-mread="m1">🔊 Read to me</button><button class="btn o sm" data-go="m-evenodd">▶ Play: Even or odd</button></div>
+    </div>
+    <div class="card">
+      <h2>🟦 Arrays <span class="ar">الصفوف والأعمدة</span></h2>
+      <div class="arr" style="margin:6px 0"><div class="arow">🍎🍎🍎🍎</div><div class="arow">🍎🍎🍎🍎</div><div class="arow">🍎🍎🍎🍎</div></div>
+      <p><b class="c-subj">By rows:</b> 4 + 4 + 4 = 12 &nbsp; <b class="c-pred">By columns:</b> 3 + 3 + 3 + 3 = 12</p>
+      <p class="small">Rows go across ➡️. Columns go up and down ⬇️. Both ways give the same total!</p>
+      <div class="row"><button class="btn sm" data-mread="m2">🔊 Read to me</button><button class="btn o sm" data-go="m-arrays">▶ Play: Arrays</button></div>
+    </div>
+    <div class="card">
+      <h2>💯 Add on a hundred chart <span class="ar">الجمع على جدول المئة</span></h2>
+      <p>Find <b>54 + 18</b>: start at 54. <b>⬇️ Move down 1 row</b> to add 1 ten (64). <b>➡️ Move ahead 8</b> to add 8 ones (72). So 54 + 18 = <b>72</b>.</p>
+      <div class="row"><button class="btn sm" data-mread="m3">🔊 Read to me</button><button class="btn o sm" data-go="m-chart">▶ Play: Hundred chart</button></div>
+    </div>
+    <div class="card">
+      <h2>🤝 Friendly numbers <span class="ar">الأعداد الصديقة</span></h2>
+      <p><b>29 + 14</b>: 29 is close to 30. <b>29 + 1 = 30</b>, so take 1 from 14: <b>14 − 1 = 13</b>. Now <b>30 + 13 = 43</b>. Easy!</p>
+      <div class="row"><button class="btn sm" data-mread="m4">🔊 Read to me</button><button class="btn o sm" data-go="m-friendly">▶ Play: Friendly numbers</button></div>
+    </div>
+    <div class="card">
+      <h2>🧱 Add with tens and ones <span class="ar">الجمع بالعشرات والآحاد</span></h2>
+      <p><b>47 + 26</b>: join the tens: 4 + 2 = <b>6 tens</b>. Join the ones: 7 + 6 = <b>13 ones</b>. 13 ones is too many — <b>regroup</b> 10 ones as 1 ten → <b>7 tens 3 ones = 73</b>.</p>
+      <div class="row"><button class="btn sm" data-mread="m5">🔊 Read to me</button><button class="btn o sm" data-go="m-blocks">▶ Play: Tens & ones</button><button class="btn o sm" data-go="m-story">▶ Play: Story problems</button></div>
+    </div>
+    <div class="card center">
+      <b>Ready for a match?</b>
+      <div style="margin-top:8px"><button class="btn o big" data-go="m-match">🏆 Play the Math Match</button></div>
+    </div>
+  </section>
+
+  <section class="panel" id="p-m-evenodd">
+    <div class="card center">
+      <p class="muted" style="margin:0">👯 Even or odd? · زوجي أم فردي؟</p>
+      <div id="eoQ"></div>
+      <div id="eoChoices"></div>
+      <div id="eoPairs"></div>
+      <div class="fb" id="eoFb"></div>
+      <div class="row c"><button class="btn w" id="eoShow">👀 Show me in pairs</button><button class="btn g" id="eoNext" hidden>Next ▶</button></div>
+    </div>
+  </section>
+
+  <section class="panel" id="p-m-arrays">
+    <div class="card center">
+      <p class="muted" style="margin:0">🟦 Arrays · Write two equations</p>
+      <div class="arr" id="arGrid"></div>
+      <div id="arEq"></div>
+      <div class="fb" id="arFb"></div>
+      <div class="row c"><button class="btn g" id="arCheck" data-check>⚽ Check</button><button class="btn w" id="arNext">Skip ▶</button></div>
+    </div>
+  </section>
+
+  <section class="panel" id="p-m-chart">
+    <div class="card center">
+      <p class="muted" style="margin:0">💯 Hundred chart · Move the ball!</p>
+      <div class="bignum" id="hcQ" style="font-size:2.4rem"></div>
+      <div class="gtask" id="hcHow"></div>
+      <div class="hc" id="hcGrid"></div>
+      <div class="small muted" id="hcInfo"></div>
+      <div class="row c hcctl" id="hcCtl">
+        <button class="btn w" data-d="-10">⬆️ −10</button>
+        <button class="btn w" data-d="-1">⬅️ −1</button>
+        <button class="btn" data-d="1">➡️ +1</button>
+        <button class="btn" data-d="10">⬇️ +10</button>
+      </div>
+      <div class="fb" id="hcFb"></div>
+      <div class="row c"><button class="btn g" id="hcScore">⚽ Score here!</button><button class="btn w" id="hcReset">↩️ Start again</button><button class="btn w" id="hcNext">Skip ▶</button></div>
+    </div>
+  </section>
+
+  <section class="panel" id="p-m-blocks">
+    <div class="card center">
+      <p class="muted" style="margin:0">🧱 Tens & ones · Join, regroup, add!</p>
+      <div class="bignum" id="bkQ" style="font-size:2.4rem"></div>
+      <div class="bparts" id="bkParts"></div>
+      <button class="btn o" id="bkJoin">➕ Join them!</button>
+      <div class="bsum" id="bkSum" hidden></div>
+      <button class="btn p" id="bkRegroup" hidden>🔄 Regroup 10 ones → 1 ten</button>
+      <div class="eqline" id="bkEq" hidden></div>
+      <div class="fb" id="bkFb"></div>
+      <div class="row c"><button class="btn g" id="bkCheck" data-check hidden>⚽ Check</button><button class="btn w" id="bkNext">Skip ▶</button></div>
+    </div>
+  </section>
+
+  <section class="panel" id="p-m-friendly">
+    <div class="card center">
+      <p class="muted" style="margin:0">🤝 Friendly numbers · الأعداد الصديقة</p>
+      <div class="bignum" id="frQ" style="font-size:2.4rem"></div>
+      <div id="frSteps" style="text-align:left;max-width:520px;margin:0 auto"></div>
+      <div class="fb" id="frFb"></div>
+      <div class="row c"><button class="btn g" id="frCheck" data-check>⚽ Check</button><button class="btn w" id="frNext">Skip ▶</button></div>
+      <div class="tip">A <b>friendly number</b> ends in 0, like 30 or 50. Add a little to make one, then take the same away from the other number.</div>
+    </div>
+  </section>
+
+  <section class="panel" id="p-m-story">
+    <div class="card center">
+      <p class="muted" style="margin:0">📖 Story problems</p>
+      <div class="story" id="stQ"></div>
+      <div class="row c" style="margin-top:8px"><input class="nin tot" id="stIn" inputmode="numeric" pattern="[0-9]*" autocomplete="off" maxlength="3"> <b id="stUnit"></b></div>
+      <div id="stHow"></div>
+      <div class="fb" id="stFb"></div>
+      <div class="row c"><button class="btn g" id="stCheck" data-check>⚽ Check</button><button class="btn w" id="stSay">🔊 Read it</button><button class="btn o" id="stHowBtn">💡 Help</button><button class="btn w" id="stNext">Skip ▶</button></div>
+    </div>
+  </section>
+
+  <section class="panel" id="p-m-match">
+    <div class="card center">
+      <h2 style="margin-bottom:4px">🏆 The Math Match</h2>
+      <div id="mtIntro"><p>10 questions from all your math lessons. Score <b>8 or more</b> to win!</p><button class="btn o big" id="mtGo0">⚽ Kick off</button></div>
+      <div id="mtPlay" hidden>
+        <div class="dots" id="mtDots"></div>
+        <div class="muted" id="mtTitle"></div>
+        <div id="mtPrompt"></div>
+        <div id="mtAct"></div>
+        <div class="fb" id="mtFb"></div>
+        <button class="btn g" id="mtNext" hidden>Next ▶</button>
+      </div>
+      <div id="mtEnd" hidden></div>
+    </div>
+  </section>
+
   <!-- TROPHIES -->
   <section class="panel" id="p-trophies">
     <div class="card center">
@@ -630,6 +823,11 @@
       <h2>🧠 Grammar report</h2>
       <p class="muted small" style="margin-top:-4px">How well each grammar lesson is understood (from her answers in the games).</p>
       <div class="report" id="gReport"></div>
+    </div>
+    <div class="card">
+      <h2>🔢 Math report</h2>
+      <p class="muted small" style="margin-top:-4px">How well each math lesson is understood (from the answers in the games).</p>
+      <div class="report" id="mReport"></div>
     </div>
     <div class="card">
       <h2>🏆 Trophy cabinet</h2>
@@ -653,8 +851,12 @@
         <h2>⚙️ Settings</h2>
         <div class="form">
           <div>
-            <label for="pName">Child's name (Leo will cheer for her)</label>
+            <label for="pName">Child's name (Leo cheers using this name)</label>
             <input id="pName" placeholder="e.g. Sara">
+          </div>
+          <div>
+            <label for="pBoy">Boy or girl (for Leo's Arabic words)</label>
+            <select id="pBoy"><option value="0">👧 Girl</option><option value="1">👦 Boy</option></select>
           </div>
           <div>
             <label for="pMission">Daily mission (goals per day)</label>
@@ -717,6 +919,15 @@
 
 <div id="goal"><div class="net">🥅</div><div class="ball">⚽</div><div class="txt">GOOOOL!</div></div>
 <div id="award"><div class="box"><div class="e" id="aE"></div><div class="muted" id="aKind">New trophy!</div><h2 id="aT"></h2><p class="muted" id="aD"></p><button class="btn o big" id="aOk">Yay! ⚽</button></div></div>
+<div id="profMenu"><div class="box">
+  <h2>👤 Who is playing?</h2>
+  <div class="plist" id="profList"></div>
+  <h3>➕ Add a child</h3>
+  <input id="profName" placeholder="Name">
+  <div class="row"><button class="btn" id="profGirl">👧 Add girl</button><button class="btn" id="profBoy">👦 Add boy</button></div>
+  <p class="small muted">Each child gets their own scores, trophies and word list.</p>
+  <div style="text-align:right"><button class="btn w sm" id="profClose">Close</button></div>
+</div></div>
 <div id="toast"></div>
 
 <script>
@@ -763,7 +974,13 @@ const DEFAULT_WORDS = [
   {unit:U2, focus:"oo", word:"typhoon",   ar:"إعصار",                    emoji:"🌀", def:"A giant rotating storm that brings wind, rain and destruction.", ex:"The typhoon brought strong wind and heavy rain."}
 ];
 
-const KEY = "leoSpelling.v1";
+// Each child has their own saved progress; the first child keeps the original save.
+const PROF_KEY = "leoSpelling.profiles";
+const keyFor = id => id === "main" ? "leoSpelling.v1" : "leoSpelling.v1." + id;
+let PROF = {list: [{id: "main", name: ""}], cur: "main"};
+try { const pr = JSON.parse(localStorage.getItem(PROF_KEY)); if (pr && Array.isArray(pr.list) && pr.list.some(x => x.id === pr.cur)) PROF = pr; } catch (e) {}
+function saveProf(){ try { localStorage.setItem(PROF_KEY, JSON.stringify(PROF)); } catch (e) {} }
+const KEY = keyFor(PROF.cur);
 const $ = id => document.getElementById(id);
 const uid = () => Math.random().toString(36).slice(2, 10);
 const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -775,7 +992,7 @@ const today = () => new Date().toISOString().slice(0, 10);
 function freshWords(){ return DEFAULT_WORDS.map(w => ({img: "", focus: "", ...w, id: uid()})); }
 function freshState(){
   return {words: freshWords(), seeded: DEFAULT_WORDS.map(w => w.word), name: "", goals: 0, streak: 0, best: 0, stats: {},
-          coachImg: "", unit: "all", voice: true, badges: {}, pkWins: 0, pkPerfect: 0, missions: 0, missionGoal: 10, day: {d: today(), g: 0, done: false}, gstats: {}, cupWins: 0};
+          coachImg: "", unit: "all", voice: true, badges: {}, pkWins: 0, pkPerfect: 0, missions: 0, missionGoal: 10, day: {d: today(), g: 0, done: false}, gstats: {}, cupWins: 0, mstats: {}, matchWins: 0, boy: false};
 }
 function load(){
   let s = null;
@@ -945,22 +1162,23 @@ function renderCoach(){
   $("coach").innerHTML = (S.coachImg ? `<img class="photo" src="${esc(S.coachImg)}" alt="Coach">` : COACH_SVG) + `<span class="tapme">tap me!</span>`;
 }
 function nm(){ return S.name ? " " + S.name : ""; }
+function gx(girl, boy){ return S.boy ? boy : girl; }
 const PRAISE = [
-  () => [`GOOOOL! That's Messi-level spelling${nm()}! ⚽`, "أحسنتِ يا بطلة! 🏆"],
-  () => [`Top corner! Perfect spelling${nm()}! 🎯`, "رائعة! استمري!"],
+  () => [`GOOOOL! That's Messi-level spelling${nm()}! ⚽`, gx("أحسنتِ يا بطلة! 🏆", "أحسنتَ يا بطل! 🏆")],
+  () => [`Top corner! Perfect spelling${nm()}! 🎯`, gx("رائعة! استمري!", "رائع! استمر!")],
   () => [`Vamos${nm()}! Another goal for your team! 🇦🇷`, "ممتاز! 👏"],
-  () => [`You are the number 10 of spelling! 🔟`, "أنتِ نجمة! ⭐"],
-  () => [`What a strike! Champions practise every day, just like you!`, "شاطرة! 💙"],
-  () => [`Hat-trick feeling! Keep scoring${nm()}! ⚽⚽⚽`, "برافو عليكِ!"]
+  () => [`You are the number 10 of spelling! 🔟`, gx("أنتِ نجمة! ⭐", "أنتَ نجم! ⭐")],
+  () => [`What a strike! Champions practise every day, just like you!`, gx("شاطرة! 💙", "شاطر! 💙")],
+  () => [`Hat-trick feeling! Keep scoring${nm()}! ⚽⚽⚽`, gx("برافو عليكِ!", "برافو عليك!")]
 ];
 const RETRY = [
-  () => [`Almost! Even the best players miss sometimes. Try again! 💪`, "حاولي مرة ثانية!"],
-  () => [`Look at the red letters and shoot again${nm()}!`, "قريبة جداً!"],
-  () => [`Don't give up, champions keep trying! ⚽`, "لا تستسلمي! 💪"]
+  () => [`Almost! Even the best players miss sometimes. Try again! 💪`, gx("حاولي مرة ثانية!", "حاول مرة ثانية!")],
+  () => [`Look at the red letters and shoot again${nm()}!`, gx("قريبة جداً!", "قريب جداً!")],
+  () => [`Don't give up, champions keep trying! ⚽`, gx("لا تستسلمي! 💪", "لا تستسلم! 💪")]
 ];
 const LEARN_TIPS = [
-  () => [`Listen, look, and say the letters with me!`, "اسمعي وانظري وتهجّي معي"],
-  () => [`Watch the coloured letters, they are the tricky part! 👀`, "انتبهي للحروف الملوّنة!"],
+  () => [`Listen, look, and say the letters with me!`, gx("اسمعي وانظري وتهجّي معي", "اسمع وانظر وتهجَّ معي")],
+  () => [`Watch the coloured letters, they are the tricky part! 👀`, gx("انتبهي للحروف الملوّنة!", "انتبه للحروف الملوّنة!")],
   () => [`Practice makes champions${nm()}! 🏆`, "التمرين يصنع الأبطال"]
 ];
 const FACTS = [
@@ -1001,7 +1219,7 @@ $("coach").addEventListener("click", () => {
   } else {
     const list = pool(); if (!list.length) return;
     const w = rnd(list);
-    setBubble(`Quick challenge! Can you spell the word that means "${w.ar}"?`, "تحدٍّ سريع! هل تستطيعين تهجئة هذه الكلمة؟",
+    setBubble(`Quick challenge! Can you spell the word that means "${w.ar}"?`, gx("تحدٍّ سريع! هل تستطيعين تهجئة هذه الكلمة؟", "تحدٍّ سريع! هل تستطيع تهجئة هذه الكلمة؟"),
       `<div class="go"><button class="btn o sm" id="chGo">Yes! Let's go ⚽</button></div>`);
     animateCoach("cheer");
     coachVoice("Quick challenge! Can you spell this word?");
@@ -1037,6 +1255,8 @@ const BADGES = [
   {id: "g100", e: "🌟", t: "Ballon d'Or",       d: "Score 100 goals",                    test: () => S.goals >= 100},
   {id: "gram", e: "🧠", t: "Grammar Star",      d: "Get 5 right in every grammar game",  test: () => Object.keys(GSKILLS).every(k => S.gstats[k] && S.gstats[k].ok >= 5)},
   {id: "gcup", e: "🥇", t: "Grammar Cup Winner", d: "Score 8 or more in the Grammar Cup", test: () => S.cupWins >= 1},
+  {id: "math", e: "🔢", t: "Math Star",         d: "Get 5 right in every math game",     test: () => Object.keys(MSKILLS).every(k => S.mstats[k] && S.mstats[k].ok >= 5)},
+  {id: "mwin", e: "🧮", t: "Math Match Winner", d: "Score 8 or more in the Math Match",  test: () => S.matchWins >= 1},
   {id: "g250", e: "🐐", t: "The GOAT",          d: "Score 250 goals",                    test: () => S.goals >= 250}
 ];
 const awardQ = [];
@@ -1048,7 +1268,7 @@ function showAward(){
   $("aE").textContent = a.e; $("aT").textContent = a.t; $("aD").textContent = a.d; $("aKind").textContent = a.kind || "New trophy unlocked!";
   $("award").classList.add("on");
   goal(true);
-  say(() => [`Amazing${nm()}! You won: ${a.t}! 🏆`, "مبروك! ربحتِ كأساً جديدة! 🏆"], "cheer");
+  say(() => [`Amazing${nm()}! You won: ${a.t}! 🏆`, gx("مبروك! ربحتِ كأساً جديدة! 🏆", "مبروك! ربحتَ كأساً جديدة! 🏆")], "cheer");
 }
 $("aOk").onclick = () => { $("award").classList.remove("on"); awardOpen = false; setTimeout(showAward, 300); renderTrophies(); };
 function checkBadges(){
@@ -1074,7 +1294,8 @@ function renderTrophies(){
   $("tNext").textContent = L.next ? `${L.next[0] - S.goals} more goals to become ${L.next[1]}` : "You reached the top level!";
   $("tGoals").textContent = S.goals; $("tBest").textContent = S.best; $("tPk").textContent = S.pkWins;
   $("tMaster").textContent = `${S.words.filter(isMastered).length}/${S.words.length}`;
-  $("gReport").innerHTML = grammarReportHTML();
+  $("gReport").innerHTML = skillReportHTML(GSKILLS, S.gstats, GGAME);
+  $("mReport").innerHTML = skillReportHTML(MSKILLS, S.mstats, MGAME);
   $("badges").innerHTML = BADGES.map(b => `<div class="badge ${S.badges[b.id] ? "" : "locked"}"><div class="e">${S.badges[b.id] ? b.e : "🔒"}</div><b>${esc(b.t)}</b><span>${esc(b.d)}</span></div>`).join("");
 }
 
@@ -1179,15 +1400,15 @@ $("units").onclick = e => {
   S.unit = b.dataset.u; save(); renderUnits(); resetGames(); refreshTab();
 };
 
-let tab = "learn", lastTab = {spell: "learn", grammar: "g-learn"};
-const modeOf = t => t.startsWith("g-") ? "grammar" : (t === "trophies" || t === "parents") ? t : "spell";
+let tab = "learn", lastTab = {spell: "learn", grammar: "g-learn", math: "m-learn"};
+const modeOf = t => t.startsWith("g-") ? "grammar" : t.startsWith("m-") ? "math" : (t === "trophies" || t === "parents") ? t : "spell";
 function showTab(t){
   tab = t;
   const m = modeOf(t);
   if (lastTab[m]) lastTab[m] = t;
   document.querySelectorAll("#modes button").forEach(x => x.classList.toggle("on", x.dataset.mode === m));
-  $("units").hidden = m !== "spell"; $("tabs").hidden = m !== "spell"; $("gtabs").hidden = m !== "grammar";
-  document.querySelectorAll("#tabs button, #gtabs button").forEach(x => x.classList.toggle("on", x.dataset.tab === t));
+  $("units").hidden = m !== "spell"; $("tabs").hidden = m !== "spell"; $("gtabs").hidden = m !== "grammar"; $("mtabs").hidden = m !== "math";
+  document.querySelectorAll("#tabs button, #gtabs button, #mtabs button").forEach(x => x.classList.toggle("on", x.dataset.tab === t));
   document.querySelectorAll(".panel").forEach(p => p.classList.toggle("on", p.id === "p-" + t));
   if (synth) synth.cancel();
   refreshTab();
@@ -1204,6 +1425,7 @@ function refreshTab(){
 }
 $("tabs").addEventListener("click", e => { const b = e.target.closest("button"); if (b) showTab(b.dataset.tab); });
 $("gtabs").addEventListener("click", e => { const b = e.target.closest("button"); if (b) showTab(b.dataset.tab); });
+$("mtabs").addEventListener("click", e => { const b = e.target.closest("button"); if (b) showTab(b.dataset.tab); });
 $("modes").addEventListener("click", e => { const b = e.target.closest("button"); if (b) showTab(lastTab[b.dataset.mode] || b.dataset.mode); });
 
 /* ===================== Learn ===================== */
@@ -1296,7 +1518,7 @@ function pkCheck(){
     $("pkCheck").hidden = true;
     $("pkHint").textContent = "👆 Tap the goal to shoot!";
     $("pitch").classList.add("aim");
-    say(() => [`Perfect spelling! Now choose your corner and shoot! 🎯`, "تهجئة صحيحة! اختاري الزاوية واركلي!"], "cheer");
+    say(() => [`Perfect spelling! Now choose your corner and shoot! 🎯`, gx("تهجئة صحيحة! اختاري الزاوية واركلي!", "تهجئة صحيحة! اختر الزاوية واركل!")], "cheer");
     $("pitch").scrollIntoView({behavior: "smooth", block: "center"});
   } else {
     pk.phase = "anim";
@@ -1351,7 +1573,7 @@ function pkEnd(){
     : `<h3>Final score ${pk.you} – ${pk.keep}</h3><div>Good try! Practise your tricky words and win the next one! 💪</div><button class="btn o big" id="pkGo">⚽ Play again</button>`;
   st.hidden = false;
   $("pkGo").onclick = pkStart;
-  if (won) { goal(true); say(() => [`We are the champions${nm()}! You won the match ${pk.you} to ${pk.keep}! 🏆`, "مبروك! فزتِ بالمباراة! 🏆"], "cheer"); }
+  if (won) { goal(true); say(() => [`We are the champions${nm()}! You won the match ${pk.you} to ${pk.keep}! 🏆`, gx("مبروك! فزتِ بالمباراة! 🏆", "مبروك! فزتَ بالمباراة! 🏆")], "cheer"); }
   else say(() => [`Great effort! Every champion loses sometimes. Let's train and play again! 💪`, "محاولة رائعة! هيا نتمرن ونلعب مرة ثانية!"], "sad");
   checkBadges();
 }
@@ -1531,6 +1753,7 @@ $("gIn").addEventListener("keydown", e => { if (e.key === "Enter") tryGate(); })
 
 function renderParents(){
   $("pName").value = S.name || "";
+  $("pBoy").value = S.boy ? "1" : "0";
   $("pMission").value = S.missionGoal;
   $("pCount").textContent = S.words.length;
   $("pList").innerHTML = S.words.map(w => {
@@ -1544,7 +1767,12 @@ function renderParents(){
     </div>`;
   }).join("") || `<p class="muted">No words yet.</p>`;
 }
-$("pName").oninput = () => { S.name = $("pName").value.trim(); save(); };
+$("pName").oninput = () => {
+  S.name = $("pName").value.trim(); save();
+  const me = PROF.list.find(x => x.id === PROF.cur); if (me) { me.name = S.name; saveProf(); }
+  renderProf();
+};
+$("pBoy").onchange = () => { S.boy = $("pBoy").value === "1"; save(); };
 $("pMission").onchange = () => { S.missionGoal = Math.max(1, Math.min(100, +$("pMission").value || 10)); save(); updateScores(); };
 
 // Shrink photos before saving so many words fit in browser storage.
@@ -1656,7 +1884,7 @@ $("pImport").onchange = e => {
 };
 $("pResetScore").onclick = () => {
   if (!confirm("Reset goals, streaks, trophies and tricky-word progress?")) return;
-  Object.assign(S, {goals: 0, streak: 0, best: 0, stats: {}, gstats: {}, cupWins: 0, badges: {}, pkWins: 0, pkPerfect: 0, missions: 0, day: {d: today(), g: 0, done: false}});
+  Object.assign(S, {goals: 0, streak: 0, best: 0, stats: {}, gstats: {}, cupWins: 0, mstats: {}, matchWins: 0, badges: {}, pkWins: 0, pkPerfect: 0, missions: 0, day: {d: today(), g: 0, done: false}});
   save(); updateScores(); renderParents();
 };
 $("pResetWords").onclick = () => {
@@ -1682,10 +1910,10 @@ const GSKILLS = {
 const GGAME = {types: "g-types", change: "g-change", sp: "g-sp", frag: "g-frag", noun: "g-noun", caps: "g-caps"};
 function gstat(k){ return S.gstats[k] || (S.gstats[k] = {ok: 0, miss: 0}); }
 const GPRAISE = [
-  () => [`GOOOL! Grammar genius${nm()}! 🧠⚽`, "أحسنتِ! عبقرية في القواعد!"],
+  () => [`GOOOL! Grammar genius${nm()}! 🧠⚽`, gx("أحسنتِ! عبقرية في القواعد!", "أحسنتَ! عبقري في القواعد!")],
   () => [`Perfect pass! You really understand it${nm()}!`, "ممتاز! فهمتِ الدرس!"],
-  () => [`Top corner! That's championship grammar! 🏆`, "رائعة يا بطلة!"],
-  () => [`Vamos${nm()}! Another goal for team grammar! 🇦🇷`, "برافو عليكِ! 👏"]
+  () => [`Top corner! That's championship grammar! 🏆`, gx("رائعة يا بطلة!", "رائع يا بطل!")],
+  () => [`Vamos${nm()}! Another goal for team grammar! 🇦🇷`, gx("برافو عليكِ! 👏", "برافو عليك! 👏")]
 ];
 function gRight(k, opts){ gstat(k).ok++; award(Object.assign({praise: GPRAISE}, opts)); }
 function gWrong(k, en, ar){
@@ -2111,7 +2339,7 @@ function cupStart(){
   cup.qs = shuffle([...pick("types", 4), ...pick("frag", 3), ...pick("noun", 3)]);
   cup.i = 0; cup.res = [];
   $("cupIntro").hidden = true; $("cupEnd").hidden = true; $("cupPlay").hidden = false;
-  say(() => [`Welcome to the Grammar Cup${nm()}! Show me what you know! 🏆`, "أهلاً بكِ في كأس القواعد!"], "cheer");
+  say(() => [`Welcome to the Grammar Cup${nm()}! Show me what you know! 🏆`, gx("أهلاً بكِ في كأس القواعد!", "أهلاً بك في كأس القواعد!")], "cheer");
   cupAsk();
 }
 function cupDots(){ $("cupDots").innerHTML = cup.qs.map((_, i) => cup.res[i] ? (cup.res[i].ok ? "⚽" : "❌") : "⚪").join(""); }
@@ -2141,7 +2369,7 @@ function cupEnd(){
     <button class="btn o big" id="cupAgain">⚽ Play again</button>`;
   $("cupEnd").hidden = false;
   $("cupAgain").onclick = cupStart;
-  if (won) say(() => [`Champions! You won the Grammar Cup ${score} out of ${CUP_SIZE}! 🏆`, "مبروك! فزتِ بكأس القواعد! 🏆"], "cheer");
+  if (won) say(() => [`Champions! You won the Grammar Cup ${score} out of ${CUP_SIZE}! 🏆`, gx("مبروك! فزتِ بكأس القواعد! 🏆", "مبروك! فزتَ بكأس القواعد! 🏆")], "cheer");
   else say(() => [`Great effort${nm()}! ${score} out of ${CUP_SIZE}. Let's practise and win it next time! 💪`, "محاولة رائعة! هيا نتمرن ونفوز المرة القادمة!"], "sad");
   checkBadges();
 }
@@ -2170,21 +2398,545 @@ const GREFRESH = {
   "g-sp": () => { if (!spg.cur) nextSP(); },
   "g-caps": () => { if (!cp.cur) nextCaps(); }
 };
-function grammarReportHTML(){
-  return Object.keys(GSKILLS).map(k => {
-    const s = S.gstats[k] || {ok: 0, miss: 0}, n = s.ok + s.miss, pct = n ? Math.round(s.ok / n * 100) : 0;
+function skillReportHTML(SK, stats, games){
+  return Object.keys(SK).map(k => {
+    const s = stats[k] || {ok: 0, miss: 0}, n = s.ok + s.miss, pct = n ? Math.round(s.ok / n * 100) : 0;
     const note = !n ? `<span class="muted small">not played yet</span>`
       : n >= 5 && pct < 70 ? `<span class="need">⚠️ needs practice</span>` : n >= 5 ? `<span class="gooda">✅ understands well</span>` : `<span class="muted small">keep playing</span>`;
-    return `<div class="r"><b>${esc(GSKILLS[k])} <span>${n ? pct + "% · " + s.ok + "/" + n : ""}</span></b>
+    return `<div class="r"><b>${esc(SK[k])} <span>${n ? pct + "% · " + s.ok + "/" + n : ""}</span></b>
       <div class="bar light"><i style="width:${pct}%;background:${pct >= 70 ? "var(--ok)" : "var(--gold)"}"></i></div>${note}
-      <button class="btn w sm" data-go="${GGAME[k]}" style="margin-top:4px">Play ▶</button></div>`;
+      <button class="btn w sm" data-go="${games[k]}" style="margin-top:4px">Play ▶</button></div>`;
   }).join("");
 }
 
+/* ===================== Math (Grade 2) ===================== */
+// Questions follow the Grade 2 lessons L2-1, L2-3, L3-1, L3-4 and L4-1 and their extra-practice sheets.
+const MSKILLS = {
+  evenodd: "Even & odd numbers", arrays: "Arrays (rows & columns)", chart: "Adding on a hundred chart",
+  blocks: "Adding tens & ones (models)", friendly: "Friendly numbers (compensation)", story: "Story problems"
+};
+const MGAME = {evenodd: "m-evenodd", arrays: "m-arrays", chart: "m-chart", blocks: "m-blocks", friendly: "m-friendly", story: "m-story"};
+function mstat(k){ return S.mstats[k] || (S.mstats[k] = {ok: 0, miss: 0}); }
+const MPRAISE = [
+  () => [`GOOOL! Math magic${nm()}! 🔢⚽`, gx("رائعة! 👏", "رائع! 👏")],
+  () => [`Perfect! You are a number champion! 🏆`, gx("أنتِ بطلة الأرقام!", "أنتَ بطل الأرقام!")],
+  () => [`Top corner! Great counting${nm()}! 🎯`, "ممتاز! 🌟"],
+  () => [`Vamos${nm()}! Another goal for team math! 🇦🇷`, gx("برافو عليكِ!", "برافو عليك!")]
+];
+function mRight(k, opts){ mstat(k).ok++; award(Object.assign({praise: MPRAISE}, opts)); }
+function mWrong(k, en, ar){ mstat(k).miss++; penalize(); setBubble(en, ar); animateCoach("sad"); coachVoice(en); }
+const rint = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
+const numIn = (id, cls) => `<input class="nin ${cls || ""}" id="${id}" inputmode="numeric" pattern="[0-9]*" autocomplete="off" maxlength="3">`;
+const val = id => { const v = $(id).value.trim(); return v === "" ? NaN : +v; };
+function markIn(id, ok){ const el = $(id); if (!el) return; el.classList.remove("good", "bad"); void el.offsetWidth; el.classList.add(ok ? "good" : "bad"); }
+function tensOnes(n){ return `${Math.floor(n / 10)} ten${Math.floor(n / 10) === 1 ? "" : "s"} and ${n % 10} one${n % 10 === 1 ? "" : "s"}`; }
+// Pressing Enter in a number box presses that game's Check button.
+document.addEventListener("keydown", e => {
+  if (e.key !== "Enter" || !e.target.classList || !e.target.classList.contains("nin")) return;
+  const btn = e.target.closest(".card") && e.target.closest(".card").querySelector("[data-check]");
+  if (btn && !btn.hidden) btn.click();
+});
+
+/* ----- Even or odd ----- */
+const EO_SHEET = [8, 13, 20, 17, 34, 45, 62, 71, 96, 53, 75];
+const EO_PICK = [[[27, 40, 55], "E"], [[18, 32, 47], "O"], [[61, 74, 89], "E"], [[22, 36, 51], "O"], [[15, 28, 39], "E"], [[33, 36], "E"], [[48, 49], "O"]];
+const eo = {queue: [], cur: null, done: false};
+const isEven = n => n % 2 === 0;
+function eoExplain(n){
+  return isEven(n)
+    ? [`${n} is even. It makes pairs with nobody left over. Its ones digit is ${n % 10}: 0, 2, 4, 6 and 8 are even.`, `${n} عدد زوجي: يمكن تقسيمه إلى أزواج بدون باقٍ.`]
+    : [`${n} is odd. When we make pairs, one is left over. Its ones digit is ${n % 10}: 1, 3, 5, 7 and 9 are odd.`, `${n} عدد فردي: عند تقسيمه إلى أزواج يبقى واحد.`];
+}
+function nextEO(){
+  if (!eo.queue.length) {
+    const qs = EO_SHEET.map(n => ({n})).concat(EO_PICK.map(([ns, k]) => ({ns, k})));
+    for (let i = 0; i < 8; i++) qs.push({n: rint(2, 99)});
+    for (let i = 0; i < 4; i++) { const k = rnd(["E", "O"]); const want = k === "E" ? rint(1, 49) * 2 : rint(0, 49) * 2 + 1;
+      const others = [rint(0, 49) * 2 + (k === "E" ? 1 : 0), rint(0, 49) * 2 + (k === "E" ? 1 : 0)].map(x => Math.max(1, x));
+      qs.push({ns: shuffle([want, ...others]), k}); }
+    eo.queue = shuffle(qs);
+  }
+  eo.cur = eo.queue.pop(); eo.done = false;
+  const q = eo.cur;
+  $("eoPairs").innerHTML = ""; $("eoFb").innerHTML = ""; $("eoNext").hidden = true; $("eoShow").hidden = !("n" in q);
+  if ("n" in q) {
+    $("eoQ").innerHTML = `<div class="bignum">${q.n}</div><div class="gtask">Is <b>${q.n}</b> even or odd?<span class="ar">هل العدد ${q.n} زوجي أم فردي؟</span></div>`;
+    $("eoChoices").className = "gchoices";
+    $("eoChoices").innerHTML = `<button class="btn w" data-k="E">👯 Even<small>pairs, none left</small></button><button class="btn w" data-k="O">☝️ Odd<small>one left over</small></button>`;
+  } else {
+    const word = q.k === "E" ? "EVEN" : "ODD";
+    $("eoQ").innerHTML = `<div class="gtask">Tap the <b>${word}</b> number.<span class="ar">اضغط على العدد ${q.k === "E" ? "الزوجي" : "الفردي"}.</span></div>`;
+    $("eoChoices").className = "gchoices c3";
+    $("eoChoices").innerHTML = q.ns.map(n => `<button class="btn w bigbtn" data-n="${n}">${n}</button>`).join("");
+  }
+}
+function eoPairsHTML(n){
+  if (n > 40) return `<div class="small muted">That's a lot of balls! Look at the <b>ones digit</b>: ${n} ends in <b>${n % 10}</b>.</div>`;
+  let h = "";
+  for (let i = 0; i + 1 < n; i += 2) h += `<span class="pair">⚽⚽</span>`;
+  if (n % 2) h += `<span class="pair left">⚽</span>`;
+  return `<div class="pairs">${h}</div><div class="small muted">${n % 2 ? "One ball has no partner 👉 odd" : "Every ball has a partner 👉 even"}</div>`;
+}
+$("eoShow").onclick = () => { if (eo.cur && "n" in eo.cur) $("eoPairs").innerHTML = eoPairsHTML(eo.cur.n); };
+$("eoChoices").onclick = e => {
+  const b = e.target.closest("button"), q = eo.cur; if (!b || !q || eo.done) return;
+  eo.done = true;
+  let ok, n;
+  if ("n" in q) { n = q.n; ok = (b.dataset.k === "E") === isEven(n); }
+  else { n = +b.dataset.n; ok = (q.k === "E") === isEven(n); }
+  $("eoChoices").querySelectorAll("button").forEach(x => {
+    x.disabled = true;
+    const right = "n" in q ? (x.dataset.k === "E") === isEven(q.n) : (q.k === "E") === isEven(+x.dataset.n);
+    if (right) x.classList.add("right");
+  });
+  if (!ok) b.classList.add("wrong");
+  const target = "n" in q ? q.n : q.ns.find(x => (q.k === "E") === isEven(x));
+  const [en, ar] = eoExplain(ok ? n : target);
+  if ("n" in q) $("eoPairs").innerHTML = eoPairsHTML(q.n);
+  $("eoFb").innerHTML = `${ok ? "✅" : "❌"}<div class="gexp">${esc(en)}<span class="ar">${esc(ar)}</span></div>`;
+  ok ? mRight("evenodd") : mWrong("evenodd", en, ar);
+  $("eoNext").hidden = false;
+};
+$("eoNext").onclick = nextEO;
+
+/* ----- Arrays ----- */
+const AR_ICONS = ["⚽", "🍎", "⭐", "🧁", "🐟", "🌸", "🚗", "🍪"];
+const ar = {cur: null, tries: 0, done: false};
+function nextArray(){
+  let r = rint(2, 5), c = rint(2, 5);
+  ar.cur = {r, c, icon: rnd(AR_ICONS)}; ar.tries = 0; ar.done = false;
+  let g = "";
+  for (let i = 0; i < r; i++) { g += `<div class="arow" data-r="${i}">`; for (let j = 0; j < c; j++) g += `<span data-c="${j}">${ar.cur.icon}</span>`; g += `</div>`; }
+  $("arGrid").innerHTML = g;
+  const boxes = (n, kind) => Array.from({length: n}, (_, i) => numIn(`ar${kind}${i}`, "") .replace("<input", `<input data-${kind === "R" ? "r" : "c"}="${i}"`)).join(" + ");
+  $("arEq").innerHTML = `
+    <div class="eqline"><b class="c-subj">By rows:</b> ${boxes(r, "R")} = ${numIn("arRT", "tot")}</div>
+    <div class="eqline"><b class="c-pred">By columns:</b> ${boxes(c, "C")} = ${numIn("arCT", "tot")}</div>`;
+  $("arFb").innerHTML = ""; $("arNext").textContent = "Skip ▶";
+}
+// Highlight the matching row or column while a box is being filled.
+$("arEq").addEventListener("focusin", e => {
+  const t = e.target;
+  document.querySelectorAll("#arGrid .hl").forEach(x => x.classList.remove("hl"));
+  if (t.dataset.r != null) document.querySelector(`#arGrid .arow[data-r="${t.dataset.r}"]`).classList.add("hl");
+  if (t.dataset.c != null) document.querySelectorAll(`#arGrid span[data-c="${t.dataset.c}"]`).forEach(x => x.classList.add("hl"));
+});
+$("arCheck").onclick = () => {
+  const q = ar.cur; if (!q || ar.done) return;
+  const total = q.r * q.c;
+  const want = {};
+  for (let i = 0; i < q.r; i++) want["arR" + i] = q.c;
+  for (let j = 0; j < q.c; j++) want["arC" + j] = q.r;
+  want.arRT = total; want.arCT = total;
+  if (Object.keys(want).some(id => isNaN(val(id)))) { toast("Fill in every box first 🙂"); return; }
+  let allOk = true;
+  Object.keys(want).forEach(id => { const ok = val(id) === want[id]; markIn(id, ok); if (!ok) allOk = false; });
+  const exp = [`There are ${q.r} rows with ${q.c} in each row, and ${q.c} columns with ${q.r} in each column. Both ways make ${total}!`,
+               `يوجد ${q.r} صفوف في كل صف ${q.c}، و ${q.c} أعمدة في كل عمود ${q.r}. المجموع ${total}.`];
+  if (allOk) {
+    ar.done = true;
+    $("arFb").innerHTML = `✅ ${Array(q.r).fill(q.c).join(" + ")} = ${total} and ${Array(q.c).fill(q.r).join(" + ")} = ${total}`;
+    $("arNext").textContent = "Next ▶";
+    mRight("arrays");
+    return;
+  }
+  ar.tries++;
+  mWrong("arrays", "Count the things in ONE row for each row box, and the things in ONE column for each column box.", "في معادلة الصفوف اكتب عدد الأشياء في كل صف، وفي معادلة الأعمدة عدد الأشياء في كل عمود.");
+  if (ar.tries >= 2) {
+    ar.done = true;
+    Object.keys(want).forEach(id => { $(id).value = want[id]; markIn(id, true); });
+    $("arFb").innerHTML = `Here is the answer.<div class="gexp">${esc(exp[0])}<span class="ar">${esc(exp[1])}</span></div>`;
+    $("arNext").textContent = "Next ▶";
+  } else $("arFb").innerHTML = `Almost! Fix the red boxes. 👀<div class="small muted">Tip: tap a box and its row or column lights up.</div>`;
+};
+$("arNext").onclick = nextArray;
+
+/* ----- Hundred chart ----- */
+const HC_SHEET = [[54, 18], [17, 32], [28, 21], [19, 20], [18, 8], [33, 9], [12, 73], [38, 21], [56, 42], [47, 28], [39, 17], [61, 19]];
+const hc = {queue: [], cur: null, pos: 0, path: [], tries: 0, done: false, anim: false};
+function nextChart(){
+  if (!hc.queue.length) {
+    const qs = HC_SHEET.slice();
+    for (let i = 0; i < 6; i++) { const a = rint(11, 69), b = rint(11, Math.min(39, 99 - a)); qs.push([a, b]); }
+    hc.queue = shuffle(qs);
+  }
+  const [a, b] = hc.cur = hc.queue.pop();
+  hc.pos = a; hc.path = [a]; hc.tries = 0; hc.done = false; hc.anim = false;
+  $("hcQ").innerHTML = `${a} + ${b} = <span class="qmark">?</span>`;
+  $("hcHow").innerHTML = `Start at <b>${a}</b>. ${b} = <b>${Math.floor(b / 10)} ten${Math.floor(b / 10) === 1 ? "" : "s"}</b> and <b>${b % 10} one${b % 10 === 1 ? "" : "s"}</b>.
+    <span class="ar">ابدأ من ${a}. انزل صفاً لكل عشرة، وتحرّك يميناً لكل واحد.</span>`;
+  $("hcFb").innerHTML = ""; $("hcNext").textContent = "Skip ▶";
+  renderChart();
+}
+function renderChart(){
+  const [a] = hc.cur, ps = new Set(hc.path);
+  let h = "";
+  for (let n = 1; n <= 100; n++) h += `<span class="${n === a ? "st" : ""} ${ps.has(n) ? "pth" : ""} ${n === hc.pos ? "ball" : ""}">${n === hc.pos ? "⚽" : n}</span>`;
+  $("hcGrid").innerHTML = h;
+  const moved = hc.pos - a;
+  $("hcInfo").innerHTML = `The ball is on <b>${hc.pos}</b> · moved ${moved >= 0 ? "+" : ""}${moved}`;
+}
+function hcMove(d){
+  if (!hc.cur || hc.done || hc.anim) return;
+  const n = hc.pos + d;
+  if (n < 1 || n > 100) return;
+  hc.pos = n; hc.path.push(n); renderChart();
+}
+$("hcCtl").onclick = e => { const b = e.target.closest("button"); if (b) hcMove(+b.dataset.d); };
+$("hcReset").onclick = () => { if (!hc.cur || hc.done || hc.anim) return; hc.pos = hc.cur[0]; hc.path = [hc.pos]; renderChart(); $("hcFb").innerHTML = ""; };
+function hcShowPath(done){
+  const [a, b] = hc.cur;
+  hc.pos = a; hc.path = [a]; hc.anim = true; renderChart();
+  const steps = Array(Math.floor(b / 10)).fill(10).concat(Array(b % 10).fill(1));
+  let i = 0;
+  (function step(){
+    if (i >= steps.length) { hc.anim = false; done && done(); return; }
+    hc.pos += steps[i++]; hc.path.push(hc.pos); renderChart();
+    setTimeout(step, 330);
+  })();
+}
+$("hcScore").onclick = () => {
+  if (!hc.cur || hc.done || hc.anim) return;
+  const [a, b] = hc.cur, sum = a + b;
+  const exp = [`${a} + ${b}: move down ${Math.floor(b / 10)} row${Math.floor(b / 10) === 1 ? "" : "s"} for the tens, then ${b % 10} step${b % 10 === 1 ? "" : "s"} to the right for the ones. You land on ${sum}.`,
+               `انزل ${Math.floor(b / 10)} صفوف للعشرات، ثم تحرّك ${b % 10} خطوات يميناً للآحاد.`];
+  if (hc.pos === sum) {
+    hc.done = true;
+    $("hcQ").innerHTML = `${a} + ${b} = <span class="ans">${sum}</span>`;
+    $("hcFb").innerHTML = `✅ ${a} + ${b} = ${sum}`;
+    $("hcNext").textContent = "Next ▶";
+    mRight("chart");
+    return;
+  }
+  hc.tries++;
+  mWrong("chart", exp[0], exp[1]);
+  if (hc.tries >= 2) {
+    hc.done = true;
+    $("hcFb").innerHTML = `Watch the ball! 👀<div class="gexp">${esc(exp[0])}<span class="ar">${esc(exp[1])}</span></div>`;
+    hcShowPath(() => { $("hcQ").innerHTML = `${a} + ${b} = <span class="ans">${sum}</span>`; });
+    $("hcNext").textContent = "Next ▶";
+  } else $("hcFb").innerHTML = `Not ${hc.pos}. Try again! Press ↩️ to go back to ${a}.<div class="gexp">⬇️ = add 1 ten · ➡️ = add 1 one</div>`;
+};
+$("hcNext").onclick = nextChart;
+
+/* ----- Tens and ones (place-value blocks) ----- */
+const BK_SHEET = [[23, 14], [27, 15], [52, 25], [38, 26], [15, 43], [46, 17], [36, 31], [25, 39], [41, 36], [54, 28], [34, 22], [37, 45],
+                  [62, 27], [19, 34], [24, 51], [48, 24], [47, 26], [32, 29], [24, 52], [15, 38]];
+const bk = {queue: [], cur: null, joined: false, regrouped: false, tries: 0, done: false};
+const rods = n => Array(n).fill(`<span class="rod"></span>`).join("");
+const cubes = n => `<span class="ones">${Array(n).fill(`<span class="cube"></span>`).join("")}</span>`;
+function blockGroup(n, label){
+  return `<div class="bgrp"><div class="blocks">${rods(Math.floor(n / 10))}${cubes(n % 10)}</div><div class="small"><b>${n}</b> = ${Math.floor(n / 10)} tens ${n % 10} ones${label ? " · " + label : ""}</div></div>`;
+}
+function nextBlocks(){
+  if (!bk.queue.length) bk.queue = shuffle(BK_SHEET);
+  const [a, b] = bk.cur = bk.queue.pop();
+  bk.joined = false; bk.regrouped = false; bk.tries = 0; bk.done = false;
+  $("bkQ").innerHTML = `${a} + ${b} = <span class="qmark">?</span>`;
+  $("bkParts").innerHTML = blockGroup(a) + `<div class="plus">+</div>` + blockGroup(b);
+  $("bkSum").innerHTML = ""; $("bkSum").hidden = true;
+  $("bkJoin").hidden = false; $("bkRegroup").hidden = true;
+  $("bkEq").hidden = true;
+  $("bkEq").innerHTML = `${numIn("bkT")} tens ${numIn("bkO")} ones = ${numIn("bkS", "tot")}`;
+  $("bkFb").innerHTML = ""; $("bkNext").textContent = "Skip ▶"; $("bkCheck").hidden = true;
+}
+function renderSum(bundle){
+  const [a, b] = bk.cur;
+  let T = Math.floor(a / 10) + Math.floor(b / 10), O = a % 10 + b % 10;
+  if (bk.regrouped) { T += 1; O -= 10; }
+  const onesHTML = bundle
+    ? `<span class="ones bundle">${Array(10).fill(`<span class="cube"></span>`).join("")}</span>${cubes(O - 10)}`
+    : cubes(O);
+  $("bkSum").innerHTML = `<div class="blocks">${rods(T)}${onesHTML}</div>
+    <div class="small"><b class="c-subj">${T} tens</b> and <b class="c-pred">${O} ones</b>${O >= 10 ? ` — that's 10 or more ones! Regroup! 🔄` : ""}</div>`;
+}
+$("bkJoin").onclick = () => {
+  if (!bk.cur || bk.joined) return;
+  bk.joined = true;
+  const [a, b] = bk.cur, O = a % 10 + b % 10;
+  $("bkJoin").hidden = true; $("bkSum").hidden = false; renderSum();
+  if (O >= 10) { $("bkRegroup").hidden = false; say(() => [`Wow, ${O} ones! Regroup 10 ones into 1 ten!`, gx("اجمعي ١٠ آحاد لتصبح عشرة واحدة!", "اجمع ١٠ آحاد لتصبح عشرة واحدة!")], null); }
+  else { $("bkEq").hidden = false; $("bkCheck").hidden = false; $("bkT").focus({preventScroll: true}); }
+};
+$("bkRegroup").onclick = () => {
+  if (!bk.cur || bk.regrouped) return;
+  renderSum(true);
+  setTimeout(() => {
+    bk.regrouped = true; renderSum();
+    const rs = $("bkSum").querySelectorAll(".rod"); if (rs.length) rs[rs.length - 1].classList.add("new");
+    $("bkRegroup").hidden = true; $("bkEq").hidden = false; $("bkCheck").hidden = false;
+    $("bkT").focus({preventScroll: true});
+  }, 900);
+};
+$("bkCheck").onclick = () => {
+  if (!bk.cur || bk.done) return;
+  const [a, b] = bk.cur, sum = a + b, T = Math.floor(sum / 10), O = sum % 10;
+  if (["bkT", "bkO", "bkS"].some(id => isNaN(val(id)))) { toast("Fill in every box first 🙂"); return; }
+  const okT = val("bkT") === T, okO = val("bkO") === O, okS = val("bkS") === sum;
+  markIn("bkT", okT); markIn("bkO", okO); markIn("bkS", okS);
+  if (okT && okO && okS) {
+    bk.done = true;
+    $("bkQ").innerHTML = `${a} + ${b} = <span class="ans">${sum}</span>`;
+    $("bkFb").innerHTML = `✅ ${T} tens and ${O} ones = ${sum}`;
+    $("bkNext").textContent = "Next ▶";
+    mRight("blocks");
+    return;
+  }
+  bk.tries++;
+  const en = `Count the rods for tens and the little cubes for ones. ${T} tens and ${O} ones make ${sum}.`;
+  const hint = `Count the rods (tens) and the small cubes (ones) in the green box.`;
+  mWrong("blocks", bk.tries >= 2 ? en : hint, "عُدّ الأعمدة للعشرات والمكعبات الصغيرة للآحاد.");
+  if (bk.tries >= 2) {
+    bk.done = true;
+    $("bkT").value = T; $("bkO").value = O; $("bkS").value = sum; ["bkT", "bkO", "bkS"].forEach(id => markIn(id, true));
+    $("bkFb").innerHTML = `<div class="gexp">${esc(en)}</div>`; $("bkNext").textContent = "Next ▶";
+  } else $("bkFb").innerHTML = `Almost! ${esc(hint)}`;
+};
+$("bkNext").onclick = nextBlocks;
+
+/* ----- Friendly numbers (compensation) ----- */
+const FR_SHEET = [[29, 14], [47, 16], [28, 17], [48, 15], [69, 24], [27, 18], [58, 27], [79, 16], [38, 25], [59, 23], [36, 19], [57, 18], [39, 26], [49, 32], [68, 25]];
+const fr = {queue: [], cur: null, tries: 0, done: false};
+function nextFriendly(){
+  if (!fr.queue.length) {
+    const qs = FR_SHEET.slice();
+    for (let i = 0; i < 6; i++) { const x = rint(1, 7) * 10 + rint(7, 9), y = rint(12, Math.min(39, 99 - x)); qs.push(rnd([[x, y], [y, x]])); }
+    fr.queue = shuffle(qs);
+  }
+  const [a, b] = fr.cur = fr.queue.pop();
+  // Make the addend closest to the next ten into the friendly number.
+  const big = (a % 10 >= b % 10) ? a : b, other = big === a ? b : a, need = 10 - big % 10;
+  Object.assign(fr, {big, other, need, tries: 0, done: false});
+  $("frQ").innerHTML = `${a} + ${b} = <span class="qmark">?</span>`;
+  $("frSteps").innerHTML = `
+    <div class="eqline">🤝 Make <b>${big}</b> a friendly number (a ten): <span class="nowrap">${big} + ${numIn("fr1")} = ${numIn("fr2")}</span></div>
+    <div class="eqline">➖ Take the same amount from <b>${other}</b>: <span class="nowrap">${other} − <b id="frEcho1">?</b> = ${numIn("fr3")}</span></div>
+    <div class="eqline">⚽ Add the new numbers: <span class="nowrap"><b id="frEcho2">?</b> + <b id="frEcho3">?</b> = ${numIn("fr4", "tot")}</span></div>`;
+  ["fr1", "fr2", "fr3"].forEach((id, i) => $(id).addEventListener("input", () => { $("frEcho" + (i + 1)).textContent = $(id).value || "?"; }));
+  $("frFb").innerHTML = ""; $("frNext").textContent = "Skip ▶";
+}
+$("frCheck").onclick = () => {
+  if (!fr.cur || fr.done) return;
+  const {big, other, need} = fr, sum = big + other;
+  const want = {fr1: need, fr2: big + need, fr3: other - need, fr4: sum};
+  if (Object.keys(want).some(id => isNaN(val(id)))) { toast("Fill in every box first 🙂"); return; }
+  let allOk = true;
+  Object.keys(want).forEach(id => { const ok = val(id) === want[id]; markIn(id, ok); if (!ok) allOk = false; });
+  const en = `${big} is close to ${big + need}. Add ${need} to get ${big + need}, and take ${need} from ${other} to get ${other - need}. ${big + need} + ${other - need} = ${sum}.`;
+  const arx = `${big} قريب من ${big + need}. نضيف ${need} ثم نطرح ${need} من ${other}.`;
+  if (allOk) {
+    fr.done = true;
+    $("frQ").innerHTML = `${fr.cur[0]} + ${fr.cur[1]} = <span class="ans">${sum}</span>`;
+    $("frFb").innerHTML = `✅ ${big + need} + ${other - need} = ${sum}`; $("frNext").textContent = "Next ▶";
+    mRight("friendly");
+    return;
+  }
+  fr.tries++;
+  mWrong("friendly", fr.tries >= 2 ? en : `How many more does ${big} need to reach the next ten? Then take that many away from ${other}.`, arx);
+  if (fr.tries >= 2) {
+    fr.done = true;
+    Object.keys(want).forEach(id => { $(id).value = want[id]; markIn(id, true); });
+    $("frEcho1").textContent = need; $("frEcho2").textContent = big + need; $("frEcho3").textContent = other - need;
+    $("frFb").innerHTML = `<div class="gexp">${esc(en)}<span class="ar">${esc(arx)}</span></div>`; $("frNext").textContent = "Next ▶";
+  } else $("frFb").innerHTML = `Almost! Fix the red boxes.`;
+};
+$("frNext").onclick = nextFriendly;
+
+/* ----- Story problems ----- */
+const ST_SHEET = [
+  ["Sara has 36 stickers. Her friend gives her 25 more stickers. How many stickers does Sara have now?", 36, 25, "stickers", "🏷️"],
+  ["There are 48 red apples and 33 green apples in a basket. How many apples are there in all?", 48, 33, "apples", "🍎"],
+  ["A bookshop sold 52 books on Monday and 29 books on Tuesday. How many books did it sell in all?", 52, 29, "books", "📚"],
+  ["Omar scored 47 points in the first game and 26 points in the second game. How many points did he score in all?", 47, 26, "points", "🎮"],
+  ["Layla read 38 pages on Friday and 45 pages on Saturday. How many pages did she read in all?", 38, 45, "pages", "📖"]
+];
+const ST_T = [
+  (a, b) => [`Leo practised ${a} free kicks in the morning and ${b} free kicks in the afternoon. How many free kicks did he practise in all?`, "free kicks", "⚽"],
+  (a, b) => [`There are ${a} fans in the blue stand and ${b} fans in the white stand. How many fans are there in all?`, "fans", "🏟️"],
+  (a, b) => [`Yousef has ${a} football cards. His brother gives him ${b} more. How many football cards does Yousef have now?`, "cards", "🃏"],
+  (a, b) => [`Mariam picked ${a} flowers and her sister picked ${b} flowers. How many flowers did they pick in all?`, "flowers", "🌸"],
+  (a, b) => [`The team drank ${a} bottles of water in the first half and ${b} bottles in the second half. How many bottles did they drink in all?`, "bottles", "💧"],
+  (a, b) => [`A shop sold ${a} red balls and ${b} white balls. How many balls did the shop sell in all?`, "balls", "🛒"]
+];
+const st = {queue: [], cur: null, tries: 0, done: false};
+function nextStory(){
+  if (!st.queue.length) {
+    const qs = ST_SHEET.map(([t, a, b, unit, icon]) => ({t, a, b, unit, icon}));
+    ST_T.forEach(f => { const a = rint(12, 59), b = rint(11, Math.min(39, 99 - a)); const [t, unit, icon] = f(a, b); qs.push({t, a, b, unit, icon}); });
+    st.queue = shuffle(qs);
+  }
+  st.cur = st.queue.pop(); st.tries = 0; st.done = false;
+  $("stQ").innerHTML = `<div class="sticon">${st.cur.icon}</div>${esc(st.cur.t)}`;
+  $("stIn").value = ""; $("stIn").className = "nin tot"; $("stUnit").textContent = st.cur.unit;
+  $("stFb").innerHTML = ""; $("stHow").innerHTML = ""; $("stNext").textContent = "Skip ▶";
+  speakSoon(st.cur.t, 0.9);
+}
+function storyHow(q){
+  const ta = Math.floor(q.a / 10) * 10, tb = Math.floor(q.b / 10) * 10, oa = q.a % 10, ob = q.b % 10;
+  return `<div class="gexp" style="text-align:left">✏️ ${q.a} + ${q.b}<br>Tens: ${ta} + ${tb} = ${ta + tb}<br>Ones: ${oa} + ${ob} = ${oa + ob}<br>Together: ${ta + tb} + ${oa + ob} = <b>${q.a + q.b}</b></div>`;
+}
+$("stHowBtn").onclick = () => {
+  const q = st.cur; if (!q) return;
+  const ta = Math.floor(q.a / 10) * 10, tb = Math.floor(q.b / 10) * 10, oa = q.a % 10, ob = q.b % 10;
+  $("stHow").innerHTML = `<div class="gexp" style="text-align:left">💡 "In all" means add: ${q.a} + ${q.b}<br>Tens: ${ta} + ${tb} = ${ta + tb}<br>Ones: ${oa} + ${ob} = ${oa + ob}<br>Now add them: ${ta + tb} + ${oa + ob} = <b>?</b></div>`;
+};
+$("stSay").onclick = () => st.cur && speak(st.cur.t, "en-US", 0.9);
+$("stCheck").onclick = () => {
+  const q = st.cur; if (!q || st.done) return;
+  const v = val("stIn"); if (isNaN(v)) { toast("Type your answer first 🙂"); return; }
+  const sum = q.a + q.b;
+  if (v === sum) {
+    st.done = true; markIn("stIn", true);
+    $("stFb").innerHTML = `✅ ${q.a} + ${q.b} = ${sum} ${esc(q.unit)}`; $("stNext").textContent = "Next ▶";
+    mRight("story");
+    return;
+  }
+  st.tries++; markIn("stIn", false);
+  const en = `"In all" means we add: ${q.a} + ${q.b}. Add the tens, then the ones.`;
+  mWrong("story", en, "«في المجموع» يعني أن نجمع العددين.");
+  if (st.tries >= 2) {
+    st.done = true; $("stIn").value = sum; markIn("stIn", true);
+    $("stFb").innerHTML = `The answer is <b>${sum} ${esc(q.unit)}</b>.${storyHow(q)}`; $("stNext").textContent = "Next ▶";
+  } else $("stFb").innerHTML = `Not quite. Try again! <div class="small muted">Tip: press 💡 to see how to add tens and ones.</div>`;
+};
+$("stNext").onclick = nextStory;
+
+/* ----- Math Match (mixed check-up) ----- */
+const MT_SIZE = 10;
+const mt = {qs: [], i: 0, res: [], done: false};
+function mtMake(){
+  const qs = [];
+  for (let i = 0; i < 3; i++) qs.push({type: "eo", n: rint(2, 99), skill: "evenodd"});
+  for (let i = 0; i < 2; i++) { const r = rint(2, 5), c = rint(2, 5); qs.push({type: "arr", r, c, skill: "arrays"}); }
+  for (let i = 0; i < 3; i++) { const a = rint(11, 69), b = rint(11, Math.min(29, 99 - a)); qs.push({type: "add", a, b, skill: "blocks"}); }
+  for (let i = 0; i < 2; i++) { const f = rnd(ST_T), a = rint(12, 59), b = rint(11, Math.min(39, 99 - a)); const [t, unit, icon] = f(a, b); qs.push({type: "story", t, a, b, unit, icon, skill: "story"}); }
+  return shuffle(qs);
+}
+function mtStart(){
+  mt.qs = mtMake(); mt.i = 0; mt.res = [];
+  $("mtIntro").hidden = true; $("mtEnd").hidden = true; $("mtPlay").hidden = false;
+  say(() => [`Kick off${nm()}! 10 math questions. Let's go! ⚽`, "هيا نبدأ المباراة!"], "cheer");
+  mtAsk();
+}
+function mtDots(){ $("mtDots").innerHTML = mt.qs.map((_, i) => mt.res[i] ? (mt.res[i].ok ? "⚽" : "❌") : "⚪").join(""); }
+function mtAsk(){
+  if (mt.i >= mt.qs.length) return mtEnd();
+  const q = mt.qs[mt.i]; mt.done = false;
+  $("mtTitle").textContent = `Question ${mt.i + 1} of ${mt.qs.length}`;
+  $("mtFb").innerHTML = ""; $("mtNext").hidden = true;
+  $("mtNext").textContent = mt.i + 1 < mt.qs.length ? "Next question ▶" : "See my result 🏆";
+  if (q.type === "eo") {
+    $("mtPrompt").innerHTML = `<div class="bignum">${q.n}</div><div class="gtask">Is ${q.n} even or odd?</div>`;
+    $("mtAct").innerHTML = `<div class="gchoices"><button class="btn w" data-k="E">👯 Even</button><button class="btn w" data-k="O">☝️ Odd</button></div>`;
+  } else {
+    let p = "";
+    if (q.type === "arr") {
+      let g = ""; for (let i = 0; i < q.r; i++) g += `<div class="arow">${"⭐".repeat(q.c)}</div>`;
+      p = `<div class="arr">${g}</div><div class="gtask">How many stars in all?</div>`;
+    } else if (q.type === "add") p = `<div class="bignum" style="font-size:2.6rem">${q.a} + ${q.b} = ?</div>`;
+    else p = `<div class="story"><div class="sticon">${q.icon}</div>${esc(q.t)}</div>`;
+    $("mtPrompt").innerHTML = p;
+    $("mtAct").innerHTML = `<div class="row c">${numIn("mtIn", "tot")}<button class="btn g" id="mtGo" data-check>⚽ Check</button></div>`;
+    $("mtIn").focus({preventScroll: true});
+  }
+  mtDots();
+}
+function mtAnswer(ok, q, shown){
+  mt.done = true; mt.res[mt.i] = {skill: q.skill, ok};
+  const answer = q.type === "eo" ? (isEven(q.n) ? "even" : "odd") : q.type === "arr" ? q.r * q.c : q.a + q.b;
+  const how = q.type === "eo" ? eoExplain(q.n)
+    : q.type === "arr" ? [`${q.r} rows of ${q.c}: ${Array(q.r).fill(q.c).join(" + ")} = ${q.r * q.c}.`, "اجمع عدد النجوم في كل صف."]
+    : [`${q.a} + ${q.b}: add the tens, then the ones. The answer is ${q.a + q.b}.`, "اجمع العشرات ثم الآحاد."];
+  $("mtFb").innerHTML = ok ? `✅ Yes! ${answer}` : `❌ The answer is <b>${answer}</b>.<div class="gexp">${esc(how[0])}<span class="ar">${esc(how[1])}</span></div>`;
+  ok ? mRight(q.skill) : mWrong(q.skill, how[0], how[1]);
+  $("mtNext").hidden = false; mtDots();
+}
+$("mtAct").onclick = e => {
+  const q = mt.qs[mt.i]; if (!q || mt.done) return;
+  const b = e.target.closest("button"); if (!b) return;
+  if (q.type === "eo") {
+    const ok = (b.dataset.k === "E") === isEven(q.n);
+    $("mtAct").querySelectorAll("button").forEach(x => { x.disabled = true; if ((x.dataset.k === "E") === isEven(q.n)) x.classList.add("right"); });
+    if (!ok) b.classList.add("wrong");
+    mtAnswer(ok, q);
+  } else if (b.id === "mtGo") {
+    const v = val("mtIn"); if (isNaN(v)) { toast("Type your answer first 🙂"); return; }
+    const ans = q.type === "arr" ? q.r * q.c : q.a + q.b;
+    markIn("mtIn", v === ans); b.disabled = true;
+    mtAnswer(v === ans, q);
+  }
+};
+function mtEnd(){
+  $("mtPlay").hidden = true;
+  const score = mt.res.filter(r => r.ok).length, won = score >= 8;
+  if (won) { S.matchWins++; save(); goal(true); }
+  const parts = ["evenodd", "arrays", "blocks", "story"].map(k => {
+    const rs = mt.res.filter(r => r.skill === k), ok = rs.filter(r => r.ok).length;
+    return `<div class="r"><b>${esc(MSKILLS[k])} <span>${ok}/${rs.length}</span></b>
+      ${ok === rs.length ? `<span class="gooda">✅ Great!</span>` : `<span class="need">⚠️ Let's practise this one</span> <button class="btn o sm" data-go="${MGAME[k]}">Practise ▶</button>`}</div>`;
+  }).join("");
+  $("mtEnd").innerHTML = `
+    <div style="font-size:64px">${won ? "🏆" : "💪"}</div>
+    <h2>${won ? "You won the Math Match!" : "Good game!"} ${score} / ${MT_SIZE}</h2>
+    <p class="muted">${won ? "Champion! Leo is so proud of you!" : "Score 8 or more to win. Practise and try again!"}</p>
+    <div class="report" style="max-width:420px;margin:0 auto 12px">${parts}</div>
+    <button class="btn o big" id="mtAgain">⚽ Play again</button>`;
+  $("mtEnd").hidden = false;
+  $("mtAgain").onclick = mtStart;
+  if (won) say(() => [`Champions! You won the Math Match ${score} out of ${MT_SIZE}! 🏆`, gx("مبروك! فزتِ بالمباراة! 🏆", "مبروك! فزتَ بالمباراة! 🏆")], "cheer");
+  else say(() => [`Great effort${nm()}! ${score} out of ${MT_SIZE}. Let's practise and win next time! 💪`, "محاولة رائعة! هيا نتمرن ونفوز المرة القادمة!"], "sad");
+  checkBadges();
+}
+$("mtGo0").onclick = mtStart;
+$("mtNext").onclick = () => { mt.i++; mtAsk(); };
+
+const MREFRESH = {
+  "m-evenodd": () => { if (!eo.cur) nextEO(); },
+  "m-arrays": () => { if (!ar.cur) nextArray(); },
+  "m-chart": () => { if (!hc.cur) nextChart(); },
+  "m-blocks": () => { if (!bk.cur) nextBlocks(); },
+  "m-friendly": () => { if (!fr.cur) nextFriendly(); },
+  "m-story": () => { if (!st.cur) nextStory(); }
+};
+Object.assign(GREFRESH, MREFRESH);
+const MLESSON_READ = {
+  m1: "An even number can be put into pairs with nobody left over. Even numbers end in 0, 2, 4, 6 or 8. An odd number always has one left over. Odd numbers end in 1, 3, 5, 7 or 9.",
+  m2: "An array shows things in rows and columns. Rows go across. Columns go up and down. You can add the rows, or add the columns. Both ways give the same total.",
+  m3: "To add on a hundred chart, start at the first number. Move down one row to add ten. Move right one square to add one.",
+  m4: "To make a friendly number, change one number to a ten, like 29 to 30. Then take the same amount from the other number. 29 plus 14 is the same as 30 plus 13, which is 43.",
+  m5: "To add with models, join the tens and join the ones. If you have 10 ones or more, regroup 10 ones as 1 ten."
+};
+document.addEventListener("click", e => { const rd = e.target.closest("[data-mread]"); if (rd) speak(MLESSON_READ[rd.dataset.mread], "en-US", 0.9); });
+
+/* ===================== Children (profiles) ===================== */
+function renderProf(){ $("profBtn").textContent = `👤 ${S.name || "Player"} ▾`; }
+{ const me = PROF.list.find(x => x.id === PROF.cur); if (me && me.name !== S.name) { me.name = S.name; saveProf(); } }
+$("profBtn").onclick = () => {
+  $("profList").innerHTML = PROF.list.map(x => `<button class="btn ${x.id === PROF.cur ? "" : "w"}" data-p="${esc(x.id)}">${x.id === PROF.cur ? "✅ " : "⚽ "}${esc(x.name || "Player")}</button>`).join("");
+  $("profName").value = "";
+  $("profMenu").classList.add("on");
+};
+$("profClose").onclick = () => $("profMenu").classList.remove("on");
+$("profList").onclick = e => {
+  const b = e.target.closest("[data-p]"); if (!b) return;
+  if (b.dataset.p === PROF.cur) { $("profMenu").classList.remove("on"); return; }
+  PROF.cur = b.dataset.p; saveProf(); location.reload();
+};
+function addProfile(boy){
+  const name = $("profName").value.trim();
+  if (!name) { toast("Type the child's name first 🙂"); $("profName").focus(); return; }
+  const id = uid();
+  try { localStorage.setItem(keyFor(id), JSON.stringify(Object.assign(freshState(), {name, boy}))); }
+  catch (e) { toast("Could not save — storage is full."); return; }
+  PROF.list.push({id, name}); PROF.cur = id; saveProf(); location.reload();
+}
+$("profGirl").onclick = () => addProfile(false);
+$("profBoy").onclick = () => addProfile(true);
+
 /* ===================== Start ===================== */
 if (!synth) $("soundWarn").hidden = false;
-renderCoach(); renderVoice(); renderUnits(); updateScores(); renderLearn();
-say(() => [`Hi${nm()}! I'm your coach. Tap me, try the Penalty match, or play Grammar! ⚽`, "هيا نتعلم التهجئة معاً!"], null, true);
+renderCoach(); renderVoice(); renderProf(); renderUnits(); updateScores(); renderLearn();
+say(() => [`Hi${nm()}! I'm your coach. Pick Spelling, Grammar or Math and let's play! ⚽`, "هيا نتعلم التهجئة معاً!"], null, true);
 })();
 </script>
 </body>
