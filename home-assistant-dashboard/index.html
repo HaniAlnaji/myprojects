@@ -534,6 +534,8 @@ const settings = {
   url: LS.get("ha_url", CONFIG.haUrl || (location.protocol.startsWith("http") ? location.origin : "")),
   token: LS.get("ha_token", ""),
 };
+settings.url = normalizeUrl(settings.url);
+settings.token = cleanToken(settings.token);
 
 const $ = (id) => document.getElementById(id);
 function h(tag, attrs = {}, ...kids) {
@@ -568,16 +570,48 @@ function setConn(s, text) {
   $("smokeTest").hidden = s !== "demo";
 }
 
+// "192.168.1.10:8123", "homeassistant.local:8123/lovelace/0", "http://ha:8123/" → "http://host:port"
+function normalizeUrl(raw) {
+  let v = String(raw || "").trim();
+  if (!v) return "";
+  if (!/^[a-z]+:\/\//i.test(v)) v = "http://" + v;
+  try {
+    const u = new URL(v);
+    if (u.protocol === "ws:") u.protocol = "http:";
+    if (u.protocol === "wss:") u.protocol = "https:";
+    if (!/^https?:$/.test(u.protocol)) return "";
+    return u.origin;
+  } catch { return ""; }
+}
+// accepts the token with stray spaces/quotes/newlines or a "Bearer " prefix
+function cleanToken(t) { return String(t || "").replace(/^\s*bearer\s+/i, "").replace(/["'\s]/g, ""); }
+
+function connFail(status, msg) {
+  setConn("error", status);
+  toast(msg, true);
+}
+
+let everAuthed = false;
 function connect() {
   clearTimeout(reconnectTimer);
   if (ws) { ws.onclose = null; ws.close(); ws = null; }
-  if (!settings.token || !settings.url) { startDemo(); return; }
+  if (!settings.token) { startDemo(); return; }
+  if (!settings.url) {
+    connFail("No Home Assistant URL", "Your token is saved, but the Home Assistant URL is empty. Open ⚙ and enter it, e.g. http://192.168.1.10:8123");
+    return;
+  }
   authFailed = false;
   setConn("connecting", "Connecting…");
-  let url;
-  try { url = new URL("/api/websocket", settings.url); } catch { setConn("error", "Bad URL"); return; }
+  const url = new URL("/api/websocket", settings.url);
   url.protocol = url.protocol === "https:" ? "wss:" : "ws:";
-  try { ws = new WebSocket(url); } catch (e) { setConn("error", "Cannot connect"); toast(e.message, true); return; }
+  if (location.protocol === "https:" && url.protocol === "ws:") {
+    connFail("Blocked: https page → http HA",
+      "This page was opened over https://, so the browser blocks a plain http:// Home Assistant. Open the dashboard from Home Assistant itself (http://<ha-ip>:8123/local/dashboard/index.html) or from your PC, or use your https:// Home Assistant address.");
+    return;
+  }
+  try { ws = new WebSocket(url); } catch (e) { connFail("Cannot connect", `Cannot open ${url}: ${e.message}`); return; }
+  let opened = false;
+  ws.onopen = () => { opened = true; };
 
   ws.onmessage = (e) => {
     const m = JSON.parse(e.data);
@@ -587,12 +621,13 @@ function connect() {
         break;
       case "auth_ok":
         reconnectDelay = 1000;
+        everAuthed = true;
         onAuthenticated();
         break;
       case "auth_invalid":
         authFailed = true;
         setConn("error", "Invalid token");
-        toast("Home Assistant rejected the access token. Open settings (⚙) to fix it.", true);
+        toast("Home Assistant rejected the access token. Create a new long-lived token (your profile → Security), paste it in ⚙, and make sure you copied all of it.", true);
         break;
       case "result":
         if (pending[m.id]) { pending[m.id](m); delete pending[m.id]; }
@@ -608,7 +643,11 @@ function connect() {
   };
   ws.onclose = () => {
     if (mode === "demo" || authFailed) return;
-    setConn("error", `Disconnected – retrying in ${Math.round(reconnectDelay / 1000)}s`);
+    if (!everAuthed && reconnectDelay === 1000)
+      toast(opened
+        ? `Home Assistant at ${settings.url} closed the connection before login. Check that this address is your Home Assistant and that the token is complete.`
+        : `Can't reach Home Assistant at ${settings.url}. Check: the address and port (usually :8123), that this device is on your home Wi-Fi, and that http vs https matches what you use to open Home Assistant.`, true);
+    setConn("error", `Can't reach HA – retrying in ${Math.round(reconnectDelay / 1000)}s`);
     reconnectTimer = setTimeout(connect, reconnectDelay);
     reconnectDelay = Math.min(reconnectDelay * 2, 30000);
   };
@@ -1193,8 +1232,12 @@ function openSettings() {
           CONFIG.weather = weather.value.trim();
           saveLayout();
         }
-        settings.url = url.value.trim().replace(/\/$/, "");
-        settings.token = token.value.trim();
+        const u = normalizeUrl(url.value), t = cleanToken(token.value);
+        if (t && !u) { toast("Enter your Home Assistant address, e.g. http://192.168.1.10:8123", true); url.focus(); return; }
+        if (t && t.split(".").length !== 3) { toast("That doesn't look like a complete long-lived access token (it should have two dots). Copy it again from Home Assistant.", true); token.focus(); return; }
+        settings.url = u;
+        settings.token = t;
+        everAuthed = false; reconnectDelay = 1000;
         LS.set("ha_url", settings.url); LS.set("ha_token", settings.token);
         closeModal(); connect();
       } }, "Save & connect"),

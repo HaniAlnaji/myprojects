@@ -126,6 +126,20 @@ actions:
 mode: single
 ```
 
+## Troubleshooting: it doesn't connect
+
+The badge next to "My Home" tells you what's wrong:
+
+| Badge says | What to do |
+|---|---|
+| **Demo mode – not connected** | No token is saved. Open ⚙, paste the token and click **Save & connect**. |
+| **No Home Assistant URL** | Enter the address in ⚙, for example `http://192.168.1.10:8123`. Use the same address you type to open Home Assistant in the browser. |
+| **Can't reach HA – retrying** | The address is wrong or can't be reached. Check the IP and the `:8123` port. Check that this phone or PC is on your home Wi-Fi. Check `http` vs `https`: if you open HA with `https://…`, use that here too. |
+| **Invalid token** | Home Assistant rejected the token. Create a new one (your profile → Security → Long-lived access tokens) and copy **all** of it. It's a long text with two dots in it. |
+| **Blocked: https page → http HA** | The dashboard was opened from an `https://` address (for example GitHub), and browsers won't let that page talk to a plain `http://` Home Assistant. Open it from Home Assistant (`/local/dashboard/index.html`) or from your PC instead. |
+
+Never share your token in chats, screenshots or e-mails. If you did, delete it in Home Assistant and create a new one.
+
 ## How it talks to Home Assistant
 
 It uses the official [WebSocket API](https://developers.home-assistant.io/docs/api/websocket):
